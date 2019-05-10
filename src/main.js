@@ -6,7 +6,7 @@ import ui from './config/ui';
 console.log('if you have sourcemaps enabled nn your devtools, click on main.js:5 -->');
 
 // Replace with your client ID from the developer console.
-window.CLIENT_ID = '683307450342-v1dk2489h2rgvjhoedsao7pqcj9q9ujd.apps.googleusercontent.com';
+window.CLIENT_ID = 'PLEASE_SET_THIS';
 
 // Set authorized scope.
 window.SCOPES = ['https://www.googleapis.com/auth/analytics.readonly'];
