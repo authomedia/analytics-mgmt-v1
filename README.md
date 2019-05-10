@@ -12,7 +12,12 @@ cd analytics-mgmt-v1
 npm install
 ```
 
-The `public/index.html` file contains a `<script src='bundle.js'>` tag, which means we need to create `public/bundle.js`. The `rollup.config.js` file tells Rollup how to create this bundle, starting with `src/main.js` and including all its dependencies, including [date-fns](https://date-fns.org).
+### Add your Google API Client ID
+
+* Copy the `.env.example` file to `.env`
+* Add your CLIENT_ID as generated in the [Google API Console](https://console.developers.google.com/flows/enableapi?apiid=analytics&credential=client_key)
+
+## Building and running
 
 `npm run build` builds the application to `public/bundle.js`, along with a sourcemap file for debugging.
 
@@ -21,6 +26,10 @@ The `public/index.html` file contains a `<script src='bundle.js'>` tag, which me
 `npm run watch` will continually rebuild the application as your source files change.
 
 `npm run dev` will run `npm start` and `npm run watch` in parallel.
+
+### Developing
+
+The `public/index.html` file contains a `<script src='bundle.js'>` tag, which means we need to create `public/bundle.js`. The `rollup.config.js` file tells Rollup how to create this bundle, starting with `src/main.js` and including all its dependencies.
 
 ## License
 
