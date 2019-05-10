@@ -1,5 +1,6 @@
 import resolve from 'rollup-plugin-node-resolve';
 import commonjs from 'rollup-plugin-commonjs';
+import dotenv from 'rollup-plugin-dotenv';
 import { terser } from 'rollup-plugin-terser';
 
 // `npm run build` -> `production` is true
@@ -16,6 +17,7 @@ export default {
 	plugins: [
 		resolve(), // tells Rollup how to find date-fns in node_modules
 		commonjs(), // converts date-fns to ES modules
+		dotenv(), // add .env support
 		production && terser() // minify, but only in production
 	]
 };

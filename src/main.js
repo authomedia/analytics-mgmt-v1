@@ -6,10 +6,10 @@ import ui from './config/ui';
 console.log('if you have sourcemaps enabled nn your devtools, click on main.js:5 -->');
 
 // Replace with your client ID from the developer console.
-window.CLIENT_ID = 'PLEASE_SET_THIS';
+window.CLIENT_ID = process.env.CLIENT_ID;
 
 // Set authorized scope.
-window.SCOPES = ['https://www.googleapis.com/auth/analytics.readonly'];
+window.SCOPES = [process.env.SCOPES];
 
 // Initialize analytics lib
 var analytics  = new Analytics(CLIENT_ID, SCOPES);
