@@ -6,6 +6,18 @@
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
+    <style type="text/css">
+      #loading-overlay {
+        width: 300px;
+        height: 300px;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        margin-left: -150px;
+        margin-top: -150px;
+        background-color: white;
+      }
+    </style>
   </head>
 
   <body>
@@ -14,51 +26,62 @@
         <div class="col">
           <h1>Analyt Analytics</h1>
         </div>
+        <div class="col">
+          <button id="logout-button" class="btn btn-warning btn-sm" hidden>Log out</button>
+        </div>
+      </div>
+
+      <div id="loading-overlay">
+        <div class="spinner-border text-primary" role="status">
+          <span class="sr-only">Loading...</span>
+        </div>
       </div>
 
       <div class="row">
         <div class="col">
-          <button id="auth-button" hidden>Authorize</button>
+          <button id="auth-button" class="btn btn-warning" hidden>Authorize Google Account</button>
         </div>
       </div>
 
-      <form>
-        <div class="row">
-          <div class="col-sm">
-            <h3>Select Accounts</h3>
-            <div class="form-group">
-              <select id="ga-accounts" multiple="multiple" class="form-control" size="1">
-                <option value="">None</option>
-              </select>
-            </div>
+      <div id="analytics-ui" hidden>
+        <form>
+          <div class="row">
+            <div class="col-sm">
+              <h3>Select Accounts</h3>
+              <div class="form-group">
+                <select id="ga-accounts" multiple="multiple" class="form-control" size="1">
+                  <option value="">None</option>
+                </select>
+              </div>
 
-            <h3>Select Properties</h3>
-            <div class="form-group">
-              <select id="ga-properties" multiple="multiple" class="form-control" size="1">
-                <option value="">None</option>
-              </select>
-            </div>
+              <h3>Select Properties</h3>
+              <div class="form-group">
+                <select id="ga-properties" multiple="multiple" class="form-control" size="1">
+                  <option value="">None</option>
+                </select>
+              </div>
 
-            <h3>Select Profiles</h3>
-            <div class="form-group">
-              <select id="ga-profiles" multiple="multiple" class="form-control" size="1">
-                <option value="">None</option>
-              </select>
+              <h3>Select Profiles</h3>
+              <div class="form-group">
+                <select id="ga-profiles" multiple="multiple" class="form-control" size="1">
+                  <option value="">None</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-sm">
+              <h3>Debug output</h3>
+              <div class="form-group">
+                <textarea cols="80" rows="20" id="query-output" class="form-control"></textarea>
+              </div>
             </div>
           </div>
-          <div class="col-sm">
-            <h3>Debug output</h3>
-            <div class="form-group">
-              <textarea cols="80" rows="20" id="query-output" class="form-control"></textarea>
+          <div class="row">
+            <div class="col">
+              <button type="submit" class="btn btn-primary">Submit</button>
             </div>
           </div>
-        </div>
-        <div class="row">
-          <div class="col">
-            <button type="submit" class="btn btn-primary">Submit</button>
-          </div>
-        </div>
-      </form>
+        </form>
+      </div>
     </div>
 
 

@@ -1,142 +1,131 @@
 import ui from '../config/ui';
-import formControl from '../config/formControl';
 import Toast from './toast';
-import Utilities from './utilities';
-import debug from './debug';
-
-// Initialize objects
-var toast = new Toast();
-var utilities = new Utilities();
+import i18n from '../config/i18n';
 
 class Analytics {
-  constructor(CLIENT_ID, SCOPES) {
-    this.CLIENT_ID = CLIENT_ID;
-    this.SCOPES = SCOPES;
+  constructor(clientId, scopes, formControl, locale) {
+    this.clientId = clientId;
+    this.scopes = scopes;
+    this.locale = locale
+    this.translate = i18n[this.locale]
+
+    this.toast = new Toast();
+
+    this.formControl = formControl;
+    this.initFormControls();
   }
 
-  queryAccounts() {
-    // Load the Google Analytics client library.
-    gapi.client.load('analytics', 'v3').then(() => {
+  // Setup account UI
+  initFormControls() {
+    this.formControl.accounts.handleChange((i, elem) => {
+      this.formControl.properties.empty();
+      this.formControl.profiles.empty();
+      this.queryProperties($(elem).val());
+    });
 
-      // Get a list of all Google Analytics accounts for this user
-      gapi.client.analytics.management.accounts.list().then((response) => { this.handleAccounts(response) });
+    this.formControl.properties.handleChange((i, elem) => {
+      this.formControl.profiles.empty();
+      this.queryProfiles($(elem).data('accountId'), $(elem).val());
+    });
+
+    this.formControl.profiles.handleChange((i, elem) => {
+      this.queryCoreReportingApi($(elem).val());
     });
   }
 
-  handleAccounts(response) {
-    // Handles the response from the accounts list method.
-    if (response.result.items && response.result.items.length) {
-      // Populate accounts field
-      utilities.populateOptions(response.result.items, formControl.accounts, 'name', 'id');
-
-      formControl.debug.val('');
-
-      // Trigger lookup on select/change
-      formControl.accounts.on('change', () => {
-        $.each(formControl.accounts.children("option:selected"), (i, elem) => {
-          formControl.debug.val('');
-          this.queryProperties($(elem).val());
-        });
-      })
-
-    } else {
-      toast.showMessage('Error', 'No accounts found for this user.');
-    }
+  queryAccounts() {
+    gapi.client.load('analytics', 'v3').then(() => {
+      gapi.client.analytics.management.accounts.list().then((response) => {
+        this.handleAccounts(response);
+      });
+    });
   }
 
-
   queryProperties(accountId) {
-    // Get a list of all the properties for the account.
     gapi.client.analytics.management.webproperties.list({
       'accountId': accountId
     })
       .then((response) => { this.handleProperties(response) })
-      .then(null, function(err) {
-        // Log any errors.
-        toast.showMessage('Error', err);
+      .then(null, (err) => {
+        this.handleError(err);
     });
   }
 
-
-  handleProperties(response) {
-    // Handles the response from the webproperties list method.
-    if (response.result.items && response.result.items.length) {
-      formControl.debug.val('');
-
-      utilities.populateOptions(response.result.items, formControl.properties, 'name', 'id', ['accountId']);
-
-       // Trigger lookup on select/change
-      formControl.properties.on('change', () => {
-        $.each(formControl.properties.children("option:selected"), (i, elem) => {
-          formControl.debug.val('');
-          this.queryProfiles($(elem).data('accountId'), $(elem).val());
-        });
-      })
-
-    } else {
-      toast.showMessage('Error', 'No properties found for this user.');
-    }
-  }
-
-
   queryProfiles(accountId, propertyId) {
-    // Get a list of all Views (Profiles) for the first property
-    // of the first Account.
     gapi.client.analytics.management.profiles.list({
         'accountId': accountId,
         'webPropertyId': propertyId
     })
     .then((response) => { this.handleProfiles(response) })
-    .then(null, function(err) {
-        // Log any errors.
-      debug(err);
+    .then(null, (err) => {
+      this.handleError(err);
     });
   }
 
-
-  handleProfiles(response) {
-    // Handles the response from the profiles list method.
-    if (response.result.items && response.result.items.length) {
-      formControl.debug.val('');
-
-      utilities.populateOptions(response.result.items, formControl.profiles, 'name', 'id');
-
-       // Trigger lookup on select/change
-      formControl.profiles.on('change', () => {
-        $.each(formControl.profiles.children("option:selected"), (i, elem) => {
-          formControl.debug.val('');
-          this.queryCoreReportingApi($(elem).val());
-        });
-      })
-
-      // // Get the first View (Profile) ID.
-      // var firstProfileId = response.result.items[0].id;
-
-      // // Query the Core Reporting API.
-      // this.queryCoreReportingApi(firstProfileId);
+  handleResult(items, field, keyField, valueField, dataFields, errorMsg) {
+    if (items && items.length) {
+      field.populate(
+        items,
+        keyField,
+        valueField,
+        dataFields
+      );
     } else {
-      toast.showMessage('Error', 'No views (profiles) found for this user.');
+      this.handleError(errorMsg);
     }
   }
 
+  handleAccounts(response) {
+    this.handleResult(
+      response.result.items,
+      this.formControl.accounts,
+      'name',
+      'id',
+      [],
+      this.translate.analytics.errors.noAccounts
+    );
+  }
+
+  handleProperties(response) {
+    this.handleResult(
+      response.result.items,
+      this.formControl.properties,
+      'name',
+      'id',
+      ['accountId'],
+      this.translate.analytics.errors.noProperties
+    );
+  }
+
+  handleProfiles(response) {
+    this.handleResult(
+      response.result.items,
+      this.formControl.profiles,
+      'name',
+      'id',
+      [],
+      this.translate.analytics.errors.noProfiles
+    );
+  }
 
   queryCoreReportingApi(profileId) {
-    // Query the Core Reporting API for the number sessions for
-    // the past seven days.
     gapi.client.analytics.data.ga.get({
       'ids': 'ga:' + profileId,
       'start-date': '7daysAgo',
       'end-date': 'today',
       'metrics': 'ga:sessions'
     })
-    .then(function(response) {
+    .then((response) => {
       var formattedJson = JSON.stringify(response.result, null, 2);
-      debug(formattedJson);
+      this.formControl.debug.html(formattedJson);
     })
-    .then(null, function(err) {
-      // Log any errors.
-      toast.showMessage('Error', err);
+    .then(null, (err) => {
+      this.handleError(err);
     });
+  }
+
+  handleError(errorMsg) {
+    this.toast.showMessage(this.translate.titles.error, errorMsg);
   }
 }
 

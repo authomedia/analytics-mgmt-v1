@@ -1,6 +1,6 @@
 # Analytics Management Tool v1
 
-This project aims to provide a unified management interface for Google Analytics, for applying behaviour simultaneously across multiple Accounts
+This project aims to provide a unified management interface for Google Analytics, for applying behaviour simultaneously across multiple Accounts.
 
 ## Getting started
 

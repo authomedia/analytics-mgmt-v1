@@ -1,5 +1,11 @@
+import FormControl from '../components/form-control';
+
 var ui = {
-  authButton: document.getElementById('auth-button'),
+  analyticsUi: $('#analytics-ui'),
+  authButton: $('#auth-button'),
+  loadingOverlay: $('#loading-overlay'),
+  logoutButton: $('#logout-button'),
+  formControl: new FormControl(),
   notifications: {
     container: $('#toasts'),
     toast: $('.toast').clone(),
@@ -8,6 +14,20 @@ var ui = {
       autohide: true,
       delay: 2000
     }
+  },
+
+  loggedIn: function() {
+    this.analyticsUi.attr('hidden', false);
+    this.authButton.attr('hidden', true);
+    this.loadingOverlay.attr('hidden', true);
+    this.logoutButton.attr('hidden', false);
+  },
+
+  loggedOut: function() {
+    this.analyticsUi.attr('hidden', true);
+    this.authButton.attr('hidden', false);
+    this.loadingOverlay.attr('hidden', true);
+    this.logoutButton.attr('hidden', true);
   }
 }
 
