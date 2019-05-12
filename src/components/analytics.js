@@ -20,16 +20,23 @@ class Analytics {
     this.formControl.accounts.handleChange((i, elem) => {
       this.formControl.properties.empty();
       this.formControl.profiles.empty();
-      this.queryProperties($(elem).val());
+      this.queryProperties($(elem).val(), $(elem).text());
     });
 
     this.formControl.properties.handleChange((i, elem) => {
       this.formControl.profiles.empty();
-      this.queryProfiles($(elem).data('accountId'), $(elem).val());
+      this.queryProfiles($(elem).data('accountId'), $(elem).val(), $(elem).text());
     });
 
-    this.formControl.profiles.handleChange((i, elem) => {
-      this.queryCoreReportingApi($(elem).val());
+    // this.formControl.profiles.handleChange((i, elem) => {
+    //   this.queryCoreReportingApi($(elem).val(), $(elem).text());
+    // });
+
+    this.formControl.form.on('submit', (event) => {
+      event.preventDefault();
+      this.formControl.profiles.eachOption((i, elem) => {
+        this.queryCoreReportingApi($(elem).val(), $(elem).text());
+      });
     });
   }
 
@@ -41,34 +48,47 @@ class Analytics {
     });
   }
 
-  queryProperties(accountId) {
+  queryProperties(accountId, accountName) {
     gapi.client.analytics.management.webproperties.list({
       'accountId': accountId
     })
-      .then((response) => { this.handleProperties(response) })
+      .then((response) => {
+        response.parentName = accountName;
+        this.handleProperties(response)
+      })
       .then(null, (err) => {
         this.handleError(err);
     });
   }
 
-  queryProfiles(accountId, propertyId) {
+  queryProfiles(accountId, propertyId, propertyName) {
     gapi.client.analytics.management.profiles.list({
-        'accountId': accountId,
-        'webPropertyId': propertyId
+      'accountId': accountId,
+      'webPropertyId': propertyId
     })
-    .then((response) => { this.handleProfiles(response) })
+    .then((response) => {
+      response.parentName = propertyName;
+      this.handleProfiles(response)
+    })
     .then(null, (err) => {
       this.handleError(err);
     });
   }
 
-  handleResult(items, field, keyField, valueField, dataFields, errorMsg) {
+  handleResult(items, field, keyField, valueField, dataFields, errorMsg, options = {}) {
     if (items && items.length) {
+      if (options.parentName) {
+        items.map((item) => {
+          item[keyField] = `${options.parentName} > ${item[keyField]}`;
+        });
+      }
+
       field.populate(
         items,
         keyField,
         valueField,
-        dataFields
+        dataFields,
+        options
       );
     } else {
       this.handleError(errorMsg);
@@ -82,7 +102,10 @@ class Analytics {
       'name',
       'id',
       [],
-      this.translate.analytics.errors.noAccounts
+      this.translate.analytics.errors.noAccounts,
+      {
+        empty: true
+      }
     );
   }
 
@@ -93,7 +116,10 @@ class Analytics {
       'name',
       'id',
       ['accountId'],
-      this.translate.analytics.errors.noProperties
+      this.translate.analytics.errors.noProperties,
+      {
+        parentName: response.parentName
+      }
     );
   }
 
@@ -104,7 +130,10 @@ class Analytics {
       'name',
       'id',
       [],
-      this.translate.analytics.errors.noProfiles
+      this.translate.analytics.errors.noProfiles,
+      {
+        parentName: response.parentName
+      }
     );
   }
 

@@ -8,7 +8,7 @@ class SelectField {
 
   handleChange(callback) {
     this.field.on('change', () => {
-      $.each(this.field.children("option:selected"), (i, elem) => {
+      $.each(this.field.children('option:selected'), (i, elem) => {
         ui.formControl.debug.html('');
         if ($(elem).text() !== 'None') {
           callback(i, elem);
@@ -26,11 +26,14 @@ class SelectField {
   }
 
   setSize() {
-    this.field.attr("size", this.field.children('option').length);
+    this.field.attr('size', this.field.children('option').length);
   }
 
-  populate(items, keyField, valueField, dataFields = []) {
-    this.empty(false);
+  populate(items, keyField, valueField, dataFields = [], options = {}) {
+    this.emptyNone();
+    if (options.empty) {
+      this.empty(false);
+    }
     $.each(items, (key, value) => {
       this.populateOption(key, value, keyField, valueField, dataFields);
     });
@@ -38,18 +41,28 @@ class SelectField {
   }
 
   populateNoneOption() {
-    this.field.append($("<option></option>").text('None'));
+    this.field.append($('<option></option>').text('None'));
+  }
+
+  emptyNone() {
+    this.field.find('option').filter(function(index) {
+      return this.text == 'None';
+    }).remove();
   }
 
   populateOption(key, value, keyField, valueField, dataFields = []) {
-    var selectOption = $("<option></option>")
-                       .attr("value", value[valueField])
+    var selectOption = $('<option></option>')
+                       .attr('value', value[valueField])
                        .text(value[keyField]);
     this.field.append(selectOption);
 
     $.each(dataFields, function(i, dataKey) {
       selectOption.data(dataKey, value[dataKey])
     });
+  }
+
+  eachOption(callback) {
+    $.each(this.field.find('option'), callback);
   }
 }
 

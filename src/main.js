@@ -7,6 +7,7 @@ window.scopes = [process.env.SCOPES];
 window.locale = process.env.LOCALE;
 
 var formControl = ui.formControl;
+
 var analytics  = new Analytics(clientId, scopes, formControl, locale);
 
 window.authorize = function(event) {
