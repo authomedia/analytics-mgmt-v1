@@ -35,7 +35,9 @@ class SelectField {
       this.empty(false);
     }
     $.each(items, (key, value) => {
-      this.populateOption(key, value, keyField, valueField, dataFields);
+      if (value !== "" && value !== undefined) {
+        this.populateOption(key, value, keyField, valueField, dataFields);
+      }
     });
     this.setSize();
   }
@@ -53,6 +55,7 @@ class SelectField {
   populateOption(key, value, keyField, valueField, dataFields = []) {
     var selectOption = $('<option></option>')
                        .attr('value', value[valueField])
+                       .data('item', value)
                        .text(value[keyField]);
     this.field.append(selectOption);
 

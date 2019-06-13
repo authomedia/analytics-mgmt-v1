@@ -66,23 +66,156 @@
                 </select>
               </div>
 
-              <h4>Select Profiles</h4>
+              <h4>Select Views</h4>
               <div class="form-group">
                 <select id="ga-profiles" multiple="multiple" class="form-control" size="1">
                   <option value="">None</option>
                 </select>
               </div>
-            </div>
-            <div class="col-sm">
-              <h4>Debug output</h4>
+
+              <h4>Remarketing Audiences</h4>
               <div class="form-group">
-                <textarea cols="80" rows="20" id="query-output" class="form-control"></textarea>
+                <select id="ga-remarketing" multiple="multiple" class="form-control" size="1">
+                  <option value="">None</option>
+                </select>
               </div>
+
+              <!--
+              <h4>Linked Views</h4>
+              <div class="form-group">
+                <select id="ga-linked-views" multiple="multiple" class="form-control" size="1">
+                  <option value="">None</option>
+                </select>
+              </div>
+              -->
+
+              <h4>Linked Ad Accounts</h4>
+              <div class="form-group">
+                <select id="ga-linked-ad-accounts" multiple="multiple" class="form-control" size="1">
+                  <option value="">None</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="col-sm">
+              <div id="ga-remarketing-audiences">
+                <h4>Remarketing Audiences</h4>
+                <div class="form-group">
+                  <input type="text" id="ga-remarketing-name" class="form-control" placeholder="Name" />
+                </div>
+                <div class="form-group">
+                  <input type="text" id="ga-remarketing-description" class="form-control" placeholder="Description" />
+                </div>
+                <div class="form-group">
+                  <label for="ga-remarketing-audience-type">Audience Type</label>
+                  <select type="text" id="ga-remarketing-audience-type" class="form-control">
+                    <option value="SIMPLE">Simple</option>
+                    <option value="STATE_BASED">State Based</option>
+                  </select>
+                </div>
+
+                <h5>Audience Definition</h5>
+
+                <ul class="nav nav-pills" id="ga-remarketing-audience-tab" role="tablist">
+                  <li class="nav-item">
+                    <a class="nav-link active" id="include-tab" data-toggle="tab" role="tab" href="#ga-remarketing-audience-include-conditions"  aria-controls="ga-remarketing-audience-include-conditions" aria-selected="true">
+                      Include
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" id="sb-include-tab" data-toggle="tab" role="tab"  href="#ga-remarketing-audience-sb-include-conditions" aria-controls="ga-remarketing-audience-sb-include-conditions" aria-selected="false">
+                      SB Include
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" id="sb-exclude-tab" data-toggle="tab" role="tab" href="#ga-remarketing-audience-sb-exclude-conditions" aria-controls="ga-remarketing-audience-sb-exclude-conditions" aria-selected="false">
+                      SB Exclude
+                    </a>
+                  </li>
+                </ul>
+
+                <div class="tab-content" id="ga-remarketing-audience-tab-content" style="margin-top:1rem;">
+                  <div id="ga-remarketing-audience-include-conditions" role="tabpanel" class="tab-pane fade show active">
+                    <h6>Include Conditions</h6>
+                    <div class="form-group">
+                      <label for="ga-remarketing-include-condition-segment">Segment</label>
+                      <textarea id="ga-remarketing-include-condition-segment" class="form-control"></textarea>
+                    </div>
+                    <div class="form-group">
+                      <label for="ga-remarketing-include-condition-membership-duration-days">Membership Duration (days)</label>
+                      <input type="number" min="1" max="540" id="ga-remarketing-include-condition-membership-duration-days" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                      <label for="ga-remarketing-include-condition-days-to-look-back">Look Back (days)</label>
+                      <input type="number" min="0" id="ga-remarketing-include-condition-days-to-look-back" class="form-control" />
+                    </div>
+
+                    <div class="form-group">
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="1" id="ga-remarketing-include-condition-is-smart-list">
+                        <label class="form-check-label" for="ga-remarketing-include-condition-is-smart-list">
+                          Smart List?
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+
+
+                  <div id="ga-remarketing-audience-sb-include-conditions" role="tabpanel" class="tab-pane fade">
+                    <h6>State Based Include Conditions</h6>
+                    <div class="form-group">
+                      <label for="ga-remarketing-sb-include-condition-segment">Segment</label>
+                      <textarea id="ga-remarketing-sb-include-condition-segment" class="form-control"></textarea>
+                    </div>
+                    <div class="form-group">
+                      <label for="ga-remarketing-sb-include-condition-membership-duration-days">Membership Duration (days)</label>
+                      <input type="number" min="1" max="540" id="ga-remarketing-sb-include-condition-membership-duration-days" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                      <label for="ga-remarketing-sb-include-condition-days-to-look-back">Look Back (days)</label>
+                      <input type="number" min="0" id="ga-remarketing-sb-include-condition-days-to-look-back" class="form-control" />
+                    </div>
+
+                    <div class="form-group">
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="1" id="ga-remarketing-sb-include-condition-is-smart-list">
+                        <label class="form-check-label" for="ga-remarketing-sb-include-condition-is-smart-list">
+                          Smart List?
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div id="ga-remarketing-audience-sb-exclude-conditions" role="tabpanel" class="tab-pane fade">
+                    <h6>State Based Exclude Conditions</h6>
+                    <div class="form-group">
+                      <label for="ga-remarketing-sb-exclude-condition-segment">Segment</label>
+                      <textarea id="ga-remarketing-sb-exclude-condition-segment" class="form-control"></textarea>
+                    </div>
+                    <div class="form-group">
+                      <label for="ga-remarketing-sb-exclusion-duration">Exclusion Duration (days)</label>
+                      <select id="ga-remarketing-sb-exclusion-duration" class="form-control">
+                        <option value="PERMANENT">Permanent</option>
+                        <option value="TEMPORARY">Temporary</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col">
+              <button type="submit" class="btn btn-primary">Submit</button>
             </div>
           </div>
           <div class="row">
             <div class="col">
-              <button type="submit" class="btn btn-primary">Submit</button>
+              <h4>Debug output</h4>
+              <div class="form-group">
+                <textarea cols="80" rows="20" id="query-output" class="form-control"></textarea>
+              </div>
             </div>
           </div>
         </form>

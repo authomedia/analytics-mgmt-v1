@@ -8,6 +8,8 @@ window.locale = process.env.LOCALE;
 
 var formControl = ui.formControl;
 
+window.formControl = formControl;
+
 var analytics  = new Analytics(clientId, scopes, formControl, locale);
 
 window.authorize = function(event) {

@@ -20,23 +20,41 @@ class Analytics {
     this.formControl.accounts.handleChange((i, elem) => {
       this.formControl.properties.empty();
       this.formControl.profiles.empty();
+      this.formControl.remarketingAudiences.empty();
+      //this.formControl.linkedViews.empty();
+      this.formControl.linkedAdAccounts.empty();
+
       this.queryProperties($(elem).val(), $(elem).text());
     });
 
     this.formControl.properties.handleChange((i, elem) => {
       this.formControl.profiles.empty();
+      this.formControl.remarketingAudiences.empty();
+      //this.formControl.linkedViews.empty();
+      this.formControl.linkedAdAccounts.empty();
+
+
       this.queryProfiles($(elem).data('accountId'), $(elem).val(), $(elem).text());
+      this.queryRemarketingAudiences($(elem).data('accountId'), $(elem).val(), $(elem).text());
     });
 
-    // this.formControl.profiles.handleChange((i, elem) => {
-    //   this.queryCoreReportingApi($(elem).val(), $(elem).text());
-    // });
+    this.formControl.remarketingAudiences.handleChange((i, elem) => {
+      this.handleRemarketingLinkedAdAccounts($(elem));
+    });
+
+    this.formControl.profiles.handleChange((i, elem) => {
+      // todo
+    });
 
     this.formControl.form.on('submit', (event) => {
       event.preventDefault();
-      this.formControl.profiles.eachOption((i, elem) => {
-        this.queryCoreReportingApi($(elem).val(), $(elem).text());
-      });
+      // this.formControl.profiles.eachOption((i, elem) => {
+      //   this.queryCoreReportingApi($(elem).val(), $(elem).text());
+      // });
+
+      this.formControl.linkedAdAccounts.eachOption((i, elem) => {
+        this.createRemarketingAudience($(elem));
+      })
     });
   }
 
@@ -69,6 +87,20 @@ class Analytics {
     .then((response) => {
       response.parentName = propertyName;
       this.handleProfiles(response)
+    })
+    .then(null, (err) => {
+      this.handleError(err);
+    });
+  }
+
+  queryRemarketingAudiences(accountId, propertyId, propertyName) {
+    gapi.client.analytics.management.remarketingAudience.list({
+      'accountId': accountId,
+      'webPropertyId': propertyId
+    })
+    .then((response) => {
+      response.parentName = propertyName;
+      this.handleRemarketingAudiences(response)
     })
     .then(null, (err) => {
       this.handleError(err);
@@ -129,10 +161,69 @@ class Analytics {
       this.formControl.profiles,
       'name',
       'id',
-      [],
+      ['accountId'],
       this.translate.analytics.errors.noProfiles,
       {
         parentName: response.parentName
+      }
+    );
+  }
+
+  handleRemarketingAudiences(response) {
+    this.handleResult(
+      response.result.items,
+      this.formControl.remarketingAudiences,
+      'name',
+      'id',
+      [
+        'linkedViews',
+        'linkedAdAccounts'
+      ],
+      this.translate.analytics.errors.noRemarketingAudiences,
+      {
+        parentName: response.parentName
+      }
+    );
+  }
+
+  handleRemarketingLinkedViews(items) {
+    this.handleResult(
+      items.filter(Boolean),
+      this.formControl.linkedViews,
+      'view',
+      'view',
+      [],
+      this.translate.analytics.errors.noLinkedViews,
+      {
+        empty: true
+      }
+    );
+  }
+
+
+  handleRemarketingLinkedAdAccounts(elem) {
+    let items = elem.data('linkedAdAccounts');
+    let linkedViews = elem.data('linkedViews');
+
+    items = items.filter(Boolean).filter(function(item) {
+      return item.type !== 'ANALYTICS';
+    });
+
+    items = items.map(function(item) {
+      item.label = `${item.type} > ${item.linkedAccountId}`;
+      item.linkedViews = linkedViews
+      return item;
+    });
+
+    this.handleResult(
+      items,
+      this.formControl.linkedAdAccounts,
+      'label',
+      'linkedAccountId',
+      [],
+      this.translate.analytics.errors.noLinkedAdAccounts,
+      {
+        empty: false
       }
     );
   }
@@ -145,12 +236,118 @@ class Analytics {
       'metrics': 'ga:sessions'
     })
     .then((response) => {
-      var formattedJson = JSON.stringify(response.result, null, 2);
+      let formattedJson = JSON.stringify(response.result, null, 2);
       this.formControl.debug.html(formattedJson);
     })
     .then(null, (err) => {
       this.handleError(err);
     });
+  }
+
+  createRemarketingAudience(elem) {
+    let requestBody = this.buildRemarketingAudienceJson(elem);
+    console.log(requestBody);
+
+    let formattedJson = JSON.stringify(requestBody, null, 2);
+    this.formControl.debug.html(formattedJson);
+
+    // TODO: Submit new
+    // let request = gapi.client.analytics.management.remarketingAudience.insert(requestBody);
+    // request.execute((response) => {
+    //   // Handle the response.
+    //   console.log(response);
+
+    //   let formattedJson = JSON.stringify(response.result, null, 2);
+    //   this.formControl.debug.html(formattedJson);
+    // });
+
+    // TODO: Patch existing
+    // let request = gapi.client.analytics.management.remarketingAudience.patch(requestBody);
+    // request.execute((response) => {
+    //   // Handle the response.
+    //   console.log(response);
+
+    //   let formattedJson = JSON.stringify(response.result, null, 2);
+    //   this.formControl.debug.html(formattedJson);
+    // });
+  }
+
+  buildRemarketingAudienceJson(elem) {
+    let linkedAdAccount = Object.assign({}, elem.data('item'));
+    let linkedViews = linkedAdAccount.linkedViews;
+    delete(linkedAdAccount.label); // remove label
+    delete(linkedAdAccount.linkedViews); // remove linkedViews
+
+    let remarketingForm = this.formControl.remarketingForm;
+
+    if (remarketingForm.name.val() !== '' && linkedViews.length > 0) {
+      let requestBody = {
+        'accountId': linkedAdAccount.accountId,
+        'webPropertyId': linkedAdAccount.propertyId,
+        // 'remarketingAudienceId': audienceId // required for patch
+        'resource': {
+          'name': remarketingForm.name.val(),
+          'description': remarketingForm.description.val(),
+          'linkedViews': linkedViews,
+          'linkedAdAccounts': [linkedAdAccount],
+          'audienceType': remarketingForm.audienceType.val(),
+        }
+      }
+
+      let includeConditions = remarketingForm.audienceDefinition.includeConditions;
+      let sbIncludeConditions = remarketingForm.stateBasedAudienceDefinition.includeConditions;
+      let sbExcludeConditions = remarketingForm.stateBasedAudienceDefinition.excludeConditions;
+
+      if (this.includeConditionsIsValid(includeConditions)) {
+        requestBody.audienceDefinition = {
+          'includeConditions': {
+            kind: 'analytics#includeConditions',
+            daysToLookBack: includeConditions.daysToLookBack.val(),
+            segment: includeConditions.segment.val(),
+            membershipDurationDays: includeConditions.membershipDurationDays.val(),
+            isSmartList: includeConditions.isSmartList.prop('checked')
+          }
+        }
+      }
+
+      if (
+        this.includeConditionsIsValid(sbIncludeConditions) ||
+        this.excludeConditionsIsValid(sbExcludeConditions)
+      ) {
+        requestBody.stateBasedAudienceDefinition = {};
+
+        if (this.includeConditionsIsValid(sbIncludeConditions)) {
+          requestBody.stateBasedAudienceDefinition.includeConditions = {
+            kind: 'analytics#includeConditions',
+            daysToLookBack: sbIncludeConditions.daysToLookBack.val(),
+            segment: sbIncludeConditions.segment.val(),
+            membershipDurationDays: sbIncludeConditions.membershipDurationDays.val(),
+            isSmartList: sbIncludeConditions.isSmartList.prop('checked')
+          }
+        }
+
+        if (this.excludeConditionsIsValid(sbExcludeConditions)) {
+          requestBody.stateBasedAudienceDefinition.excludeConditions = {
+            exclusionDuration: sbExcludeConditions.exclusionDuration.val(),
+            segment: sbExcludeConditions.segment.val()
+          }
+        }
+      }
+
+      return requestBody;
+    }
+  }
+
+  includeConditionsIsValid(includeConditions) {
+    return (
+      includeConditions.segment.val() !== '' &&
+      includeConditions.daysToLookBack.val() >= 0 &&
+      (includeConditions.membershipDurationDays.val() > 0 && includeConditions.membershipDurationDays.val() <= 540)
+    );
+  }
+
+  excludeConditionsIsValid(excludeConditions) {
+    return (excludeConditions.segment.val() !== '');
   }
 
   handleError(errorMsg) {
