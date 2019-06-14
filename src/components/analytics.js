@@ -282,15 +282,15 @@ class Analytics {
 
     if (remarketingForm.name.val() !== '' && linkedViews.length > 0) {
       let requestBody = {
-        'accountId': linkedAdAccount.accountId,
-        'webPropertyId': linkedAdAccount.propertyId,
+        accountId: linkedAdAccount.accountId,
+        webPropertyId: linkedAdAccount.propertyId,
         // 'remarketingAudienceId': audienceId // required for patch
-        'resource': {
-          'name': remarketingForm.name.val(),
-          'description': remarketingForm.description.val(),
-          'linkedViews': linkedViews,
-          'linkedAdAccounts': [linkedAdAccount],
-          'audienceType': remarketingForm.audienceType.val(),
+        resource: {
+          name: remarketingForm.name.val(),
+          description: remarketingForm.description.val(),
+          linkedViews: linkedViews,
+          linkedAdAccounts: [linkedAdAccount],
+          audienceType: remarketingForm.audienceType.val(),
         }
       }
 
@@ -299,8 +299,8 @@ class Analytics {
       let sbExcludeConditions = remarketingForm.stateBasedAudienceDefinition.excludeConditions;
 
       if (this.includeConditionsIsValid(includeConditions)) {
-        requestBody.audienceDefinition = {
-          'includeConditions': {
+        requestBody.resource.audienceDefinition = {
+          includeConditions: {
             kind: 'analytics#includeConditions',
             daysToLookBack: includeConditions.daysToLookBack.val(),
             segment: includeConditions.segment.val(),
@@ -314,10 +314,10 @@ class Analytics {
         this.includeConditionsIsValid(sbIncludeConditions) ||
         this.excludeConditionsIsValid(sbExcludeConditions)
       ) {
-        requestBody.stateBasedAudienceDefinition = {};
+        requestBody.resource.stateBasedAudienceDefinition = {};
 
         if (this.includeConditionsIsValid(sbIncludeConditions)) {
-          requestBody.stateBasedAudienceDefinition.includeConditions = {
+          requestBody.resource.stateBasedAudienceDefinition.includeConditions = {
             kind: 'analytics#includeConditions',
             daysToLookBack: sbIncludeConditions.daysToLookBack.val(),
             segment: sbIncludeConditions.segment.val(),
@@ -327,7 +327,7 @@ class Analytics {
         }
 
         if (this.excludeConditionsIsValid(sbExcludeConditions)) {
-          requestBody.stateBasedAudienceDefinition.excludeConditions = {
+          requestBody.resource.stateBasedAudienceDefinition.excludeConditions = {
             exclusionDuration: sbExcludeConditions.exclusionDuration.val(),
             segment: sbExcludeConditions.segment.val()
           }
