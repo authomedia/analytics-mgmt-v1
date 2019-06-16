@@ -5,6 +5,8 @@
     <title>Analyt Analytics</title>
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.7/css/select2.min.css" rel="stylesheet" />
+
 
     <style type="text/css">
       #loading-overlay {
@@ -66,19 +68,14 @@
                 </select>
               </div>
 
-              <h4>Select Views</h4>
-              <div class="form-group">
-                <select id="ga-profiles" multiple="multiple" class="form-control" size="1">
-                  <option value="">None</option>
-                </select>
-              </div>
-
+              <!--
               <h4>Remarketing Audiences</h4>
               <div class="form-group">
                 <select id="ga-remarketing" multiple="multiple" class="form-control" size="1">
                   <option value="">None</option>
                 </select>
               </div>
+              -->
 
               <!--
               <h4>Linked Views</h4>
@@ -89,12 +86,14 @@
               </div>
               -->
 
+              <!--
               <h4>Linked Ad Accounts</h4>
               <div class="form-group">
                 <select id="ga-linked-ad-accounts" multiple="multiple" class="form-control" size="1">
                   <option value="">None</option>
                 </select>
               </div>
+              -->
             </div>
 
             <div class="col-sm">
@@ -106,30 +105,45 @@
                 <div class="form-group">
                   <input type="text" id="ga-remarketing-description" class="form-control" placeholder="Description" />
                 </div>
+
                 <div class="form-group">
-                  <label for="ga-remarketing-audience-type">Audience Type</label>
-                  <select type="text" id="ga-remarketing-audience-type" class="form-control">
-                    <option value="SIMPLE">Simple</option>
-                    <option value="STATE_BASED">State Based</option>
+                  <label for="ga-profiles">Views/Profiles</label>
+                  <select id="ga-profiles" multiple="multiple" class="form-control" size="1">
+                    <option value="">None</option>
                   </select>
                 </div>
 
+                <div class="form-group">
+                  <label for="ga-profiles">Ad Accounts</label>
+                  <select id="ga-ad-links" multiple="multiple" class="form-control" size="1">
+                    <option value="">None</option>
+                  </select>
+                </div>
+
+
                 <h5>Audience Definition</h5>
 
+                <div class="form-group">
+                  <select type="text" id="ga-remarketing-audience-type" class="form-control select2">
+                    <option value="SIMPLE">Simple Audience Type</option>
+                    <option value="STATE_BASED">State Based Audience Type</option>
+                  </select>
+                </div>
+
                 <ul class="nav nav-pills" id="ga-remarketing-audience-tab" role="tablist">
-                  <li class="nav-item">
+                  <li class="nav-item ga-remarketing-audience-type-simple-tab">
                     <a class="nav-link active" id="include-tab" data-toggle="tab" role="tab" href="#ga-remarketing-audience-include-conditions"  aria-controls="ga-remarketing-audience-include-conditions" aria-selected="true">
                       Include
                     </a>
                   </li>
-                  <li class="nav-item">
+                  <li class="nav-item ga-remarketing-audience-type-state-based-tab">
                     <a class="nav-link" id="sb-include-tab" data-toggle="tab" role="tab"  href="#ga-remarketing-audience-sb-include-conditions" aria-controls="ga-remarketing-audience-sb-include-conditions" aria-selected="false">
-                      SB Include
+                      Include
                     </a>
                   </li>
-                  <li class="nav-item">
+                  <li class="nav-item ga-remarketing-audience-type-state-based-tab">
                     <a class="nav-link" id="sb-exclude-tab" data-toggle="tab" role="tab" href="#ga-remarketing-audience-sb-exclude-conditions" aria-controls="ga-remarketing-audience-sb-exclude-conditions" aria-selected="false">
-                      SB Exclude
+                      Exclude
                     </a>
                   </li>
                 </ul>
@@ -244,6 +258,7 @@
   <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.7/js/select2.min.js"></script>
 
   <script>
 

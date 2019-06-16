@@ -6,6 +6,14 @@ class SelectField {
     this.field = field;
   }
 
+  val() {
+    return this.field.val();
+  }
+
+  data() {
+    return this.field.select2('data');
+  }
+
   handleChange(callback) {
     this.field.on('change', () => {
       $.each(this.field.children('option:selected'), (i, elem) => {
@@ -19,14 +27,20 @@ class SelectField {
 
   empty(addNoneOption = true) {
     this.field.empty()
-    if (addNoneOption) {
-      this.populateNoneOption();
-    }
+    this.field.val(null);
+    // if (addNoneOption) {
+    //   this.populateNoneOption();
+    // }
     this.setSize();
   }
 
   setSize() {
     this.field.attr('size', this.field.children('option').length);
+
+    this.field.select2({
+      placeholder: 'None selected - pick some',
+      // allowClear: true
+    });
   }
 
   populate(items, keyField, valueField, dataFields = [], options = {}) {
@@ -43,7 +57,7 @@ class SelectField {
   }
 
   populateNoneOption() {
-    this.field.append($('<option></option>').text('None'));
+    this.field.append($(new Option(null, 'None')));
   }
 
   emptyNone() {
@@ -53,10 +67,8 @@ class SelectField {
   }
 
   populateOption(key, value, keyField, valueField, dataFields = []) {
-    var selectOption = $('<option></option>')
-                       .attr('value', value[valueField])
-                       .data('item', value)
-                       .text(value[keyField]);
+    let selectOption = $(new Option(value[keyField], value[valueField])).data('item', value);
+
     this.field.append(selectOption);
 
     $.each(dataFields, function(i, dataKey) {
