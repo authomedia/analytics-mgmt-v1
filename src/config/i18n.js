@@ -1,7 +1,11 @@
 var i18n = {
   en: {
     titles: {
-      error: "Error"
+      error: "Error",
+      success: "Success!"
+    },
+    messages: {
+      remarketingSuccess: "Created remarketing campaign"
     },
     analytics: {
       errors: {

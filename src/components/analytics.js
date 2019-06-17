@@ -293,8 +293,10 @@ class Analytics {
         console.log(response);
 
         // Handle the response.
-        if (response.code !== 200) {
+        if (response.code && response.message) {
           this.handleError(response.message);
+        } else {
+          this.handleSuccess(this.translate.messages.remarketingSuccess);
         }
 
         let formattedJson = JSON.stringify(response, null, 2);
@@ -418,6 +420,10 @@ class Analytics {
 
   handleError(errorMsg) {
     this.toast.showMessage(this.translate.titles.error, errorMsg);
+  }
+
+  handleSuccess(message) {
+    this.toast.showMessage(this.translate.titles.success, message)
   }
 }
 
