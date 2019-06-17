@@ -22,7 +22,7 @@ class Toast {
 
     ui.notifications.container.append(toast);
 
-    toast.find('.toast-header small').html(title);
+    toast.find('.toast-header strong').html(title);
     toast.find('.toast-body').html(message);
 
     toast.toast('show');

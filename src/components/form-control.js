@@ -19,7 +19,6 @@ class FormControl {
 
     this.remarketingForm = {
       name: $('#ga-remarketing-name'),
-      description: $('#ga-remarketing-description'),
       audienceType: $('#ga-remarketing-audience-type'),
       audienceDefinition: {
         includeConditions: {

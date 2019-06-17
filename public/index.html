@@ -7,8 +7,14 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.7/css/select2.min.css" rel="stylesheet" />
 
+    <link href="https://fonts.googleapis.com/css?family=Lobster|Roboto&display=swap" rel="stylesheet">
+
 
     <style type="text/css">
+      body {
+        margin-top: 1rem;
+        font-family: 'Roboto', sans-serif;
+      }
       #loading-overlay {
         display:flex;
         justify-content:left;
@@ -33,7 +39,26 @@
         position: absolute;
         top: -3rem;
         right: 0rem;
+      }
 
+      .alert-icon {
+        width: 1.5rem;
+        height: 1.5rem;
+      }
+
+      .brand-title {
+        font-family: 'Lobster', cursive;
+      }
+
+      .brand-logo {
+        width: 2.6rem;
+        height: 2.6rem;
+        display: inline-block;
+        padding-bottom: 0.4rem;
+      }
+
+      .query-output-title {
+        margin-top: 0.5rem;
       }
     </style>
   </head>
@@ -42,7 +67,10 @@
     <div class="container container-fluid">
       <div class="row">
         <div class="col">
-          <h1>Analyt Analytics</h1>
+          <h1 class="brand-title">
+            <img src="/analyt-logo.png" class="brand-logo" />
+            Analytics
+          </h1>
         </div>
         <div class="col">
           <button id="logout-button" class="btn btn-warning btn-sm" hidden>Log out</button>
@@ -94,6 +122,20 @@
                 </select>
               </div>
 
+              <div class="form-group">
+                <label for="ga-profiles">Views/Profiles</label>
+                <select id="ga-profiles" multiple="multiple" class="form-control" size="1">
+                  <option value="">None</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="ga-profiles">Ad Accounts</label>
+                <select id="ga-ad-links" multiple="multiple" class="form-control" size="1">
+                  <option value="">None</option>
+                </select>
+              </div>
+
               <!--
               <h4>Remarketing Audiences</h4>
               <div class="form-group">
@@ -128,24 +170,6 @@
                 <div class="form-group">
                   <input type="text" id="ga-remarketing-name" class="form-control" placeholder="Name" />
                 </div>
-                <div class="form-group">
-                  <input type="text" id="ga-remarketing-description" class="form-control" placeholder="Description" />
-                </div>
-
-                <div class="form-group">
-                  <label for="ga-profiles">Views/Profiles</label>
-                  <select id="ga-profiles" multiple="multiple" class="form-control" size="1">
-                    <option value="">None</option>
-                  </select>
-                </div>
-
-                <div class="form-group">
-                  <label for="ga-profiles">Ad Accounts</label>
-                  <select id="ga-ad-links" multiple="multiple" class="form-control" size="1">
-                    <option value="">None</option>
-                  </select>
-                </div>
-
 
                 <h5>Audience Definition</h5>
 
@@ -233,7 +257,7 @@
                       <textarea id="ga-remarketing-sb-exclude-condition-segment" class="form-control"></textarea>
                     </div>
                     <div class="form-group">
-                      <label for="ga-remarketing-sb-exclusion-duration">Exclusion Duration (days)</label>
+                      <label for="ga-remarketing-sb-exclusion-duration">Exclusion Duration</label>
                       <select id="ga-remarketing-sb-exclusion-duration" class="form-control">
                         <option value="PERMANENT">Permanent</option>
                         <option value="TEMPORARY">Temporary</option>
@@ -250,9 +274,10 @@
               <button type="submit" class="btn btn-primary">Submit</button>
             </div>
           </div>
+          <hr />
           <div class="row">
             <div class="col">
-              <h4>Debug output</h4>
+              <h4 class="query-output-title">Debug output</h4>
               <div class="form-group">
                 <textarea cols="80" rows="20" id="query-output" class="form-control"></textarea>
               </div>
@@ -268,7 +293,7 @@
     <div style="position: absolute; top: 0; right: 0; margin: 10px" id="toasts">
       <div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
         <div class="toast-header">
-          <!-- <img src="" class="rounded mr-2" alt=""> -->
+          <img src="/analyt-logo.png" class="rounded mr-2 alert-icon" alt="Analyt">
           <strong class="mr-auto"></strong>
           <small></small>
           <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">

@@ -11,8 +11,8 @@ var ui = {
     toast: $('.toast').clone(),
     defaults: {
       animation: true,
-      autohide: true,
-      delay: 2000
+      autohide: false,
+      delay: 5000
     }
   },
 
