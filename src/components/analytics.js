@@ -17,12 +17,14 @@ class Analytics {
 
   // Setup account UI
   initFormControls() {
+    this.formControl.showSimpleAudienceTypeTabs();
+
     this.formControl.accounts.handleChange((i, elem) => {
       this.formControl.properties.empty();
       this.formControl.profiles.empty();
       this.formControl.remarketingAudiences.empty();
-      //this.formControl.linkedViews.empty();
       this.formControl.linkedAdAccounts.empty();
+      this.formControl.adLinks.empty();
 
       this.queryProperties($(elem).val(), $(elem).text());
     });
@@ -30,30 +32,36 @@ class Analytics {
     this.formControl.properties.handleChange((i, elem) => {
       this.formControl.profiles.empty();
       this.formControl.remarketingAudiences.empty();
-      //this.formControl.linkedViews.empty();
       this.formControl.linkedAdAccounts.empty();
+      this.formControl.adLinks.empty();
 
 
       this.queryProfiles($(elem).data('accountId'), $(elem).val(), $(elem).text());
-      this.queryRemarketingAudiences($(elem).data('accountId'), $(elem).val(), $(elem).text());
+      this.queryAdLinks($(elem).data('accountId'), $(elem).val(), $(elem).text());
     });
 
-    this.formControl.remarketingAudiences.handleChange((i, elem) => {
-      this.handleRemarketingLinkedAdAccounts($(elem));
-    });
+    this.formControl.audienceType.handleChange((i, elem) => {
+      elem = $(elem);
 
-    this.formControl.profiles.handleChange((i, elem) => {
-      // todo
-    });
+      if (elem.val() == 'SIMPLE') {
+        this.formControl.showSimpleAudienceTypeTabs();
+      }
+
+      if (elem.val() == 'STATE_BASED') {
+        this.formControl.showStateBasedAudienceTypeTabs();
+      }
+
+    })
 
     this.formControl.form.on('submit', (event) => {
       event.preventDefault();
-      // this.formControl.profiles.eachOption((i, elem) => {
-      //   this.queryCoreReportingApi($(elem).val(), $(elem).text());
-      // });
 
-      this.formControl.linkedAdAccounts.eachOption((i, elem) => {
-        this.createRemarketingAudience($(elem));
+      this.formControl.debug.html('');
+
+      this.formControl.profiles.field.find('option:selected').each((i, profile) => {
+        this.formControl.debug.append(`${$(profile).text()}\n`);
+        this.createRemarketingAudience($(profile));
+        this.formControl.debug.append(`\n\n`);
       })
     });
   }
@@ -87,6 +95,20 @@ class Analytics {
     .then((response) => {
       response.parentName = propertyName;
       this.handleProfiles(response)
+    })
+    .then(null, (err) => {
+      this.handleError(err);
+    });
+  }
+
+  queryAdLinks(accountId, propertyId, propertyName) {
+    gapi.client.analytics.management.webPropertyAdWordsLinks.list({
+      'accountId': accountId,
+      'webPropertyId': propertyId
+    })
+    .then((response) => {
+      response.parentName = propertyName;
+      this.handleAdLinks(response)
     })
     .then(null, (err) => {
       this.handleError(err);
@@ -200,14 +222,27 @@ class Analytics {
     );
   }
 
+  handleAdLinks(response) {
+    this.handleResult(
+      response.result.items,
+      this.formControl.adLinks,
+      'name',
+      'id',
+      [],
+      this.translate.analytics.errors.noAdLinks,
+      {
+        parentName: response.parentName
+      }
+    );  }
+
 
   handleRemarketingLinkedAdAccounts(elem) {
     let items = elem.data('linkedAdAccounts');
     let linkedViews = elem.data('linkedViews');
 
-    items = items.filter(Boolean).filter(function(item) {
-      return item.type !== 'ANALYTICS';
-    });
+    // items = items.filter(Boolean).filter(function(item) {
+    //   return item.type !== 'ANALYTICS';
+    // });
 
     items = items.map(function(item) {
       item.label = `${item.type} > ${item.linkedAccountId}`;
@@ -244,22 +279,33 @@ class Analytics {
     });
   }
 
-  createRemarketingAudience(elem) {
-    let requestBody = this.buildRemarketingAudienceJson(elem);
-    console.log(requestBody);
+  createRemarketingAudience(profile) {
+    let audiences = this.buildRemarketingAudiences(profile);
+    console.log(audiences);
 
-    let formattedJson = JSON.stringify(requestBody, null, 2);
-    this.formControl.debug.html(formattedJson);
+    let formattedJson = JSON.stringify(audiences, null, 2);
+    this.formControl.debug.append(formattedJson);
 
     // TODO: Submit new
-    // let request = gapi.client.analytics.management.remarketingAudience.insert(requestBody);
-    // request.execute((response) => {
-    //   // Handle the response.
-    //   console.log(response);
+    if(this.formControl.liveApiCallToggle.prop('checked')) {
+      let request = gapi.client.analytics.management.remarketingAudience.insert(audiences);
+      request.execute((response) => {
+        console.log(response);
 
-    //   let formattedJson = JSON.stringify(response.result, null, 2);
-    //   this.formControl.debug.html(formattedJson);
-    // });
+        // Handle the response.
+        if (response.code && response.message) {
+          this.handleError(response.message);
+        } else {
+          this.handleSuccess(this.translate.messages.remarketingSuccess);
+        }
+
+        let formattedJson = JSON.stringify(response, null, 2);
+
+        this.formControl.debug.append(`${$(profile).text()}\n`);
+        this.formControl.debug.append(formattedJson);
+        this.formControl.debug.append(`\n\n`);
+      });
+    }
 
     // TODO: Patch existing
     // let request = gapi.client.analytics.management.remarketingAudience.patch(requestBody);
@@ -272,24 +318,33 @@ class Analytics {
     // });
   }
 
-  buildRemarketingAudienceJson(elem) {
-    let linkedAdAccount = Object.assign({}, elem.data('item'));
-    let linkedViews = linkedAdAccount.linkedViews;
-    delete(linkedAdAccount.label); // remove label
-    delete(linkedAdAccount.linkedViews); // remove linkedViews
+  buildRemarketingAudiences(profile) {
+    profile = $(profile).data('item');
 
+    let property = profile.property
+
+    let linkedAdAccounts = this.formControl.adLinks.field.find('option:selected')
+      .filter((i, item) => {
+        return $(item).data('item').entity.webPropertyRef.id == profile.webPropertyId;
+      })
+      .map((i, item) => {
+        return $(item).data('item');
+      })
+
+    return this.buildRemarketingAudienceJson(property, linkedAdAccounts, profile);
+  }
+
+  buildRemarketingAudienceJson(property, linkedAdAccounts, profile) {
     let remarketingForm = this.formControl.remarketingForm;
 
-    if (remarketingForm.name.val() !== '' && linkedViews.length > 0) {
+    if (remarketingForm.name.val() !== '') {
       let requestBody = {
-        accountId: linkedAdAccount.accountId,
-        webPropertyId: linkedAdAccount.propertyId,
-        // 'remarketingAudienceId': audienceId // required for patch
+        accountId: profile.accountId,
+        webPropertyId: profile.webPropertyId,
         resource: {
           name: remarketingForm.name.val(),
-          description: remarketingForm.description.val(),
-          linkedViews: linkedViews,
-          linkedAdAccounts: [linkedAdAccount],
+          linkedViews: [profile.id],
+          linkedAdAccounts: this.buildLinkedAccountsJson(linkedAdAccounts, profile),
           audienceType: remarketingForm.audienceType.val(),
         }
       }
@@ -301,10 +356,9 @@ class Analytics {
       if (this.includeConditionsIsValid(includeConditions)) {
         requestBody.resource.audienceDefinition = {
           includeConditions: {
-            kind: 'analytics#includeConditions',
-            daysToLookBack: includeConditions.daysToLookBack.val(),
+            daysToLookBack: parseInt(includeConditions.daysToLookBack.val()),
             segment: includeConditions.segment.val(),
-            membershipDurationDays: includeConditions.membershipDurationDays.val(),
+            membershipDurationDays: parseInt(includeConditions.membershipDurationDays.val()),
             isSmartList: includeConditions.isSmartList.prop('checked')
           }
         }
@@ -318,10 +372,9 @@ class Analytics {
 
         if (this.includeConditionsIsValid(sbIncludeConditions)) {
           requestBody.resource.stateBasedAudienceDefinition.includeConditions = {
-            kind: 'analytics#includeConditions',
-            daysToLookBack: sbIncludeConditions.daysToLookBack.val(),
+            daysToLookBack: parseInt(sbIncludeConditions.daysToLookBack.val()),
             segment: sbIncludeConditions.segment.val(),
-            membershipDurationDays: sbIncludeConditions.membershipDurationDays.val(),
+            membershipDurationDays: parseInt(sbIncludeConditions.membershipDurationDays.val()),
             isSmartList: sbIncludeConditions.isSmartList.prop('checked')
           }
         }
@@ -335,7 +388,20 @@ class Analytics {
       }
 
       return requestBody;
+
+    } else {
+      this.handleError( this.translate.analytics.errors.remarketingAudiencesValidationError);
     }
+  }
+
+
+  buildLinkedAccountsJson(linkedAdAccounts, profile){
+    return $.makeArray(linkedAdAccounts.map((i, linkedAdAccount) => {
+      return {
+        linkedAccountId: linkedAdAccount.adWordsAccounts[0].customerId,
+        type: 'ADWORDS_LINKS',
+      }
+    }));
   }
 
   includeConditionsIsValid(includeConditions) {
@@ -350,8 +416,14 @@ class Analytics {
     return (excludeConditions.segment.val() !== '');
   }
 
+
+
   handleError(errorMsg) {
     this.toast.showMessage(this.translate.titles.error, errorMsg);
+  }
+
+  handleSuccess(message) {
+    this.toast.showMessage(this.translate.titles.success, message)
   }
 }
 

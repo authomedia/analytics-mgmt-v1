@@ -10,11 +10,15 @@ class FormControl {
     this.profiles = new SelectField($('#ga-profiles'));
     this.remarketingAudiences = new SelectField($('#ga-remarketing'));
     this.linkedViews = new SelectField($('#ga-linked-views'));
+    this.adLinks = new SelectField($('#ga-ad-links'));
     this.linkedAdAccounts = new SelectField($('#ga-linked-ad-accounts'));
+
+    this.audienceType = new SelectField($('#ga-remarketing-audience-type'));
+
+    this.liveApiCallToggle = $('#ga-live-api-call-toggle');
 
     this.remarketingForm = {
       name: $('#ga-remarketing-name'),
-      description: $('#ga-remarketing-description'),
       audienceType: $('#ga-remarketing-audience-type'),
       audienceDefinition: {
         includeConditions: {
@@ -37,6 +41,29 @@ class FormControl {
         }
       }
     }
+
+    $('.select2').select2({
+      width: 'element'
+    });
+  }
+
+  showSimpleAudienceTypeTabs() {
+    $('.ga-remarketing-audience-type-simple-tab').show();
+    $('.ga-remarketing-audience-type-state-based-tab').hide();
+
+    $('.ga-remarketing-audience-type-simple-tab a:first').tab('show');
+
+    $('#ga-remarketing-audience-sb-include-conditions, #ga-remarketing-audience-sb-exclude-conditions').find('input, textarea').val(null);
+
+  }
+
+  showStateBasedAudienceTypeTabs() {
+    $('.ga-remarketing-audience-type-simple-tab').hide();
+    $('.ga-remarketing-audience-type-state-based-tab').show();
+
+    $('.ga-remarketing-audience-type-state-based-tab a:first').tab('show');
+
+    $('#ga-remarketing-audience-include-conditions').find('input, textarea').val(null);
   }
 }
 

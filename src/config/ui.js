@@ -12,7 +12,7 @@ var ui = {
     defaults: {
       animation: true,
       autohide: true,
-      delay: 2000
+      delay: 5000
     }
   },
 
