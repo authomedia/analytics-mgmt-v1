@@ -15,6 +15,8 @@ class FormControl {
 
     this.audienceType = new SelectField($('#ga-remarketing-audience-type'));
 
+    this.liveApiCallToggle = $('#ga-live-api-call-toggle');
+
     this.remarketingForm = {
       name: $('#ga-remarketing-name'),
       description: $('#ga-remarketing-description'),
