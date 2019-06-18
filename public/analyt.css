@@ -1,0 +1,126 @@
+body {
+  font-family: 'Roboto', sans-serif;
+}
+
+.alert-icon {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+/*.live-api-call-toggle {
+  position: relative;
+  width: 100%;
+  top: 0px;
+}
+
+.live-api-call-toggle .form-group {
+  position: absolute;
+  top: -3rem;
+  right: 0rem;
+}*/
+
+.bd-placeholder-img {
+  font-size: 1.125rem;
+  text-anchor: middle;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+#loading-overlay {
+  display:flex;
+  justify-content:left;
+  align-items:left;
+  width:100%;
+  height:100%;
+  background-color: white;
+}
+
+.loading-spinner {
+  width:3em;
+  height:3em;
+}
+
+
+.brand-logo {
+  width: 2.6rem;
+  height: 2.6rem;
+  display: inline-block;
+  padding-bottom: 0.4rem;
+}
+
+.brand-title {
+  font-family: 'Lobster', cursive;
+}
+
+.toasts {
+  position: absolute;
+  top: 3rem;
+  right: 0;
+  margin: 10px
+}
+
+.select2-container {
+  width: 100% !important;
+}
+
+@media (min-width: 768px) {
+  .bd-placeholder-img-lg {
+    font-size: 3.5rem;
+  }
+}
+
+
+.google-button {
+  height: 40px;
+  border-width: 0;
+  background: #f0f0f0;
+  color: #737373;
+  border-radius: 5px;
+  white-space: nowrap;
+  box-shadow: 1px 1px 0px 1px rgba(0,0,0,0.05);
+  transition-property: background-color, box-shadow;
+  transition-duration: 150ms;
+  transition-timing-function: ease-in-out;
+  padding: 0;
+
+  &:focus,
+  &:hover {
+    box-shadow: 1px 4px 5px 1px rgba(0,0,0,0.1);
+  }
+
+  &:active {
+    background-color: #e5e5e5;
+    box-shadow: none;
+    transition-duration: 10ms;
+  }
+}
+
+.google-button__icon {
+  display: inline-block;
+  vertical-align: middle;
+  margin: 8px 0 8px 8px;
+  width: 18px;
+  height: 18px;
+  box-sizing: border-box;
+}
+
+.google-button__icon--plus {
+  width: 27px;
+}
+
+.google-button__text {
+  display: inline-block;
+  vertical-align: middle;
+  padding: 0 24px;
+  font-size: 14px;
+  font-weight: bold;
+  font-family: 'Roboto', arial, sans-serif;
+}
+
+// Boilerplate stuff
+
+button.google-button ~ button {
+  margin-left: 20px;
+}
