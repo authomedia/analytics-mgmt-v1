@@ -33,4 +33,4 @@ The `public/index.html` file contains a `<script src='bundle.js'>` tag, which me
 
 ## License
 
-[MIT](LICENSE).
+(c) 2019 Analyt Ltd.

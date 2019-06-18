@@ -5,6 +5,7 @@ var ui = {
   authButton: $('#auth-button'),
   loadingOverlay: $('#loading-overlay'),
   logoutButton: $('#logout-button'),
+  contentTitle: $('#content-title'),
   formControl: new FormControl(),
   notifications: {
     container: $('#toasts'),
@@ -17,6 +18,7 @@ var ui = {
   },
 
   loggedIn: function() {
+    // this.contentTitle.find('img').after('Remarketing Audiences');
     this.analyticsUi.attr('hidden', false);
     this.authButton.attr('hidden', true);
     this.loadingOverlay.attr('hidden', true);
@@ -24,6 +26,7 @@ var ui = {
   },
 
   loggedOut: function() {
+    // this.contentTitle.find('img').after('Log in');
     this.analyticsUi.attr('hidden', true);
     this.authButton.attr('hidden', false);
     this.loadingOverlay.attr('hidden', true);
