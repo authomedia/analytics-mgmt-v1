@@ -15,8 +15,11 @@ class FormControl {
 
     this.audienceType = new SelectField($('#ga-remarketing-audience-type'));
 
+    this.submitButtons = $('button[type=submit]');
+
     this.liveApiCallToggle = $('#ga-live-api-call-toggle');
 
+    // Build Remarketing Audiences Form Lookups
     this.remarketingForm = {
       name: $('#ga-remarketing-name'),
       audienceType: $('#ga-remarketing-audience-type'),
@@ -42,8 +45,15 @@ class FormControl {
       }
     }
 
+    // Bind Select2 elements
     $('.select2').select2({
       width: 'element'
+    });
+
+    // Change Submit Button colour when the API calls are active
+    this.liveApiCallToggle.on('change', (event) => {
+      let elem = $(event.currentTarget);
+      this.toggleSubmitButtonColor(elem);
     });
   }
 
@@ -64,6 +74,14 @@ class FormControl {
     $('.ga-remarketing-audience-type-state-based-tab a:first').tab('show');
 
     $('#ga-remarketing-audience-include-conditions').find('input, textarea').val(null);
+  }
+
+  toggleSubmitButtonColor(elem) {
+    if (elem.prop('checked')) {
+      this.submitButtons.addClass('btn-warning');
+    } else {
+      this.submitButtons.removeClass('btn-warning');
+    }
   }
 }
 
