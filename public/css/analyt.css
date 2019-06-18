@@ -2,46 +2,14 @@ body {
   font-family: 'Roboto', sans-serif;
 }
 
+.navbar-brand {
+  font-size: 1.3rem;
+}
+
 .alert-icon {
   width: 1.5rem;
   height: 1.5rem;
 }
-
-/*.live-api-call-toggle {
-  position: relative;
-  width: 100%;
-  top: 0px;
-}
-
-.live-api-call-toggle .form-group {
-  position: absolute;
-  top: -3rem;
-  right: 0rem;
-}*/
-
-.bd-placeholder-img {
-  font-size: 1.125rem;
-  text-anchor: middle;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-}
-
-#loading-overlay {
-  display:flex;
-  justify-content:left;
-  align-items:left;
-  width:100%;
-  height:100%;
-  background-color: white;
-}
-
-.loading-spinner {
-  width:3em;
-  height:3em;
-}
-
 
 .brand-logo {
   width: 2.6rem;
@@ -53,24 +21,6 @@ body {
 .brand-title {
   font-family: 'Lobster', cursive;
 }
-
-.toasts {
-  position: absolute;
-  top: 3rem;
-  right: 0;
-  margin: 10px
-}
-
-.select2-container {
-  width: 100% !important;
-}
-
-@media (min-width: 768px) {
-  .bd-placeholder-img-lg {
-    font-size: 3.5rem;
-  }
-}
-
 
 .google-button {
   height: 40px;
@@ -119,8 +69,31 @@ body {
   font-family: 'Roboto', arial, sans-serif;
 }
 
-// Boilerplate stuff
-
 button.google-button ~ button {
   margin-left: 20px;
+}
+
+#loading-overlay {
+  display:flex;
+  justify-content:left;
+  align-items:left;
+  width:100%;
+  height:100%;
+  background-color: white;
+}
+
+.loading-spinner {
+  width:3em;
+  height:3em;
+}
+
+.select2-container {
+  width: 100% !important;
+}
+
+.toasts {
+  position: absolute;
+  top: 3rem;
+  right: 0;
+  margin: 10px
 }
