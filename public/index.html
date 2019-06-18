@@ -36,7 +36,7 @@
           <div class="sidebar-sticky">
             <ul class="nav flex-column">
               <li class="nav-item">
-                <a class="nav-link active" href="#">
+                <a class="nav-link active" href="/index">
                   <span data-feather="home"></span>
                   Remarketing Audiences <span class="sr-only">(current)</span>
                 </a>
@@ -232,7 +232,12 @@
                     </div>
                   </div>
 
-                  <div class="col-sm-12 col-md-4">
+                  <div class="col-12 d-lg-none d-md-block" style="margin-bottom: .5rem;">
+                    <button type="submit" class="btn btn-warning">Create Audience</button>
+                    <hr />
+                  </div>
+
+                  <div class="col-md-12 col-lg-4">
                     <h5 class="query-output-title">Results</h5>
                     <div class="form-group">
                       <textarea cols="80" rows="20" id="query-output" class="form-control"></textarea>
@@ -240,12 +245,14 @@
                   </div>
                 </div>
 
-                <div class="row">
-                  <div class="col-2">
-                    <button type="submit" class="btn btn-primary">Create Audience</button>
+                <div class="row d-md-none d-lg-block">
+                  <div class="col-4">
+                    <button type="submit" class="btn btn-warning">Create Audience</button>
                   </div>
+
+                  <hr />
                 </div>
-                <hr />
+
               </form>
             </div>
           </div>
