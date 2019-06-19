@@ -138,15 +138,17 @@
                     <div id="ga-remarketing-audiences">
                       <h5>
                         <img src="/images/adminhome_remarketing.png">
-                        Remarketing Audiences
+                        Audience Definitions
                       </h5>
                       <div class="form-group">
-                        <input type="text" id="ga-remarketing-name" class="form-control" placeholder="Name" />
+                        <input type="text" id="ga-remarketing-name" class="form-control" placeholder="Audience Name" />
                       </div>
 
-                      <h6>Audience Definition</h6>
 
                       <div class="form-group">
+                        <label for="ga-remarketing-audience-type">Type</label>
+
+
                         <select type="text" id="ga-remarketing-audience-type" class="form-control">
                           <option value="SIMPLE">Simple Audience Type</option>
                           <option value="STATE_BASED">State Based Audience Type</option>
@@ -183,7 +185,7 @@
                           </div>
                           <div class="form-group">
                             <label for="ga-remarketing-include-condition-membership-duration-days">Membership Duration (days)</label>
-                            <input type="number" min="1" max="540" id="ga-remarketing-include-condition-membership-duration-days" class="form-control" />
+                            <input type="number" min="1" max="540" id="ga-remarketing-include-condition-membership-duration-days" class="form-control" placeholder="Between 1-540 days" />
                           </div>
 
                           <label for="ga-remarketing-include-condition-days-to-look-back">Look Back (days)</label>
