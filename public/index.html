@@ -16,16 +16,22 @@
     <!-- Custom styles for this template -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.7/css/select2.min.css" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css?family=Lobster|Roboto&display=swap" rel="stylesheet">
+    <link href="/css/open-iconic-bootstrap.css" rel="stylesheet">
     <link href="/css/dashboard.css" rel="stylesheet">
     <link href="/css/analyt.css" rel="stylesheet">
   </head>
   <body>
     <nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
-      <a class="navbar-brand col-sm-3 col-md-2 mr-0 brand-title" href="/">Analyt Analytics</a>
+      <a class="navbar-brand col-sm-3 col-md-2 mr-0 brand-title" href="/">
+        Analyt Analytics
+      </a>
 
       <ul class="navbar-nav px-3">
         <li class="nav-item text-nowrap">
-          <a class="nav-link" id="logout-button" href="#">Sign out</a>
+          <a class="nav-link" id="logout-button" href="#">
+            <span class="oi oi-account-logout"></span></span>
+            Sign out
+          </a>
         </li>
       </ul>
     </nav>
@@ -49,7 +55,7 @@
         <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
           <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
             <h1 class="h2 brand-title" id="content-title">
-              <img src="/images/analyt-logo.png" class="brand-logo" />
+              <img src="/images/analyt-logo.png" class="brand-logo" alt="Analyt">
               Remarketing Audiences
             </h1>
             <div class="btn-toolbar mb-2 mb-md-0">
@@ -87,28 +93,40 @@
               <form>
                 <div class="row">
                   <div class="col-md-6 col-lg-4">
-                    <h5>Select Accounts</h5>
+                    <h5>
+                      <img src="/images/adminhome_account_settings.png">
+                      Select Accounts
+                    </h5>
                     <div class="form-group">
                       <select id="ga-accounts" multiple="multiple" class="form-control" size="1">
                         <option value="">None</option>
                       </select>
                     </div>
 
-                    <h5>Select Properties</h5>
+                    <h5>
+                      <img src="/images/adminhome_property_settings.png">
+                      Select Properties
+                    </h5>
                     <div class="form-group">
                       <select id="ga-properties" multiple="multiple" class="form-control" size="1">
                         <option value="">None</option>
                       </select>
                     </div>
 
-                    <h5>Select Views/Profiles</h5>
+                    <h5>
+                      <img src="/images/adminhome_profile_settings.png">
+                      Select Views/Profiles
+                    </h5>
                     <div class="form-group">
                       <select id="ga-profiles" multiple="multiple" class="form-control" size="1">
                         <option value="">None</option>
                       </select>
                     </div>
 
-                    <h5>Select Ad Accounts</h5>
+                    <h5>
+                      <img src="/images/adminhome_link_adwords.png">
+                      Select Ad Accounts
+                    </h5>
                     <div class="form-group">
                       <select id="ga-ad-links" multiple="multiple" class="form-control" size="1">
                         <option value="">None</option>
@@ -118,7 +136,10 @@
 
                   <div class="col-md-6 col-lg-4">
                     <div id="ga-remarketing-audiences">
-                      <h5>Remarketing Audiences</h5>
+                      <h5>
+                        <img src="/images/adminhome_remarketing.png">
+                        Remarketing Audiences
+                      </h5>
                       <div class="form-group">
                         <input type="text" id="ga-remarketing-name" class="form-control" placeholder="Name" />
                       </div>
@@ -135,16 +156,19 @@
                       <ul class="nav nav-pills" id="ga-remarketing-audience-tab" role="tablist">
                         <li class="nav-item ga-remarketing-audience-type-simple-tab">
                           <a class="nav-link active" id="include-tab" data-toggle="tab" role="tab" href="#ga-remarketing-audience-include-conditions"  aria-controls="ga-remarketing-audience-include-conditions" aria-selected="true">
+                            <span class="oi oi-check"></span>
                             Include
                           </a>
                         </li>
                         <li class="nav-item ga-remarketing-audience-type-state-based-tab">
                           <a class="nav-link" id="sb-include-tab" data-toggle="tab" role="tab"  href="#ga-remarketing-audience-sb-include-conditions" aria-controls="ga-remarketing-audience-sb-include-conditions" aria-selected="false">
+                            <span class="oi oi-check"></span>
                             Include
                           </a>
                         </li>
                         <li class="nav-item ga-remarketing-audience-type-state-based-tab">
                           <a class="nav-link" id="sb-exclude-tab" data-toggle="tab" role="tab" href="#ga-remarketing-audience-sb-exclude-conditions" aria-controls="ga-remarketing-audience-sb-exclude-conditions" aria-selected="false">
+                            <span class="oi oi-x"></span>
                             Exclude
                           </a>
                         </li>
@@ -233,12 +257,15 @@
                   </div>
 
                   <div class="col-12 d-lg-none d-md-block" style="margin-bottom: .5rem;">
-                    <button type="submit" class="btn btn-primary">Create Audience</button>
+                    <button type="submit" class="btn btn-warning btn-lg">Create Audience</button>
                     <hr />
                   </div>
 
                   <div class="col-md-12 col-lg-4">
-                    <h5 class="query-output-title">Results</h5>
+                    <h5 class="query-output-title">
+                      <span class="oi oi-beaker"></span>
+                      Results
+                    </h5>
                     <div class="form-group">
                       <textarea cols="80" rows="20" id="query-output" class="form-control"></textarea>
                     </div>
@@ -247,7 +274,10 @@
 
                 <div class="row d-md-none d-lg-block">
                   <div class="col-4">
-                    <button type="submit" class="btn btn-primary">Create Audience</button>
+                    <button type="submit" class="btn btn-warning btn-lg">
+                      <span class="oi oi-aperture"></span>
+                      Create Audience
+                    </button>
                   </div>
 
                   <hr />

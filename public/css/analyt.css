@@ -12,8 +12,8 @@ body {
 }
 
 .brand-logo {
-  width: 2.6rem;
-  height: 2.6rem;
+  width: 2.2rem;
+  height: 2.3rem;
   display: inline-block;
   padding-bottom: 0.4rem;
 }
@@ -21,6 +21,31 @@ body {
 .brand-title {
   font-family: 'Lobster', cursive;
 }
+
+.custom-control-input:checked ~ .custom-control-label::before {
+  background-color: #28a745;
+  border-color: #28a745;
+}
+
+.navbar-brand > img {
+  height: 30px;
+}
+
+.navbar-brand > span {
+  display: none;
+}
+
+.nav-pills .nav-item > a {
+  font-size: 0.8rem;
+}
+
+/*.nav-pills .nav-item > a.active {
+  background-color: #17a2b8 !important;
+}
+
+.nav-pills .nav-item > a:not(.active) {
+  color: #17a2b8 !important;
+}*/
 
 .google-button {
   height: 40px;

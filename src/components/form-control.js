@@ -78,9 +78,11 @@ class FormControl {
 
   toggleSubmitButtonColor(elem) {
     if (elem.prop('checked')) {
-      this.submitButtons.addClass('btn-warning');
-    } else {
       this.submitButtons.removeClass('btn-warning');
+      this.submitButtons.addClass('btn-success');
+    } else {
+      this.submitButtons.addClass('btn-warning');
+      this.submitButtons.removeClass('btn-success');
     }
   }
 }
