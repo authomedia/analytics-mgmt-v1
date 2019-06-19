@@ -122,3 +122,16 @@ button.google-button ~ button {
   right: 0;
   margin: 10px
 }
+
+@media (max-width: 576px) {
+  .toasts {
+    top: 5.5rem;
+    left: 0rem;
+    position: fixed;
+    opacity: 1;
+  }
+
+  .toasts .toast {
+    max-width: 100%;
+  }
+}
