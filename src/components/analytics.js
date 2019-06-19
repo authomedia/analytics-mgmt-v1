@@ -407,8 +407,8 @@ class Analytics {
   includeConditionsIsValid(includeConditions) {
     return (
       includeConditions.segment.val() !== '' &&
-      includeConditions.daysToLookBack.val() >= 0 &&
-      (includeConditions.membershipDurationDays.val() > 0 && includeConditions.membershipDurationDays.val() <= 540)
+      parseInt(includeConditions.daysToLookBack.val()) >= 0 &&
+      (parseInt(includeConditions.membershipDurationDays.val()) > 0 && parseInt(includeConditions.membershipDurationDays.val()) <= 540)
     );
   }
 
