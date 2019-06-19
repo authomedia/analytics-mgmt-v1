@@ -95,7 +95,7 @@
                   <div class="col-md-6 col-lg-4">
                     <h5>
                       <img src="/images/adminhome_account_settings.png">
-                      Select Accounts
+                      Accounts
                     </h5>
                     <div class="form-group">
                       <select id="ga-accounts" multiple="multiple" class="form-control" size="1">
@@ -105,7 +105,7 @@
 
                     <h5>
                       <img src="/images/adminhome_property_settings.png">
-                      Select Properties
+                      Properties
                     </h5>
                     <div class="form-group">
                       <select id="ga-properties" multiple="multiple" class="form-control" size="1">
@@ -115,7 +115,7 @@
 
                     <h5>
                       <img src="/images/adminhome_profile_settings.png">
-                      Select Views/Profiles
+                      Views/Profiles
                     </h5>
                     <div class="form-group">
                       <select id="ga-profiles" multiple="multiple" class="form-control" size="1">
@@ -125,7 +125,7 @@
 
                     <h5>
                       <img src="/images/adminhome_link_adwords.png">
-                      Select Ad Accounts
+                      Ad Accounts
                     </h5>
                     <div class="form-group">
                       <select id="ga-ad-links" multiple="multiple" class="form-control" size="1">
@@ -179,7 +179,7 @@
                           <h6>Include Conditions</h6>
                           <div class="form-group">
                             <label for="ga-remarketing-include-condition-segment">Segment</label>
-                            <textarea id="ga-remarketing-include-condition-segment" class="form-control"></textarea>
+                            <textarea id="ga-remarketing-include-condition-segment" class="form-control" placeholder="Enter a segment expression e.g. users::condition::ga:browser==Chrome"></textarea>
                           </div>
                           <div class="form-group">
                             <label for="ga-remarketing-include-condition-membership-duration-days">Membership Duration (days)</label>
@@ -211,7 +211,7 @@
                           <h6>State Based Include Conditions</h6>
                           <div class="form-group">
                             <label for="ga-remarketing-sb-include-condition-segment">Segment</label>
-                            <textarea id="ga-remarketing-sb-include-condition-segment" class="form-control"></textarea>
+                            <textarea id="ga-remarketing-sb-include-condition-segment" class="form-control" placeholder="Enter a segment expression e.g. users::condition::ga:browser==Chrome"></textarea>
                           </div>
                           <div class="form-group">
                             <label for="ga-remarketing-sb-include-condition-membership-duration-days">Membership Duration (days)</label>
@@ -242,7 +242,7 @@
                           <h6>State Based Exclude Conditions</h6>
                           <div class="form-group">
                             <label for="ga-remarketing-sb-exclude-condition-segment">Segment</label>
-                            <textarea id="ga-remarketing-sb-exclude-condition-segment" class="form-control"></textarea>
+                            <textarea id="ga-remarketing-sb-exclude-condition-segment" class="form-control" placeholder="Enter a segment expression e.g. users::condition::ga:browser==Chrome"></textarea>
                           </div>
                           <div class="form-group">
                             <label for="ga-remarketing-sb-exclusion-duration">Exclusion Duration</label>
@@ -257,7 +257,10 @@
                   </div>
 
                   <div class="col-12 d-lg-none d-md-block" style="margin-bottom: .5rem;">
-                    <button type="submit" class="btn btn-warning btn-lg">Create Audience</button>
+                    <button type="submit" class="btn btn-warning btn-lg">
+                      <span class="oi oi-aperture"></span>
+                      Create Audience
+                    </button>
                     <hr />
                   </div>
 
@@ -267,7 +270,7 @@
                       Results
                     </h5>
                     <div class="form-group">
-                      <textarea cols="80" rows="20" id="query-output" class="form-control"></textarea>
+                      <textarea cols="80" rows="20" id="query-output" class="form-control" placeholder="Output will be displayed here" disabled></textarea>
                     </div>
                   </div>
                 </div>
