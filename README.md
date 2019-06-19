@@ -15,7 +15,7 @@ npm install
 ### Add your Google API Client ID
 
 * Copy the `.env.example` file to `.env`
-* Add your CLIENT_ID as generated in the [Google API Console](https://console.developers.google.com/flows/enableapi?apiid=analytics&credential=client_key)
+* Add your `CLIENT_ID` as generated in the [Google API Console](https://console.developers.google.com/flows/enableapi?apiid=analytics&credential=client_key)
 
 ## Building and running
 
