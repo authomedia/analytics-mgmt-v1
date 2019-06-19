@@ -39,6 +39,7 @@ class SelectField {
 
     this.field.select2({
       placeholder: 'None selected - pick some',
+      closeOnSelect: false
       // allowClear: true
     });
   }
