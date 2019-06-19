@@ -38,4 +38,4 @@ The `public/index.html` file contains a `<script src='/js/bundle.js'>` tag, whic
 
 ### Contributors
 
-* [Joey Connor](https://gitlab.com/authomedia)
+* [Joey Connor](https://github.com/authomedia)
