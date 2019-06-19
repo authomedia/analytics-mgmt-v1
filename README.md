@@ -29,8 +29,13 @@ npm install
 
 ### Developing
 
-The `public/index.html` file contains a `<script src='bundle.js'>` tag, which means we need to create `public/bundle.js`. The `rollup.config.js` file tells Rollup how to create this bundle, starting with `src/main.js` and including all its dependencies.
+The `public/index.html` file contains a `<script src='/js/bundle.js'>` tag, which means we need to create `public/js/bundle.js`. The `rollup.config.js` file tells Rollup how to create this bundle, starting with `src/main.js` and including all its dependencies.
 
 ## License
 
-(c) 2019 Analyt Ltd.
+&copy; 2019 Analyt Ltd.
+
+
+### Contributors
+
+* [Joey Connor](https://gitlab.com/authomedia)
