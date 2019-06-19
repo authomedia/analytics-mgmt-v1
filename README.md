@@ -33,7 +33,7 @@ The `public/index.html` file contains a `<script src='/js/bundle.js'>` tag, whic
 
 ## License
 
-&copy; 2019 Analyt Ltd.
+&copy; 2019 [Analyt Ltd](https://analyt.co.uk/).
 
 
 ### Contributors
