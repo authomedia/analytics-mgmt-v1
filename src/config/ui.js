@@ -1,4 +1,10 @@
 import FormControl from '../components/form-control';
+import Analytics from '../components/analytics'
+
+const analytics = new Analytics(
+  process.env.CLIENT_ID
+  [process.env.SCOPES]
+);
 
 var ui = {
   analyticsUi: $('#analytics-ui'),
@@ -6,7 +12,7 @@ var ui = {
   loadingOverlay: $('#loading-overlay'),
   logoutButton: $('#logout-button'),
   contentTitle: $('#content-title'),
-  formControl: new FormControl(),
+  formControl: new FormControl(analytics),
   notifications: {
     container: $('#toasts'),
     toast: $('.toast').clone(),

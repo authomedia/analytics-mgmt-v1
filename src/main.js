@@ -1,16 +1,14 @@
 import ui from './config/ui';
 
-import Analytics from './components/analytics'
-
 window.clientId = process.env.CLIENT_ID;
 window.scopes = [process.env.SCOPES];
 window.locale = process.env.LOCALE;
 
-var formControl = ui.formControl;
+const formControl = ui.formControl;
 
-window.formControl = formControl;
 
-var analytics  = new Analytics(clientId, scopes, formControl, locale);
+formControl.initAccountSelectionForm();
+formControl.initRemarketingForm();
 
 window.authorize = function(event) {
   var useImmediate = event ? false : true;
@@ -25,7 +23,7 @@ window.authorize = function(event) {
       ui.loggedOut();
     } else {
       ui.loggedIn()
-      analytics.queryAccounts();
+      formControl.accounts.init();
     }
   });
 }
