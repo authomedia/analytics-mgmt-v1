@@ -1,23 +1,33 @@
 import SelectField from './select-field';
+import AccountsField from './accounts-field';
+import PropertiesField from './properties-field';
+import ProfilesField from './profiles-field';
+import RemarketingAudiencesField from './remarketing-audiences-field';
+import LinkedViewsField from './linked-views-field';
+import AdLinksField from './ad-links-field';
+import LinkedAdAccountsField from './linked-ad-accounts-field';
+import ToggleField from './toggle-field';
 
 class FormControl {
-  constructor() {
+  constructor(analytics) {
+    this.analytics = analytics;
+
     this.debug = $('#query-output');
     this.form = $('#analytics-ui form');
 
-    this.accounts = new SelectField($('#ga-accounts'));
-    this.properties = new SelectField($('#ga-properties'));
-    this.profiles = new SelectField($('#ga-profiles'));
-    this.remarketingAudiences = new SelectField($('#ga-remarketing'));
-    this.linkedViews = new SelectField($('#ga-linked-views'));
-    this.adLinks = new SelectField($('#ga-ad-links'));
-    this.linkedAdAccounts = new SelectField($('#ga-linked-ad-accounts'));
+    this.accounts = new AccountsField($('#ga-accounts'), this);
+    this.properties = new PropertiesField($('#ga-properties'), this);
+    this.profiles = new ProfilesField($('#ga-profiles'), this);
+    this.remarketingAudiences = new RemarketingAudiencesField($('#ga-remarketing'), this);
+    this.linkedViews = new LinkedViewsField($('#ga-linked-views'), this);
+    this.adLinks = new AdLinksField($('#ga-ad-links'), this);
+    this.linkedAdAccounts = new LinkedAdAccountsField($('#ga-linked-ad-accounts'), this);
 
-    this.audienceType = new SelectField($('#ga-remarketing-audience-type'));
+    this.audienceType = new SelectField($('#ga-remarketing-audience-type'), this);
 
     this.submitButtons = $('button[type=submit]');
 
-    this.liveApiCallToggle = $('#ga-live-api-call-toggle');
+    this.liveApiCallToggle = new ToggleField($('#ga-live-api-call-toggle'), this);
 
     // Build Remarketing Audiences Form Lookups
     this.remarketingForm = {
@@ -49,13 +59,41 @@ class FormControl {
     $('.select2').select2({
       width: 'element'
     });
+  }
 
-    // Change Submit Button colour when the API calls are active
-    this.liveApiCallToggle.on('change', (event) => {
-      let elem = $(event.currentTarget);
-      this.toggleSubmitButtonColor(elem);
+  // Setup account UI
+  initAccountSelectionForm() {
+    this.showSimpleAudienceTypeTabs();
+  }
+
+  initRemarketingForm() {
+    this.audienceType.handleChange((i, elem) => {
+      elem = $(elem);
+
+      if (elem.val() == 'SIMPLE') {
+        this.showSimpleAudienceTypeTabs();
+      }
+
+      if (elem.val() == 'STATE_BASED') {
+        this.showStateBasedAudienceTypeTabs();
+      }
+
+    })
+
+    this.form.on('submit', (event) => {
+      event.preventDefault();
+
+      this.debug.html('');
+
+      this.profiles.field.find('option:selected').each((i, profile) => {
+        this.debug.append(`${$(profile).text()}\n`);
+        this.analytics.createRemarketingAudience($(profile));
+        this.debug.append(`\n\n`);
+      })
     });
   }
+
+
 
   showSimpleAudienceTypeTabs() {
     $('.ga-remarketing-audience-type-simple-tab').show();
@@ -76,15 +114,7 @@ class FormControl {
     $('#ga-remarketing-audience-include-conditions').find('input, textarea').val(null);
   }
 
-  toggleSubmitButtonColor(elem) {
-    if (elem.prop('checked')) {
-      this.submitButtons.removeClass('btn-warning');
-      this.submitButtons.addClass('btn-success');
-    } else {
-      this.submitButtons.addClass('btn-warning');
-      this.submitButtons.removeClass('btn-success');
-    }
-  }
+
 }
 
 export default FormControl;

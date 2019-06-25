@@ -1,9 +1,15 @@
 import ui from '../config/ui';
 import Utilities from './utilities';
 
-class SelectField {
-  constructor(field) {
+import ModelBase from '../models/model-base';
+
+
+class SelectField extends ModelBase {
+  constructor(field, formControl) {
+    super();
+
     this.field = field;
+    this.formControl = formControl;
   }
 
   val() {
@@ -23,6 +29,26 @@ class SelectField {
         }
       });
     })
+  }
+
+  handleResult(items, field, keyField, valueField, dataFields, errorMsg, options = {}) {
+    if (items && items.length) {
+      if (options.parentName) {
+        items.map((item) => {
+          item[keyField] = `${options.parentName} > ${item[keyField]}`;
+        });
+      }
+
+      this.populate(
+        items,
+        keyField,
+        valueField,
+        dataFields,
+        options
+      );
+    } else {
+      this.handleError(errorMsg);
+    }
   }
 
   empty(addNoneOption = true) {
