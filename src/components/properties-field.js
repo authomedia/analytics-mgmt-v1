@@ -26,7 +26,7 @@ class PropertiesField extends SelectField {
         this.handleResult(response)
       })
       .then(null, (err) => {
-        this.handleError(err);
+        this.handleError(`${accountName}: ${err}`);
     });
   }
 

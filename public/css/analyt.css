@@ -39,14 +39,6 @@ body {
   font-size: 0.8rem;
 }
 
-/*.nav-pills .nav-item > a.active {
-  background-color: #17a2b8 !important;
-}
-
-.nav-pills .nav-item > a:not(.active) {
-  color: #17a2b8 !important;
-}*/
-
 .google-button {
   height: 40px;
   border-width: 0;
@@ -121,6 +113,10 @@ button.google-button ~ button {
   top: 3rem;
   right: 0;
   margin: 10px
+}
+
+textarea.results-output {
+  font-size: 0.7rem;
 }
 
 @media (max-width: 576px) {

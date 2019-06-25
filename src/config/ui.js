@@ -13,6 +13,7 @@ var ui = {
   logoutButton: $('#logout-button'),
   contentTitle: $('#content-title'),
   formControl: new FormControl(analytics),
+
   notifications: {
     container: $('#toasts'),
     toast: $('.toast').clone(),
@@ -20,6 +21,16 @@ var ui = {
       animation: true,
       autohide: true,
       delay: 5000
+    }
+  },
+
+  modals: {
+    container: $('#modals'),
+    modal: $('#modals > .modal'),
+    defaults: {
+      primaryText: "Confirm submit",
+      secondaryText: "Cancel",
+      callback: (event) => {}
     }
   },
 

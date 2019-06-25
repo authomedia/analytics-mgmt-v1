@@ -6,13 +6,22 @@ import RemarketingAudiencesField from './remarketing-audiences-field';
 import LinkedViewsField from './linked-views-field';
 import AdLinksField from './ad-links-field';
 import LinkedAdAccountsField from './linked-ad-accounts-field';
-import ToggleField from './toggle-field';
+import LiveApiToggleField from './live-api-toggle-field';
+import AudienceTypeField from './audience-type-field';
+
+import Modal from './modal';
 
 class FormControl {
   constructor(analytics) {
     this.analytics = analytics;
 
+    this.modal = new Modal();
+
     this.debug = $('#query-output');
+    this.logger = $('#logger-output');
+
+    this.loggerClear = $('#logger-clear');
+
     this.form = $('#analytics-ui form');
 
     this.accounts = new AccountsField($('#ga-accounts'), this);
@@ -23,11 +32,10 @@ class FormControl {
     this.adLinks = new AdLinksField($('#ga-ad-links'), this);
     this.linkedAdAccounts = new LinkedAdAccountsField($('#ga-linked-ad-accounts'), this);
 
-    this.audienceType = new SelectField($('#ga-remarketing-audience-type'), this);
+    this.audienceType = new AudienceTypeField($('#ga-remarketing-audience-type'), this);
+    this.liveApiCallToggle = new LiveApiToggleField($('#ga-live-api-call-toggle'), this);
 
     this.submitButtons = $('button[type=submit]');
-
-    this.liveApiCallToggle = new ToggleField($('#ga-live-api-call-toggle'), this);
 
     // Build Remarketing Audiences Form Lookups
     this.remarketingForm = {
@@ -59,61 +67,64 @@ class FormControl {
     $('.select2').select2({
       width: 'element'
     });
+
+    this.initLoggerClearButton();
   }
 
-  // Setup account UI
-  initAccountSelectionForm() {
-    this.showSimpleAudienceTypeTabs();
+  initLoggerClearButton() {
+    this.loggerClear.on('click', (event) => {
+      event.preventDefault();
+      this.logger.empty();
+    })
   }
 
   initRemarketingForm() {
-    this.audienceType.handleChange((i, elem) => {
-      elem = $(elem);
-
-      if (elem.val() == 'SIMPLE') {
-        this.showSimpleAudienceTypeTabs();
-      }
-
-      if (elem.val() == 'STATE_BASED') {
-        this.showStateBasedAudienceTypeTabs();
-      }
-
-    })
-
     this.form.on('submit', (event) => {
       event.preventDefault();
 
       this.debug.html('');
 
-      this.profiles.field.find('option:selected').each((i, profile) => {
-        this.debug.append(`${$(profile).text()}\n`);
-        this.analytics.createRemarketingAudience($(profile));
-        this.debug.append(`\n\n`);
+      this.showConfirmModal(() => {
+        this.profiles.field.find('option:selected').each((i, profile) => {
+          this.debug.append(`${$(profile).text()}\n`);
+          this.analytics.createRemarketingAudience($(profile));
+          this.debug.append(`\n\n`);
+        })
       })
     });
   }
 
-
-
-  showSimpleAudienceTypeTabs() {
-    $('.ga-remarketing-audience-type-simple-tab').show();
-    $('.ga-remarketing-audience-type-state-based-tab').hide();
-
-    $('.ga-remarketing-audience-type-simple-tab a:first').tab('show');
-
-    $('#ga-remarketing-audience-sb-include-conditions, #ga-remarketing-audience-sb-exclude-conditions').find('input, textarea').val(null);
-
+  showConfirmModal(callback) {
+    this.modal.showModal(
+      this.analytics.translate.analytics.modals.remarketingAudienceModalTitle,
+      `<p>${this.getAudienceInfo()}</p>`,
+      {
+        primaryText: this.analytics.translate.analytics.modals.primaryText,
+        callback: (event) => {
+          callback();
+        }
+      }
+    )
   }
 
-  showStateBasedAudienceTypeTabs() {
-    $('.ga-remarketing-audience-type-simple-tab').hide();
-    $('.ga-remarketing-audience-type-state-based-tab').show();
+  getAudienceInfo() {
+    let numProfiles = this.profiles.field.find('option:selected').length;
+    let numDays = this.getMembershipDurationDays().length;
+    let totalAudiences = numDays * numProfiles;
 
-    $('.ga-remarketing-audience-type-state-based-tab a:first').tab('show');
-
-    $('#ga-remarketing-audience-include-conditions').find('input, textarea').val(null);
+    return `Will create ${numDays} audiences for ${numProfiles} selected views/profiles (total ${totalAudiences})`;
   }
 
+  // TODO: Refactor this as it is duplicated in here and the RemarketingAudiences class!
+  getMembershipDurationDays() {
+    let membershipDurationDays = this.remarketingForm.audienceDefinition.includeConditions.membershipDurationDays.val().split(',');
+    if (this.audienceType.val() == "STATE_BASED") {
+      membershipDurationDays = this.remarketingForm.stateBasedAudienceDefinition.includeConditions.membershipDurationDays.val().split(',');
+    }
+    return membershipDurationDays.map((days) => {
+      return days.trim();
+    }).filter(Boolean);
+  }
 
 }
 
