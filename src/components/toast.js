@@ -13,7 +13,7 @@ class Toast {
   }
 
   showMessage(title, message, level='info') {
-    Logger[level](`${title}: ${message}`);
+    Logger[level](title, message.clone(true));
     this.showToast(title, message);
   }
 
