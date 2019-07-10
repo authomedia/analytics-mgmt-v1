@@ -1,4 +1,5 @@
 import ui from '../config/ui';
+import Logger from 'js-logger';
 
 class Toast {
   constructor() {
@@ -11,14 +12,14 @@ class Toast {
     $('.toast').remove();
   }
 
-  showMessage(title, message) {
+  showMessage(title, message, level='info') {
+    Logger[level](`${title}: ${message}`);
     this.showToast(title, message);
   }
 
   showToast(title, message, toastOptions) {
-    var opts = $.extend(ui.notifications.defaults, toastOptions);
-
-    var toast = ui.notifications.toast.clone().toast(opts)
+    let opts = $.extend(ui.notifications.defaults, toastOptions);
+    let toast = ui.notifications.toast.clone().toast(opts);
 
     ui.notifications.container.append(toast);
 

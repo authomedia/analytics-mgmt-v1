@@ -8,6 +8,9 @@ var i18n = {
       remarketingSuccess: "Created remarketing campaign"
     },
     analytics: {
+      modals: {
+        remarketingAudienceModalTitle: 'Create Remarketing Audience'
+      },
       errors: {
         noAccounts: 'No accounts found for this user.',
         noProperties: 'No properties found for this user.',

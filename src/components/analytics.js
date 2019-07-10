@@ -9,6 +9,8 @@ class Analytics extends ModelBase {
   constructor(clientId, scopes) {
     super();
 
+    this.translate = i18n[process.env.LOCALE];
+
     this.clientId = clientId;
     this.scopes = scopes;
   }

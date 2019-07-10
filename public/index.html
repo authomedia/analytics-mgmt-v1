@@ -60,7 +60,7 @@
             </h1>
             <div class="btn-toolbar mb-2 mb-md-0">
               <div class="btn-group mr-2">
-                <div class="custom-control custom-switch">
+                <div class="custom-control custom-switch" data-toggle="tooltip" data-placement="bottom" title="Enable WRITE calls to the Google Management API">
                   <input class="custom-control-input form-control-lg" type="checkbox" value="1" id="ga-live-api-call-toggle">
                   <label class="custom-control-label" for="ga-live-api-call-toggle">
                     Live API Call?
@@ -141,13 +141,16 @@
                         Audience Definitions
                       </h5>
                       <div class="form-group">
-                        <input type="text" id="ga-remarketing-name" class="form-control" placeholder="Audience Name" />
+                        <div class="input-group">
+                          <input type="text" id="ga-remarketing-name" class="form-control" placeholder="Audience Name" />
+                          <div class="input-group-append" data-toggle="tooltip" data-placement="bottom" title="Membership duration in days will be appended to the audience name automatically">
+                            <span class="input-group-text" id="basic-addon2">- N days</span>
+                          </div>
+                        </div>
                       </div>
-
 
                       <div class="form-group">
                         <label for="ga-remarketing-audience-type">Type</label>
-
 
                         <select type="text" id="ga-remarketing-audience-type" class="form-control">
                           <option value="SIMPLE">Simple Audience Type</option>
@@ -267,12 +270,32 @@
                   </div>
 
                   <div class="col-md-12 col-lg-4">
-                    <h5 class="query-output-title">
-                      <span class="oi oi-beaker"></span>
-                      Results
-                    </h5>
-                    <div class="form-group">
-                      <textarea cols="80" rows="20" id="query-output" class="form-control" placeholder="Output will be displayed here" disabled></textarea>
+                    <nav>
+                      <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                        <a class="nav-item nav-link active" id="results-tab" data-toggle="tab" role="tab" href="#results-tab-pane"  aria-controls="results-tab" aria-selected="true">
+                          <span class="oi oi-beaker"></span>
+                          Results
+                        </a>
+                        <a class="nav-item nav-link" id="logger-tab" data-toggle="tab" role="tab" href="#logger-tab-pane"  aria-controls="logger-tab" aria-selected="true">
+                          <span class="oi oi-list"></span>
+                          Logs
+                        </a>
+                      </div>
+                    </nav>
+
+                    <div class="tab-content" id="results-tab-content">
+                      <div id="results-tab-pane" role="tabpanel" class="tab-pane fade show active">
+                        <div class="form-group">
+                          <textarea cols="80" rows="20" id="query-output" class="results-output form-control" placeholder="Debug output will be displayed here" disabled></textarea>
+                        </div>
+                      </div>
+
+                      <div id="logger-tab-pane" role="tabpanel" class="tab-pane fade">
+                        <div class="form-group">
+                          <textarea cols="80" rows="20" id="logger-output" class="results-output form-control" placeholder="Log output will be displayed here" disabled></textarea>
+                          <button class="btn btn-sm btn-link" id="logger-clear">Clear log</button>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -309,6 +332,26 @@
         </div>
       </div>
 
+      <div id="modals">
+        <div class="modal" tabindex="-1" role="dialog">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-primary"></button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal"></button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>

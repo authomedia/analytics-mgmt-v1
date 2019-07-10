@@ -1,6 +1,6 @@
 import ModelBase from '../models/model-base';
 
-class ToggleField extends ModelBase {
+class LiveApiToggleField extends ModelBase {
   constructor(field, formControl) {
     super();
     this.field = field;
@@ -27,4 +27,4 @@ class ToggleField extends ModelBase {
   }
 }
 
-export default ToggleField;
+export default LiveApiToggleField;

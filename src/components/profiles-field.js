@@ -5,16 +5,6 @@ class ProfilesField extends SelectField {
     super(field, formControl);
 
     this.className = 'Profiles';
-
-    // this.handleChange((i, elem) => {
-    //   this.formControl.profiles.empty();
-    //   this.formControl.remarketingAudiences.empty();
-    //   this.formControl.linkedAdAccounts.empty();
-    //   this.formControl.adLinks.empty();
-
-    //   this.formControl.profiles.init($(elem).data('accountId'), $(elem).val(), $(elem).text());
-    //   this.formControl.adLinks.init($(elem).data('accountId'), $(elem).val(), $(elem).text());
-    // });
   }
 
   init(accountId, propertyId, propertyName) {
@@ -27,7 +17,7 @@ class ProfilesField extends SelectField {
       this.handleResult(response)
     })
     .then(null, (err) => {
-      this.handleError(err);
+      this.handleError(`${propertyName}: ${err}`);
     });
   }
 

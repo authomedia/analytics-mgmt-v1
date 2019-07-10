@@ -16,7 +16,6 @@ class RemarketingAudience extends ModelBase {
 
   create() {
     let audiences = this.toJson();
-    console.log(audiences);
 
     this.debugJson(audiences);
 
@@ -24,13 +23,19 @@ class RemarketingAudience extends ModelBase {
       audiences.forEach((audience) => {
         let request = gapi.client.analytics.management.remarketingAudience.insert(audience);
         request.execute((response) => {
-          console.log(response);
-
           // Handle the response.
           if (response.code && response.message) {
-            this.handleError(response.message);
+            this.handleError(`
+              ${audience.webPropertyId} >
+              ${audience.resource.name}:
+              ${response.message}
+            `);
           } else {
-            this.handleSuccess(this.translate.messages.remarketingSuccess);
+            this.handleSuccess(`
+              ${audience.webPropertyId} >
+              ${audience.resource.name}:
+              ${this.translate.messages.remarketingSuccess}
+            `);
           }
           this.debug($(this.profile).text());
           this.debugJson(response);
@@ -70,6 +75,7 @@ class RemarketingAudience extends ModelBase {
 
     } else {
       this.handleError(this.translate.analytics.errors.remarketingAudiencesValidationError);
+      return [];
     }
   }
 

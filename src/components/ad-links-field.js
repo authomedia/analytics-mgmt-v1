@@ -17,9 +17,9 @@ class AdLinksField extends SelectField {
       this.handleResult(response)
     })
     .then(null, (err) => {
-      this.handleError(err);
+      this.handleError(`${propertyName}: ${err}`);
     });
-   }
+  }
 
   handleResult(response) {
     super.handleResult(
@@ -28,7 +28,7 @@ class AdLinksField extends SelectField {
       'name',
       'id',
       [],
-      this.translate.analytics.errors[`no${this.className}`],
+      `${response.parentName}: ${this.translate.analytics.errors[`no${this.className}`]}`,
       {
         parentName: response.parentName
       }
