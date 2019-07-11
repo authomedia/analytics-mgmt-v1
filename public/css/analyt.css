@@ -139,12 +139,20 @@ div.results-output > ul > li *{
   padding-right: 0.2rem;
 }
 
+span.logger-message {
+  font-weight: bold;
+}
+
 span.logger-info {
-  color: dodgerblue;
+  color: #007bff;
 }
 
 span.logger-warn {
-  color: red;
+  color: #ffc107;
+}
+
+span.logger-error {
+  color: #dc3545;
 }
 
 @media (max-width: 576px) {

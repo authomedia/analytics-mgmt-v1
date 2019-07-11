@@ -10,12 +10,16 @@ class ModelBase {
     this.modal = new Modal();
   }
 
-  handleError(errorMsg) {
-    this.toast.showMessage(this.translate.titles.error, errorMsg, 'warn');
+  handleSuccess(message, action = {}) {
+    this.toast.showMessage(this.translate.titles.success, message, action, 'info')
   }
 
-  handleSuccess(message) {
-    this.toast.showMessage(this.translate.titles.success, message, 'info')
+  handleWarn(message, action = {}) {
+    this.toast.showMessage(this.translate.titles.error, message, action, 'warn');
+  }
+
+  handleError(message, action = {}) {
+    this.toast.showMessage(this.translate.titles.error, message, action, 'error');
   }
 
   debug(string) {

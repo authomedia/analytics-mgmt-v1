@@ -39,25 +39,27 @@ class RemarketingAudience extends ModelBase {
             ${response.message}
         `);
 
-        let retryLink = $('<a>');
-        retryLink.html('[RETRY]');
-        retryLink.attr('href', '#');
-        retryLink.data('request', request);
-        retryLink.on('click', (event) => {
-          let elem = $(event.currentTarget);
-          this.executeRequest(request, audience);
-        });
+        let options = {
+          action: {
+            text: 'RETRY',
+            icon: 'reload',
+            click: (event) => {
+              let elem = $(event.currentTarget);
+              this.executeRequest(request, audience);
+            }
+          }
+        }
 
-        let messageHtml = $(`<span>${message}</span>`).append(retryLink);
-
-        this.handleError(messageHtml);
+        this.handleError(message, options);
 
       } else {
-        this.handleSuccess(dedent(`
+        let message = dedent(`
           ${audience.webPropertyId} >
             ${audience.resource.name}:
             ${this.translate.messages.remarketingSuccess}
-        `));
+        `);
+
+        this.handleSuccess(message);
       }
       this.debug($(this.profile).text());
       this.debugJson(response);
