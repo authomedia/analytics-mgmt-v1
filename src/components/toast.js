@@ -13,7 +13,7 @@ class Toast {
   }
 
   showMessage(title, message, options = {}, level='info') {
-    Logger[level](title, message, options); // must clone with events!
+    Logger[level](title, message, options);
     this.showToast(title, message, options);
   }
 

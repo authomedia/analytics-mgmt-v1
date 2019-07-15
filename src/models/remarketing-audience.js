@@ -210,7 +210,6 @@ class RemarketingAudience extends ModelBase {
   excludeConditionsIsValid(excludeConditions) {
     return (excludeConditions.segment.val() !== '');
   }
-
 }
 
 export default RemarketingAudience;
