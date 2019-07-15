@@ -1,69 +1,22 @@
-import moment from 'moment';
-
 import ui from './config/ui';
 import Logger from 'js-logger';
+import customLogger from './components/custom-logger';
 
-
+// Setup Logger
 Logger.useDefaults();
+Logger.setHandler(customLogger);
 
-Logger.setHandler(function (messages, context) {
-  messages = Array.from(messages);
-  let options = {};
-  let action;
-
-  //console.log(messages);
-  if (typeof(messages[messages.length -1]) == 'object') {
-    options = messages.pop();
-    action = options['action'] || {};
-  }
-
-  let logMessage = $('<li></li>');
-
-  let content = [
-    $(`<span class='logger-timestamp'>${moment().format('hh:mm:ss')}</span>`),
-    $(`<span class='logger-${context.level.name.toLowerCase()}'>${context.level.name}:</span>`)
-  ];
-
-  $.each(messages, (i, message) => {
-    content.push($(`<span class='logger-message'>${message}</span>`));
-  });
-
-  if (action !== undefined) {
-    let link = $('<a>');
-    let linkContent = []
-
-    if (action.icon) {
-      linkContent.push($(`<span class="oi oi-${action.icon}"></span>`));
-    }
-
-    if (action.text) {
-      linkContent.push(action.text);
-    }
-
-    link.html(linkContent);
-    link.attr('href', '#');
-    link.on('click', action.click)
-    content.push(link);
-  }
-
-  ui.formControl.logger.append($(logMessage.html(content)));
-
-  let loggerContainer = ui.formControl.logger.parent()
-  loggerContainer.prop('scrollTop', loggerContainer.prop('scrollHeight'));
-
-  Logger.createDefaultHandler()(messages, context);
-});
-
+// Setup GA Client
 window.clientId = process.env.CLIENT_ID;
 window.scopes = [process.env.SCOPES];
 window.locale = process.env.LOCALE;
 
+// Setup form control
 const formControl = ui.formControl;
-
-
 formControl.audienceType.init();
 formControl.initRemarketingForm();
 
+// Setup GA client callbacks
 window.authorize = function(event) {
   var useImmediate = event ? false : true;
   var authData = {
@@ -82,8 +35,9 @@ window.authorize = function(event) {
   });
 }
 
+// Initialize app
 $(function() {
-  Logger.error("App initialized");
+  Logger.info('App initialized');
 
   $('[data-toggle="tooltip"]').tooltip();
 
