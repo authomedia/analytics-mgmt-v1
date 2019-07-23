@@ -115,8 +115,44 @@ button.google-button ~ button {
   margin: 10px
 }
 
-textarea.results-output {
+textarea.results-output,
+div.results-output {
   font-size: 0.7rem;
+  min-height: 350px;
+  overflow: scroll;
+}
+
+div.results-output {
+  background-color: #e9ecef;
+}
+
+div.results-output > ul {
+  margin: 0px;
+  padding: 0px;
+}
+
+div.results-output > ul > li {
+  list-style: none;
+}
+
+div.results-output > ul > li *{
+  padding-right: 0.2rem;
+}
+
+span.logger-message {
+  font-weight: bold;
+}
+
+span.logger-info {
+  color: #007bff;
+}
+
+span.logger-warn {
+  color: #ffc107;
+}
+
+span.logger-error {
+  color: #dc3545;
 }
 
 @media (max-width: 576px) {

@@ -1,23 +1,22 @@
 import ui from './config/ui';
 import Logger from 'js-logger';
+import customLogger from './components/custom-logger';
 
+// Setup Logger
 Logger.useDefaults();
+Logger.setHandler(customLogger);
 
-Logger.setHandler(function (messages, context) {
-  ui.formControl.logger.append(`${context.level.name}: ${messages[0]}\n`);
-  Logger.createDefaultHandler()(messages,context);
-});
-
+// Setup GA Client
 window.clientId = process.env.CLIENT_ID;
 window.scopes = [process.env.SCOPES];
 window.locale = process.env.LOCALE;
 
+// Setup form control
 const formControl = ui.formControl;
-
-
 formControl.audienceType.init();
 formControl.initRemarketingForm();
 
+// Setup GA client callbacks
 window.authorize = function(event) {
   var useImmediate = event ? false : true;
   var authData = {
@@ -36,6 +35,7 @@ window.authorize = function(event) {
   });
 }
 
+// Initialize app
 $(function() {
   Logger.info('App initialized');
 

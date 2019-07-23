@@ -18,7 +18,7 @@ class FormControl {
     this.modal = new Modal();
 
     this.debug = $('#query-output');
-    this.logger = $('#logger-output');
+    this.logger = $('#logger-output > ul');
 
     this.loggerClear = $('#logger-clear');
 

@@ -9,7 +9,8 @@ var i18n = {
     },
     analytics: {
       modals: {
-        remarketingAudienceModalTitle: 'Create Remarketing Audience'
+        remarketingAudienceModalTitle: 'Create Remarketing Audience',
+        primaryText: 'Create Audiences'
       },
       errors: {
         noAccounts: 'No accounts found for this user.',

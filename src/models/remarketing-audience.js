@@ -1,3 +1,5 @@
+import dedent from 'dedent';
+
 import ModelBase from './model-base';
 import ui from '../config/ui';
 
@@ -22,27 +24,47 @@ class RemarketingAudience extends ModelBase {
     if (this.formControl.liveApiCallToggle.isChecked()) {
       audiences.forEach((audience) => {
         let request = gapi.client.analytics.management.remarketingAudience.insert(audience);
-        request.execute((response) => {
-          // Handle the response.
-          if (response.code && response.message) {
-            this.handleError(`
-              ${audience.webPropertyId} >
-              ${audience.resource.name}:
-              ${response.message}
-            `);
-          } else {
-            this.handleSuccess(`
-              ${audience.webPropertyId} >
-              ${audience.resource.name}:
-              ${this.translate.messages.remarketingSuccess}
-            `);
-          }
-          this.debug($(this.profile).text());
-          this.debugJson(response);
-          this.debug(`\n\n`);
-        });
+        this.executeRequest(request, audience);
       })
     }
+  }
+
+  executeRequest(request, audience) {
+    request.execute((response) => {
+      // Handle the response.
+      if (response.code && response.message) {
+        let message = dedent(`
+          ${audience.webPropertyId} >
+            ${audience.resource.name}:
+            ${response.message}
+        `);
+
+        let options = {
+          action: {
+            text: 'RETRY',
+            icon: 'reload',
+            click: (event) => {
+              let elem = $(event.currentTarget);
+              this.executeRequest(request, audience);
+            }
+          }
+        }
+
+        this.handleError(message, options);
+
+      } else {
+        let message = dedent(`
+          ${audience.webPropertyId} >
+            ${audience.resource.name}:
+            ${this.translate.messages.remarketingSuccess}
+        `);
+
+        this.handleSuccess(message);
+      }
+      this.debug($(this.profile).text());
+      this.debugJson(response);
+      this.debug(`\n\n`);
+    });
   }
 
   filterAdAccounts() {
@@ -165,9 +187,10 @@ class RemarketingAudience extends ModelBase {
 
   buildLinkedAccounts(linkedAdAccounts, profile){
     return $.makeArray(linkedAdAccounts.map((i, linkedAdAccount) => {
+      let account = linkedAdAccount.adWordsAccounts[0];
       return {
-        linkedAccountId: linkedAdAccount.adWordsAccounts[0].customerId,
-        type: 'ADWORDS_LINKS',
+        linkedAccountId: account.customerId,
+        type: account.type ? account.type : 'ADWORDS_LINKS',
       }
     }));
   }
