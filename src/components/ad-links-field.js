@@ -8,18 +8,17 @@ class AdLinksField extends SelectField {
   }
 
   init(accountId, propertyId, propertyName) {
-    gapi.client.analytics.management.webPropertyAdWordsLinks.list({
-      'accountId': accountId,
-      'webPropertyId': propertyId
-    })
-    .then((response) => {
-      response.result.parentName = propertyName;
-      this.handleResult(response.result)
-    })
-    .then(null, (err) => {
-      this.handleError(`${propertyName}: ${err}`);
-    });
-
+    // gapi.client.analytics.management.webPropertyAdWordsLinks.list({
+    //   'accountId': accountId,
+    //   'webPropertyId': propertyId
+    // })
+    // .then((response) => {
+    //   response.result.parentName = propertyName;
+    //   this.handleResult(response.result)
+    // })
+    // .then(null, (err) => {
+    //   this.handleError(`${propertyName}: ${err}`);
+    // });
 
     gapi.client.analytics.management.remarketingAudience.list({
       'accountId': accountId,
@@ -91,8 +90,6 @@ class AdLinksField extends SelectField {
   }
 
   handleAdAccounts(linkedAdAccounts) {
-    console.log(linkedAdAccounts);
-
     super.handleResult(
       linkedAdAccounts.items,
       this.field,
