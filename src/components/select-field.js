@@ -80,7 +80,7 @@ class SelectField extends ModelBase {
         this.populateOption(key, value, keyField, valueField, dataFields);
       }
     });
-    this.sortOptions();
+    // this.sortOptions();
     this.setSize();
   }
 
