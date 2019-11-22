@@ -80,7 +80,28 @@ class SelectField extends ModelBase {
         this.populateOption(key, value, keyField, valueField, dataFields);
       }
     });
+    // this.sortOptions();
     this.setSize();
+  }
+
+  sortOptions() {
+    let opts = this.field.find('option')
+    opts.sort((a, b) => {
+      let labelA = $(a).text().toUpperCase(); // ignore upper and lowercase
+      let labelB = $(b).text().toUpperCase(); // ignore upper and lowercase
+      if (labelA < labelB) {
+        return -1;
+      }
+      if (labelA > labelB) {
+        return 1;
+      }
+
+      return 0;
+    });
+
+
+
+    console.log(opts);
   }
 
   populateNoneOption() {

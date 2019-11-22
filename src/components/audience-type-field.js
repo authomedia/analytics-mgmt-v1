@@ -25,14 +25,18 @@ class AudienceTypeField extends SelectField {
     $('.ga-remarketing-audience-type-simple-tab').show();
     $('.ga-remarketing-audience-type-state-based-tab').hide();
     $('.ga-remarketing-audience-type-simple-tab a:first').tab('show');
-    $('#ga-remarketing-audience-sb-include-conditions, #ga-remarketing-audience-sb-exclude-conditions').find('input, textarea').val(null);
+    $('#ga-remarketing-audience-include-conditions').show();
+    $('#ga-remarketing-audience-sb-include-conditions').hide();
+    $('#ga-remarketing-audience-sb-include-conditions, #ga-remarketing-audience-sb-exclude-conditions').find('input, select, textarea').val(null);
   }
 
   showStateBasedAudienceTypeTabs() {
     $('.ga-remarketing-audience-type-simple-tab').hide();
     $('.ga-remarketing-audience-type-state-based-tab').show();
     $('.ga-remarketing-audience-type-state-based-tab a:first').tab('show');
-    $('#ga-remarketing-audience-include-conditions').find('input, textarea').val(null);
+    $('#ga-remarketing-audience-sb-include-conditions').show();
+    $('#ga-remarketing-audience-include-conditions').hide();
+    $('#ga-remarketing-audience-include-conditions').find('input, select, textarea').val(null);
   }
 }
 

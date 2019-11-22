@@ -20,7 +20,6 @@ class AdLinksField extends SelectField {
       this.handleError(`${propertyName}: ${err}`);
     });
 
-
     gapi.client.analytics.management.remarketingAudience.list({
       'accountId': accountId,
       'webPropertyId': propertyId,
@@ -91,8 +90,6 @@ class AdLinksField extends SelectField {
   }
 
   handleAdAccounts(linkedAdAccounts) {
-    console.log(linkedAdAccounts);
-
     super.handleResult(
       linkedAdAccounts.items,
       this.field,
