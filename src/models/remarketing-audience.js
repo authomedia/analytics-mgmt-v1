@@ -8,6 +8,7 @@ class RemarketingAudience extends ModelBase {
     super();
 
     this.maxRetries = 3;
+    this.initialWaitTime = 1000; // ms
     this.backoffMultiplier = 2;
 
     this.formControl = ui.formControl;
@@ -53,12 +54,12 @@ class RemarketingAudience extends ModelBase {
           }
         }
 
-        if (response.code == 429 || response.code == 403 || response.code == 400) {
+        if (response.code == 429 || response.code == 403) {
           if (retries < this.maxRetries) {
             retries = retries += 1;
 
             let errorType;
-            let waitTime = 1000 * (this.backoffMultiplier * retries);
+            let waitTime = this.initialWaitTime * (this.backoffMultiplier * retries);
 
             switch (response.code ) {
               case 429:
