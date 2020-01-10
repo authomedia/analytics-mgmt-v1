@@ -7,6 +7,8 @@ class RemarketingAudience extends ModelBase {
   constructor(profile) {
     super();
 
+    this.maxRetries = 3;
+
     this.formControl = ui.formControl;
 
     this.profile = $(profile).data('item');
@@ -29,7 +31,7 @@ class RemarketingAudience extends ModelBase {
     }
   }
 
-  executeRequest(request, audience) {
+  executeRequest(request, audience, retries = 0) {
     request.execute((response) => {
       // Handle the response.
       if (response.code && response.message) {
@@ -50,8 +52,28 @@ class RemarketingAudience extends ModelBase {
           }
         }
 
-        // handle backoff/retry in case of API quota limit...
+        if (response.code == 429 || response.code == 403) {
+          if (retries < this.maxRetries) {
+            let errorType;
+            retries = retries += 1;
+            switch (response.code ) {
+              case 429:
+                errorType = 'API Rate Limit';
+                break;
+              case 403:
+                errorType = 'Authoriazation Error';
+                break;
+              case 400:
+                errorType = 'Generic Error';
+                break;
+            }
 
+            this.handleError(`${errorType}: ${message}`, options);
+            this.executeRequest(request, audience, retries);
+          }
+        }
+
+        // Always handle final errors with a toast message
         this.handleError(message, options);
 
       } else {
