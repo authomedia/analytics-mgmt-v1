@@ -8,6 +8,7 @@ class RemarketingAudience extends ModelBase {
     super();
 
     this.maxRetries = 3;
+    this.backoffMultiplier = 2;
 
     this.formControl = ui.formControl;
 
@@ -52,10 +53,13 @@ class RemarketingAudience extends ModelBase {
           }
         }
 
-        if (response.code == 429 || response.code == 403) {
+        if (response.code == 429 || response.code == 403 || response.code == 400) {
           if (retries < this.maxRetries) {
-            let errorType;
             retries = retries += 1;
+
+            let errorType;
+            let waitTime = 1000 * (this.backoffMultiplier * retries);
+
             switch (response.code ) {
               case 429:
                 errorType = 'API Rate Limit';
@@ -69,7 +73,12 @@ class RemarketingAudience extends ModelBase {
             }
 
             this.handleError(`${errorType}: ${message}`, options);
-            this.executeRequest(request, audience, retries);
+
+            // Wait for backoff time before trying again
+            console.log(`Waiting for ${waitTime / 1000}s before continuing`);
+            setTimeout(() => {
+              this.executeRequest(request, audience, retries);
+            }, waitTime);
           }
         }
 
