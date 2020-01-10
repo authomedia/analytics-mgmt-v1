@@ -7,9 +7,9 @@ class RemarketingAudience extends ModelBase {
   constructor(profile) {
     super();
 
-    this.maxRetries = 3;
+    // Retry behaviour
+    this.maxRetries = 5;
     this.initialWaitTime = 1000; // ms
-    this.backoffMultiplier = 2;
 
     this.formControl = ui.formControl;
 
@@ -54,34 +54,14 @@ class RemarketingAudience extends ModelBase {
           }
         }
 
-        if (response.code == 429 || response.code == 403) {
-          if (retries < this.maxRetries) {
-            retries = retries += 1;
-
-            let errorType;
-            let waitTime = this.initialWaitTime * (this.backoffMultiplier * retries);
-
-            switch (response.code ) {
-              case 429:
-                errorType = 'API Rate Limit';
-                break;
-              case 403:
-                errorType = 'Authoriazation Error';
-                break;
-              case 400:
-                errorType = 'Generic Error';
-                break;
-            }
-
-            this.handleError(`${errorType}: ${message}`, options);
-
-            // Wait for backoff time before trying again
-            console.log(`Waiting for ${waitTime / 1000}s before continuing`);
-            setTimeout(() => {
-              this.executeRequest(request, audience, retries);
-            }, waitTime);
-          }
-        }
+        this.handleRetry(
+          response,
+          request,
+          audience,
+          message,
+          options,
+          retries
+        );
 
         // Always handle final errors with a toast message
         this.handleError(message, options);
@@ -99,6 +79,25 @@ class RemarketingAudience extends ModelBase {
       this.debugJson(response);
       this.debug(`\n\n`);
     });
+  }
+
+  handleRetry(response, request, audience, message, options, retries = 0) {
+    if (response.code == 429 || response.code == 403 || response.code == 400) {
+      if (retries < this.maxRetries) {
+
+        let waitTime = (Math.pow(2, retries) + Math.random());
+
+        retries = retries += 1;
+
+        this.handleError(`${response.error.data[0].reason}: ${message}`, options);
+
+        // Wait for backoff time before trying again
+        console.log(`Waiting for ${waitTime}s before continuing`);
+        setTimeout(() => {
+          this.executeRequest(request, audience, retries);
+        }, waitTime * 1000);
+      }
+    }
   }
 
   filterAdAccounts() {
