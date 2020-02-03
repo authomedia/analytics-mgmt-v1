@@ -11,6 +11,7 @@ class ProfilesField extends SelectField {
   }
 
   init(accountId, propertyId, propertyName) {
+    super.init();
     gapi.client.analytics.management.profiles.list({
       'accountId': accountId,
       'webPropertyId': propertyId

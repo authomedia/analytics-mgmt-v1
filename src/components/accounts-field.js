@@ -18,6 +18,7 @@ class AccountsField extends SelectField {
   }
 
   init() {
+    super.init();
     gapi.client.load('analytics', 'v3').then(() => {
       gapi.client.analytics.management.accounts.list().then((response) => {
         this.handleResult(response);

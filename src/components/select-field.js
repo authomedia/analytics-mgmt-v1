@@ -15,6 +15,10 @@ class SelectField extends ModelBase {
     this.selectedLabel = $(`span#${this.fieldID}-selected`);
   }
 
+  init() {
+    this.setSelectedLabel('');
+  }
+
   val() {
     return this.field.val();
   }
@@ -59,6 +63,7 @@ class SelectField extends ModelBase {
   empty(addNoneOption = true) {
     this.field.empty()
     this.field.val(null);
+    this.setSelectedLabel('');
     // if (addNoneOption) {
     //   this.populateNoneOption();
     // }
@@ -122,10 +127,6 @@ class SelectField extends ModelBase {
 
       return 0;
     });
-
-
-
-    console.log(opts);
   }
 
   populateNoneOption() {
