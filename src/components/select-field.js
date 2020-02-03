@@ -19,6 +19,7 @@ class SelectField extends ModelBase {
     this.selectAll = $(`a#${this.fieldID}-select-all`);
 
     this.initSelectAll();
+    this.initShiftSelect();
   }
 
   init() {
@@ -26,6 +27,7 @@ class SelectField extends ModelBase {
     this.setFieldVal([]);
   }
 
+  // Allow select all behaviour
   initSelectAll() {
     this.selectAll.data('mode', 'all');
     this.selectAll.on('click', (e) => {
@@ -39,6 +41,36 @@ class SelectField extends ModelBase {
         });
       }
       this.setFieldVal(ids);
+    });
+  }
+
+  // Allow multi-select on Select2 fields
+  initShiftSelect() {
+    let countShift = 0;
+    let shiftArray = [];
+    let optionsSelected = [];
+
+    this.field.on('select2:select', (e) => {
+      console.log(e.params.originalEvent.shiftKey);
+      if (e.params.originalEvent.shiftKey) {
+        shiftArray.push(e.params.data.element.index);
+        countShift++;
+      }
+      if (countShift == 2){
+        optionsSelected = $.map(this.field.children('option:selected'), (elem, i) => {
+          return $(elem).data().item.id;
+        })
+        for (let i = shiftArray[0]; i <= shiftArray[1]; i++) {
+          let optionValue = this.field.children('option').eq(i).val();
+          optionsSelected.push(optionValue);
+        }
+        this.field.val(optionsSelected);
+        this.field.trigger('change');
+        this.field.select2('close');
+        countShift = 0;
+        shiftArray = [];
+        optionsSelected = [];
+      }
     });
   }
 
@@ -102,7 +134,6 @@ class SelectField extends ModelBase {
   }
 
   empty(addNoneOption = true) {
-    console.log(this.fieldID, 'empty')
     this.field.empty()
     this.field.val(null);
     this.setSelectedLabel('');

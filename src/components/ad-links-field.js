@@ -41,8 +41,8 @@ class AdLinksField extends SelectField {
       response.result.items.filter((item, i) => {
         return item.linkedAdAccounts.map((linkedAdAccount, i) => {
           if (!seenAdAccounts.includes(linkedAdAccount.linkedAccountId)) {
-            if (linkedAdAccount.type == "ANALYTICS") {
-              // // Currently, do nothing with ANALYTICS type
+            if (linkedAdAccount.type == "ANALYTICS" || linkedAdAccount.type == "ADWORDS_LINKS") {
+              // // Currently, do nothing with ANALYTICS or ADWORDS_LINKS type
               // console.log(linkedAdAccount);
               // linkedAdAccount.label = `${linkedAdAccount.type} > ${linkedAdAccount.webPropertyId}`;
               // linkedAdAccount.linkedAccountId = linkedAdAccount.webPropertyId; // FIXME: HACK ALERT!!
