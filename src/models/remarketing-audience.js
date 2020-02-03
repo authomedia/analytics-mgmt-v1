@@ -7,6 +7,10 @@ class RemarketingAudience extends ModelBase {
   constructor(profile) {
     super();
 
+    // Retry behaviour
+    this.maxRetries = 5;
+    this.initialWaitTime = 1000; // ms
+
     this.formControl = ui.formControl;
 
     this.profile = $(profile).data('item');
@@ -29,7 +33,7 @@ class RemarketingAudience extends ModelBase {
     }
   }
 
-  executeRequest(request, audience) {
+  executeRequest(request, audience, retries = 0) {
     request.execute((response) => {
       // Handle the response.
       if (response.code && response.message) {
@@ -50,6 +54,16 @@ class RemarketingAudience extends ModelBase {
           }
         }
 
+        this.handleRetry(
+          response,
+          request,
+          audience,
+          message,
+          options,
+          retries
+        );
+
+        // Always handle final errors with a toast message
         this.handleError(message, options);
 
       } else {
@@ -65,6 +79,25 @@ class RemarketingAudience extends ModelBase {
       this.debugJson(response);
       this.debug(`\n\n`);
     });
+  }
+
+  handleRetry(response, request, audience, message, options, retries = 0) {
+    if (response.code == 429 || response.code == 403 || response.code == 400) {
+      if (retries < this.maxRetries) {
+
+        let waitTime = (Math.pow(2, retries) + Math.random());
+
+        retries = retries += 1;
+
+        this.handleError(`${response.error.data[0].reason}: ${message}`, options);
+
+        // Wait for backoff time before trying again
+        console.log(`Waiting for ${waitTime}s before continuing`);
+        setTimeout(() => {
+          this.executeRequest(request, audience, retries);
+        }, waitTime * 1000);
+      }
+    }
   }
 
   filterAdAccounts() {
