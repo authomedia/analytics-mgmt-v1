@@ -5,6 +5,9 @@ class AdLinksField extends SelectField {
     super(field, formControl);
 
     this.className = 'AdLinks';
+
+    // Initialize with empty callback for n of n selected behaviour
+    this.handleChange((i, elem) => { });
   }
 
   init(accountId, propertyId, propertyName) {

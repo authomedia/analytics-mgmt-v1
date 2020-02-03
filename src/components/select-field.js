@@ -10,6 +10,9 @@ class SelectField extends ModelBase {
 
     this.field = field;
     this.formControl = formControl;
+
+    this.fieldID = this.field.prop('id');
+    this.selectedLabel = $(`span#${this.fieldID}-selected`);
   }
 
   val() {
@@ -22,6 +25,8 @@ class SelectField extends ModelBase {
 
   handleChange(callback) {
     this.field.on('change', () => {
+      this.prepareSelectedLabel();
+
       $.each(this.field.children('option:selected'), (i, elem) => {
         ui.formControl.debug.html('');
         if ($(elem).text() !== 'None') {
@@ -68,6 +73,25 @@ class SelectField extends ModelBase {
       closeOnSelect: false
       // allowClear: true
     });
+  }
+
+  prepareSelectedLabel() {
+    // Get number of items and number selected
+    const total = this.field.children();
+    const selected = this.field.children('option:selected');
+
+    // Clear existing label
+    this.setSelectedLabel('');
+
+    const label = selected.length ? `${selected.length} of ${total.length} selected` : '';
+
+    this.setSelectedLabel(label);
+  }
+
+  setSelectedLabel(text) {
+    if (this.selectedLabel.length) {
+      this.selectedLabel.html(text);
+    }
   }
 
   populate(items, keyField, valueField, dataFields = [], options = {}) {
