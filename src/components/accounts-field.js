@@ -13,7 +13,9 @@ class AccountsField extends SelectField {
       this.formControl.linkedAdAccounts.empty();
       this.formControl.adLinks.empty();
 
-      this.formControl.properties.init($(elem).val(), $(elem).text());
+      if (elem) {
+        this.formControl.properties.init($(elem).val(), $(elem).text());
+      }
     });
   }
 

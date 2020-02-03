@@ -1,5 +1,6 @@
 import ui from '../config/ui';
 import Utilities from './utilities';
+import i18n from '../config/i18n';
 
 import ModelBase from '../models/model-base';
 
@@ -8,15 +9,37 @@ class SelectField extends ModelBase {
   constructor(field, formControl) {
     super();
 
+    this.translate = i18n[process.env.LOCALE];
+
     this.field = field;
     this.formControl = formControl;
 
     this.fieldID = this.field.prop('id');
     this.selectedLabel = $(`span#${this.fieldID}-selected`);
+    this.selectAll = $(`a#${this.fieldID}-select-all`);
+
+    this.initSelectAll();
   }
 
   init() {
     this.setSelectedLabel('');
+    this.setFieldVal([]);
+  }
+
+  initSelectAll() {
+    this.selectAll.data('mode', 'all');
+    this.selectAll.on('click', (e) => {
+      let options = [];
+      let ids = [];
+
+      if (this.selectAll.data('mode') == 'all') {
+        options = this.field.children('option');
+        ids = $.map(options, (elem, i) => {
+          return $(elem).data().item.id;
+        });
+      }
+      this.setFieldVal(ids);
+    });
   }
 
   val() {
@@ -30,14 +53,32 @@ class SelectField extends ModelBase {
   handleChange(callback) {
     this.field.on('change', () => {
       this.prepareSelectedLabel();
+      ui.formControl.debug.html('');
 
-      $.each(this.field.children('option:selected'), (i, elem) => {
-        ui.formControl.debug.html('');
-        if ($(elem).text() !== 'None') {
-          callback(i, elem);
-        }
-      });
+      const selected = this.field.children('option:selected');
+      if (selected.length) {
+        $.each(selected, (i, elem) => {
+          if ($(elem).text() !== 'None') {
+            callback(i, elem);
+          }
+        });
+      } else {
+        callback(0, null);
+      }
     })
+  }
+
+  setFieldVal(ids = []) {
+    this.field.val(ids);
+    this.field.trigger('change');
+
+    if (ids.length) {
+      this.selectAll.data('mode', 'none');
+      this.selectAll.html(this.translate.select.none);
+    } else {
+      this.selectAll.data('mode', 'all');
+      this.selectAll.html(this.translate.select.all);
+    }
   }
 
   handleResult(items, field, keyField, valueField, dataFields, errorMsg, options = {}) {
@@ -61,12 +102,12 @@ class SelectField extends ModelBase {
   }
 
   empty(addNoneOption = true) {
+    console.log(this.fieldID, 'empty')
     this.field.empty()
     this.field.val(null);
     this.setSelectedLabel('');
-    // if (addNoneOption) {
-    //   this.populateNoneOption();
-    // }
+    this.selectAll.data('mode', 'all');
+    this.selectAll.html(this.translate.select.all);
     this.setSize();
   }
 

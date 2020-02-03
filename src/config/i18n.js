@@ -22,6 +22,10 @@ var i18n = {
         noLinkedAdAccounts: 'No linked ad accounts found for this remarketing audience',
         remarketingAudiencesValidationError: 'There is a problem with your remarketing audience settings. Please check!'
       }
+    },
+    select: {
+      all: 'Select all',
+      none: 'Select none'
     }
   }
 }

@@ -12,12 +12,15 @@ class PropertiesField extends SelectField {
       this.formControl.linkedAdAccounts.empty();
       this.formControl.adLinks.empty();
 
-      this.formControl.profiles.init($(elem).data('accountId'), $(elem).val(), $(elem).text());
-      this.formControl.adLinks.init($(elem).data('accountId'), $(elem).val(), $(elem).text());
+      if (elem) {
+        this.formControl.profiles.init($(elem).data('accountId'), $(elem).val(), $(elem).text());
+        this.formControl.adLinks.init($(elem).data('accountId'), $(elem).val(), $(elem).text());
+      }
     });
   }
 
   init(accountId, accountName) {
+    super.init();
     gapi.client.analytics.management.webproperties.list({
       'accountId': accountId
     })
