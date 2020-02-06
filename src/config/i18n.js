@@ -26,6 +26,12 @@ var i18n = {
     select: {
       all: 'Select all',
       none: 'Select none'
+    },
+    validations: {
+      range: '%s should be between %s and %s',
+      inclusion: '%s should include one of the the following: %s',
+      length: '%s should be between %s and %s in length',
+      matches: '%s should include one of %s'
     }
   }
 }

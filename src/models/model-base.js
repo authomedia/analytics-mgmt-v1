@@ -1,10 +1,12 @@
+import EventEmitter from 'events';
 import i18n from '../config/i18n';
 import Toast from '../components/toast';
 import Modal from '../components/modal';
 import ui from '../config/ui';
 
-class ModelBase {
+class ModelBase extends EventEmitter {
   constructor(locale) {
+    super();
     this.translate = i18n[process.env.LOCALE];
     this.toast = new Toast();
     this.modal = new Modal();
