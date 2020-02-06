@@ -51,7 +51,6 @@ class SelectField extends ModelBase {
     let optionsSelected = [];
 
     this.field.on('select2:select', (e) => {
-      console.log(e.params.originalEvent.shiftKey);
       if (e.params.originalEvent.shiftKey) {
         shiftArray.push(e.params.data.element.index);
         countShift++;
