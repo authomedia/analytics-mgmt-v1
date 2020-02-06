@@ -8,7 +8,6 @@ const customLogger = function (messages, context) {
   let options = {};
   let action;
 
-  //console.log(messages);
   if (typeof(messages[messages.length -1]) == 'object') {
     options = messages.pop();
     action = options['action'] || {};

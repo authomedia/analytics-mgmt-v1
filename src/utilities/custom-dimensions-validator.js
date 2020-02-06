@@ -3,7 +3,6 @@ import Validator from './validator';
 import { translate } from './translate';
 import util from 'util';
 
-
 class CustomDimensionsValidator extends Validator {
   constructor() {
     super()
@@ -14,7 +13,7 @@ class CustomDimensionsValidator extends Validator {
         validate: this.validateRange,
         message: translate('validations.range', ['Index']),
         min: 1,
-        max: 26
+        max: 20 // TODO: 200 for A360 accounts - how do we differentiate?
       },
       name: {
         validate: this.validateLength,

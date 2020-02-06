@@ -107,8 +107,6 @@ class AdLinksField extends SelectField {
   }
 
   handleResult(result) {
-    console.log(result);
-
     super.handleResult(
       result.items,
       this.field,

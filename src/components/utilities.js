@@ -24,8 +24,6 @@ class Utilities {
         });
         return obj;
       } else {
-        console.log(typeof row);
-        console.log(row);
         return row
       }
     });

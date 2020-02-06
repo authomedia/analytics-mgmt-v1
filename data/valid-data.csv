@@ -2,3 +2,4 @@ index,name,scope,active
 1,foo,HIT,1
 2,bar,SESSION,1
 3,baz,USER,0
+4,boz,PRODUCT,1

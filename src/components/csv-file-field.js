@@ -25,7 +25,7 @@ class CsvFileField extends FileField {
       });
 
       parser.on('end', () => {
-        this.handleSuccess('Imported CSV data successfully');
+        // this.handleSuccess('Loaded CSV data successfully');
         this.emit('end', output);
       });
 

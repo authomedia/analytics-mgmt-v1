@@ -30,8 +30,8 @@ class CustomDimensionsPage extends Page {
     });
 
     db.customDimensions.toArray((data) => {
-      console.log(data);
       data.unshift(['index','name', 'scope', 'active']);
+      this.currentData = data;
       this.updateTable(data);
       ui.loggedIn();
     })
@@ -39,12 +39,10 @@ class CustomDimensionsPage extends Page {
 
     this.customDimensionsFileField.on('end', (data) => {
       if (this.customDimensionsValidator.validate(data)) {
-        this.updateTable(data);
+        this.currentData = data;
+        this.updateTable();
         this.enableButton(true, () => {
           this.updateDatabase(data).then(() => {
-            db.customDimensions.each((item) => {
-              console.log(item);
-            });
             this.enableButton(false);
           });
         });
@@ -58,15 +56,13 @@ class CustomDimensionsPage extends Page {
 
 
   updateTable(data) {
-    this.tableGenerator.setData(data);
+    this.tableGenerator.setData(this.currentData);
     this.tableGenerator.generateTable(this.wrapper)
   }
 
   async updateDatabase(data) {
     const dbData = Utilities.mapRows(data[0], data.slice(1, data.length))
-    console.log(dbData);
-    var ids = await db.customDimensions.bulkPut(dbData);
-    console.log("Got ids", ids);
+    return await db.customDimensions.bulkPut(dbData);
   }
 
   enableButton(active, callback ) {
@@ -85,6 +81,6 @@ class CustomDimensionsPage extends Page {
 
 export default () => {
   $(function() {
-    const page = new CustomDimensionsPage();
+    new CustomDimensionsPage();
   });
 }
