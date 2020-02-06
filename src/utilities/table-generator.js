@@ -1,4 +1,5 @@
 import TableBuilder from 'table-builder'
+import Utilities from '../components/utilities';
 
 import ModelBase from '../models/model-base';
 
@@ -18,12 +19,13 @@ class TableGenerator extends ModelBase {
       $(target).html('');
       return;
     }
+
     try {
       const headerRow = this.data[0];
-      const headers = this.mapHeaders(headerRow)
+      const headers = Utilities.mapHeaders(headerRow)
 
       let dataRows = this.data.slice(1, this.data.length);
-      dataRows = this.mapRows(headerRow, dataRows);
+      dataRows = Utilities.mapRows(headerRow, dataRows);
 
       const csvTable = new TableBuilder({ class: 'table'})
                             .setHeaders(headers)
@@ -31,28 +33,8 @@ class TableGenerator extends ModelBase {
 
       $(target).html(csvTable.render());
     } catch (e) {
-      this.handleError(e.message);
+     this.handleError(e.message);
     }
-  }
-
-  mapRows(headers, rows) {
-    return rows.map((row, i) => {
-      let obj = {};
-
-      row.map((col, j) => {
-        obj[headers[j].toString()] = col;
-      });
-
-      return obj;
-    });
-  }
-
-  mapHeaders(headers) {
-    let obj = {};
-    headers.map((col, i) => {
-      obj[col] = col;
-    });
-    return obj
   }
 }
 

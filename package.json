@@ -17,7 +17,9 @@
     "serve": "^10.1.2",
     "table-builder": "^2.1.1"
   },
-  "dependencies": {},
+  "dependencies": {
+    "dexie": "^2.0.4"
+  },
   "scripts": {
     "build": "rollup -c",
     "watch": "rollup -c -w",
