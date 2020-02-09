@@ -1,15 +1,16 @@
 import bsCustomFileInput from 'bs-custom-file-input'
-import CsvFileField from '../components/fields/csv-file-field';
-import CustomDimensionsValidator from '../utilities/custom-dimensions-validator';
-import Page from './page';
-import TableGenerator from '../utilities/table-generator';
-import Utilities from '../components/utilities';
-import ui from '../config/ui';
 
-import db from '../models/db';
+import CsvFileField from '../../components/fields/csv-file-field';
+import CustomDimensionsValidator from '../../utilities/custom-dimensions-validator';
+import Page from '../page';
+import TableGenerator from '../../utilities/table-generator';
+import Utilities from '../../components/utilities';
+
+import ui from '../../config/ui';
+import db from '../../models/db';
 
 
-class CustomDimensionsPage extends Page {
+class CustomDimensionsUploadPage extends Page {
   constructor() {
     super()
 
@@ -81,6 +82,6 @@ class CustomDimensionsPage extends Page {
 
 export default () => {
   $(function() {
-    new CustomDimensionsPage();
+    new CustomDimensionsUploadPage();
   });
 }
