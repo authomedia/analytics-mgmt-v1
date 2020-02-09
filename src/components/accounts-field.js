@@ -1,21 +1,17 @@
 import SelectField from './select-field';
+import events from '../config/events';
 
 class AccountsField extends SelectField {
-  constructor(field, formControl) {
+  constructor(field, formControl, callback) {
     super(field, formControl);
 
     this.className = 'Accounts';
 
     this.handleChange((i, elem) => {
-      this.formControl.properties.empty();
-      this.formControl.profiles.empty();
-      this.formControl.remarketingAudiences.empty();
-      this.formControl.linkedAdAccounts.empty();
-      this.formControl.adLinks.empty();
-
-      if (elem) {
-        this.formControl.properties.init($(elem).val(), $(elem).text());
-      }
+      this.formControl.emit(events.FIELDS.ACCOUNTS.CHANGE, {
+        i: i,
+        elem: elem
+      });
     });
   }
 

@@ -1,10 +1,4 @@
-import FormControl from '../components/form-control';
-import Analytics from '../components/analytics'
-
-const analytics = new Analytics(
-  process.env.CLIENT_ID
-  [process.env.SCOPES]
-);
+import Modal from '../components/modal';
 
 var ui = {
   analyticsUi: $('#analytics-ui'),
@@ -12,7 +6,13 @@ var ui = {
   loadingOverlay: $('#loading-overlay'),
   logoutButton: $('#logout-button'),
   contentTitle: $('#content-title'),
-  formControl: new FormControl(analytics),
+
+  modal: {}, // initialized during init()
+
+  debug: $('#query-output'),
+  logger: $('#logger-output > ul'),
+
+  loggerClear: $('#logger-clear'),
 
   notifications: {
     container: $('#toasts'),
@@ -34,6 +34,38 @@ var ui = {
     }
   },
 
+  init: function() {
+    this.modal = new Modal(this);
+    this.initLoggerClearButton();
+    this.initTooltips();
+    this.initLogoutButton();
+    this.initGoogleAuthButton();
+  },
+
+  initLoggerClearButton() {
+    this.loggerClear.on('click', (event) => {
+      event.preventDefault();
+      this.logger.empty();
+    })
+  },
+
+  initTooltips: function() {
+    $('[data-toggle="tooltip"]').tooltip();
+  },
+
+  initGoogleAuthButton: function() {
+    // Add an event listener to the 'auth-button'.
+    this.authButton.on('click', window.authorize);
+  },
+
+  initLogoutButton: function() {
+    // Add event listener to logout
+    this.logoutButton.on('click', () => {
+      gapi.auth.signOut()
+      this.loggedOut();
+    });
+  },
+
   loggedIn: function() {
     // this.contentTitle.find('img').after('Remarketing Audiences');
     this.analyticsUi.attr('hidden', false);
@@ -51,5 +83,8 @@ var ui = {
   }
 }
 
+$(function() {
+  ui.init()
+});
 
 export default ui;

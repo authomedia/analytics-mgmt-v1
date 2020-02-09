@@ -48,13 +48,13 @@
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link active" href="/custom-dimensions.html">
+                <a class="nav-link" href="/custom-dimensions.html">
                   <span data-feather="home"></span>
                   Custom Dimensions Editor
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="/custom-dimensions/audit.html">
+                <a class="nav-link active" href="/custom-dimensions/audit.html">
                   <span data-feather="home"></span>
                   Custom Dimensions Audit
                 </a>
@@ -68,18 +68,17 @@
           <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
             <h1 class="h2 brand-title" id="content-title">
               <img src="/images/analyt-logo.png" class="brand-logo" alt="Analyt">
-              Custom Dimensions
+              Custom Dimensions - Audit
             </h1>
 
             <div class="btn-toolbar mb-2 mb-md-0">
               <div class="btn-group mr-2">
                 <button type="submit" class="btn btn-warning" id="custom-dimensions-update-button" disabled>
                   <span class="oi oi-aperture"></span>
-                  Update Custom Dimensions
+                  Save Custom Dimensions
                 </button>
               </div>
             </div>
-
           </div>
 
           <div id="loading-overlay">
@@ -105,13 +104,49 @@
               <form>
                 <div class="row">
                   <div class="col-md-6 col-lg-8">
-                    <div class="form-group">
-                      <div class="custom-file">
-                        <input type="file" class="custom-file-input" id="custom-dimensions-csv" accept=".csv" />
-                        <label for="custom-dimensions-csv" class="custom-file-label">Upload Custom Dimensions</label>
+                   <div class="row">
+                      <div class="col-7">
+                        <h5>
+                          <img src="/images/adminhome_account_settings.png">
+                          Accounts
+                          <span id="ga-accounts-selected" class="badge  badge-secondary"></span>
+                        </h5>
+                      </div>
+                      <div class="col-5">
+                        <ul class="nav justify-content-end">
+                          <li class="nav-item">
+                            <a id="ga-accounts-select-all" class="nav-link active" href="#">Select all</a>
+                          </li>
+                        </ul>
                       </div>
                     </div>
-                    <div id="custom-dimensions-table-wrapper"></div>
+                    <div class="form-group">
+                      <select id="ga-accounts" multiple="multiple" class="form-control" size="1">
+                        <option value="">None</option>
+                      </select>
+                    </div>
+
+                    <div class="row">
+                      <div class="col-7">
+                        <h5>
+                          <img src="/images/adminhome_property_settings.png">
+                          Properties
+                          <span id="ga-properties-selected" class="badge badge-secondary"></span>
+                        </h5>
+                      </div>
+                      <div class="col-5">
+                        <ul class="nav justify-content-end">
+                          <li class="nav-item">
+                            <a id="ga-properties-select-all" class="nav-link active" href="#">Select all</a>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <select id="ga-properties" multiple="multiple" class="form-control" size="1">
+                        <option value="">None</option>
+                      </select>
+                    </div>
                   </div>
 
                   <div class="col-md-12 col-lg-4">
@@ -203,3 +238,4 @@
     <script src="https://apis.google.com/js/client.js?onload=authorize"></script>
   </body>
 </html>
+udit.html

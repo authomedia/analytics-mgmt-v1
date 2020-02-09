@@ -1,17 +1,18 @@
-import ui from '../config/ui';
 import Logger from 'js-logger';
 
 class Modal {
-  constructor() {  }
+  constructor(ui) {
+    this.ui = ui;
+  }
 
   showModal(title, body, modalOptions) {
-    let opts = $.extend(ui.modals.defaults, modalOptions);
+    let opts = $.extend(this.ui.modals.defaults, modalOptions);
 
-    this.modal = ui.modals.modal
+    this.modal = this.ui.modals.modal
 
     this.modal.modal(opts);
 
-    ui.modals.container.append(this.modal);
+    this.ui.modals.container.append(this.modal);
 
     this.modal.find('.modal-title').html(title);
     this.modal.find('.modal-body').html(body);

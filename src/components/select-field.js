@@ -84,7 +84,7 @@ class SelectField extends ModelBase {
   handleChange(callback) {
     this.field.on('change', () => {
       this.prepareSelectedLabel();
-      ui.formControl.debug.html('');
+      ui.debug.html('');
 
       const selected = this.field.children('option:selected');
       if (selected.length) {

@@ -1,3 +1,5 @@
+import EventEmitter from 'events';
+
 import SelectField from './select-field';
 import AccountsField from './accounts-field';
 import PropertiesField from './properties-field';
@@ -8,24 +10,38 @@ import AdLinksField from './ad-links-field';
 import LinkedAdAccountsField from './linked-ad-accounts-field';
 import LiveApiToggleField from './live-api-toggle-field';
 import AudienceTypeField from './audience-type-field';
+import Analytics from '../components/analytics'
 
-import Modal from './modal';
+import events from '../config/events';
+import ui from '../config/ui';
 
-class FormControl {
-  constructor(analytics) {
+const analytics = new Analytics(
+  process.env.CLIENT_ID
+  [process.env.SCOPES]
+);
+
+class FormControl extends EventEmitter {
+  constructor() {
+    super();
+
     this.analytics = analytics;
-
-    this.modal = new Modal();
-
-    this.debug = $('#query-output');
-    this.logger = $('#logger-output > ul');
-
-    this.loggerClear = $('#logger-clear');
 
     this.form = $('#analytics-ui form');
 
     this.accounts = new AccountsField($('#ga-accounts'), this);
+    this.on(events.FIELDS.ACCOUNTS.CHANGE, (event) => {
+      if (event.elem) {
+        this.properties.init($(event.elem).val(), $(event.elem).text());
+      }
+    });
+
     this.properties = new PropertiesField($('#ga-properties'), this);
+    this.on(events.FIELDS.PROPERTIES.CHANGE, (event) => {
+      if (event.elem) {
+        this.profiles.init($(event.elem).data('accountId'), $(event.elem).val(), $(event.elem).text());
+        this.adLinks.init($(event.elem).data('accountId'), $(event.elem).val(), $(event.elem).text());
+      }
+    })
     this.profiles = new ProfilesField($('#ga-profiles'), this);
     this.remarketingAudiences = new RemarketingAudiencesField($('#ga-remarketing'), this);
     this.linkedViews = new LinkedViewsField($('#ga-linked-views'), this);
@@ -67,35 +83,26 @@ class FormControl {
     $('.select2').select2({
       width: 'element'
     });
-
-    this.initLoggerClearButton();
-  }
-
-  initLoggerClearButton() {
-    this.loggerClear.on('click', (event) => {
-      event.preventDefault();
-      this.logger.empty();
-    })
   }
 
   initRemarketingForm() {
     this.form.on('submit', (event) => {
       event.preventDefault();
 
-      this.debug.html('');
+      ui.debug.html('');
 
       this.showConfirmModal(() => {
         this.profiles.field.find('option:selected').each((i, profile) => {
-          this.debug.append(`${$(profile).text()}\n`);
+          ui.debug.append(`${$(profile).text()}\n`);
           this.analytics.createRemarketingAudience($(profile));
-          this.debug.append(`\n\n`);
+          ui.debug.append(`\n\n`);
         })
       })
     });
   }
 
   showConfirmModal(callback) {
-    this.modal.showModal(
+    ui.modal.showModal(
       this.analytics.translate.analytics.modals.remarketingAudienceModalTitle,
       `<p>${this.getAudienceInfo()}</p>`,
       {
@@ -125,7 +132,6 @@ class FormControl {
       return days.trim();
     }).filter(Boolean);
   }
-
 }
 
 export default FormControl;
