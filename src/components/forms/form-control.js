@@ -1,20 +1,20 @@
 import EventEmitter from 'events';
 
-import FormControlBase from './forms/form-control-base';
-import SelectField from './select-field';
-import AccountsField from './accounts-field';
-import PropertiesField from './properties-field';
-import ProfilesField from './profiles-field';
-import RemarketingAudiencesField from './remarketing-audiences-field';
-import LinkedViewsField from './linked-views-field';
-import AdLinksField from './ad-links-field';
-import LinkedAdAccountsField from './linked-ad-accounts-field';
-import LiveApiToggleField from './live-api-toggle-field';
-import AudienceTypeField from './audience-type-field';
-import Analytics from '../components/analytics'
+import FormControlBase from './form-control-base';
+import SelectField from '../fields/select-field';
+import AccountsField from '../fields/accounts-field';
+import PropertiesField from '../fields/properties-field';
+import ProfilesField from '../fields/profiles-field';
+import RemarketingAudiencesField from '../fields/remarketing-audiences-field';
+import LinkedViewsField from '../fields/linked-views-field';
+import AdLinksField from '../fields/ad-links-field';
+import LinkedAdAccountsField from '../fields/linked-ad-accounts-field';
+import LiveApiToggleField from '../fields/live-api-toggle-field';
+import AudienceTypeField from '../fields/audience-type-field';
+import Analytics from '../analytics'
 
-import events from '../config/events';
-import ui from '../config/ui';
+import events from '../../config/events';
+import ui from '../../config/ui';
 
 const analytics = new Analytics(
   process.env.CLIENT_ID

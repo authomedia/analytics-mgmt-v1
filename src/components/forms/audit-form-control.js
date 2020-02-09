@@ -1,8 +1,8 @@
 import FormControlBase from './form-control-base';
 import TableGenerator from '../../utilities/table-generator';
-import Analytics from '../../components/analytics'
-import AccountsField from '../../components/accounts-field';
-import PropertiesField from '../../components/properties-field';
+import Analytics from '../analytics'
+import AccountsField from '../fields/accounts-field';
+import PropertiesField from '../fields/properties-field';
 
 import events from '../../config/events';
 import ui from '../../config/ui';

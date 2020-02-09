@@ -1,14 +1,14 @@
 import SelectField from './select-field';
-import events from '../config/events';
+import events from '../../config/events';
 
-class ProfilesField extends SelectField {
+class RemarketingAudiencesField extends SelectField {
   constructor(field, formControl) {
     super(field, formControl);
 
-    this.className = 'Profiles';
+    this.className = 'RemarketingAudiences';
 
     this.handleChange((i, elem) => {
-      this.formControl.emit(events.FIELDS.PROFILES.CHANGE, {
+      this.formControl.emit(events.FIELDS.REMARKETING_AUDIENCES.CHANGE, {
         i: i,
         elem: elem
       });
@@ -20,16 +20,12 @@ class ProfilesField extends SelectField {
 
     this.formControl.on(events.FIELDS.PROPERTIES.CHANGE, (event) => {
       this.empty();
-
-      if (event.elem) {
-        this.init($(event.elem).data('accountId'), $(event.elem).val(), $(event.elem).text());
-      }
     });
   }
 
   init(accountId, propertyId, propertyName) {
     super.init();
-    gapi.client.analytics.management.profiles.list({
+    gapi.client.analytics.management.remarketingAudience.list({
       'accountId': accountId,
       'webPropertyId': propertyId
     })
@@ -38,7 +34,7 @@ class ProfilesField extends SelectField {
       this.handleResult(response)
     })
     .then(null, (err) => {
-      this.handleError(`${propertyName}: ${err}`);
+      this.handleError(err);
     });
   }
 
@@ -48,7 +44,10 @@ class ProfilesField extends SelectField {
       this.field,
       'name',
       'id',
-      ['accountId'],
+      [
+        'linkedViews',
+        'linkedAdAccounts'
+      ],
       this.translate.analytics.errors[`no${this.className}`],
       {
         parentName: response.parentName
@@ -57,4 +56,4 @@ class ProfilesField extends SelectField {
   }
 }
 
-export default ProfilesField;
+export default RemarketingAudiencesField;

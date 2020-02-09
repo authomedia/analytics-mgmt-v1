@@ -1,5 +1,5 @@
 import SelectField from './select-field';
-import events from '../config/events';
+import events from '../../config/events';
 
 class AccountsField extends SelectField {
   constructor(field, formControl) {

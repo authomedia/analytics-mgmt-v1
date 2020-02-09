@@ -1,7 +1,7 @@
 import EventEmitter from 'events';
 import i18n from '../config/i18n';
-import Toast from '../components/toast';
-import Modal from '../components/modal';
+import Toast from '../components/ui/toast';
+import Modal from '../components/ui/modal';
 import ui from '../config/ui';
 
 class ModelBase extends EventEmitter {

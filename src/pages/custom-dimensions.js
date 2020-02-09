@@ -1,5 +1,5 @@
 import bsCustomFileInput from 'bs-custom-file-input'
-import CsvFileField from '../components/csv-file-field';
+import CsvFileField from '../components/fields/csv-file-field';
 import CustomDimensionsValidator from '../utilities/custom-dimensions-validator';
 import Page from './page';
 import TableGenerator from '../utilities/table-generator';

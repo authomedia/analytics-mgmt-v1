@@ -1,8 +1,8 @@
-import ui from '../config/ui';
-import Utilities from './utilities';
-import i18n from '../config/i18n';
+import ui from '../../config/ui';
+import Utilities from '../utilities';
+import i18n from '../../config/i18n';
 
-import ModelBase from '../models/model-base';
+import ModelBase from '../../models/model-base';
 
 
 class SelectField extends ModelBase {

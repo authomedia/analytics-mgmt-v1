@@ -1,5 +1,5 @@
 import ui from '../config/ui';
-import Toast from './toast';
+import Toast from './ui/toast';
 import i18n from '../config/i18n';
 import ModelBase from '../models/model-base';
 

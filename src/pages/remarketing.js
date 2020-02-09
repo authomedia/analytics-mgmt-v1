@@ -1,5 +1,5 @@
 import Logger from 'js-logger';
-import FormControl from '../components/form-control';
+import FormControl from '../components/forms/form-control';
 import events from '../config/events';
 
 export default () => {

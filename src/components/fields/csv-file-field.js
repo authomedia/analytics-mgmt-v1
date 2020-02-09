@@ -1,6 +1,6 @@
 import csv from 'csv'
 import TableBuilder from 'table-builder'
-import FileField from '../components/file-field';
+import FileField from './file-field';
 
 class CsvFileField extends FileField {
   handleFile(file) {
