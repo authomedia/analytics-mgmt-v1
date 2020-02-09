@@ -1,6 +1,9 @@
 import EventEmitter from 'events';
 
+import Analytics from '../analytics'
+
 import FormControlBase from './form-control-base';
+
 import SelectField from '../fields/select-field';
 import AccountsField from '../fields/accounts-field';
 import PropertiesField from '../fields/properties-field';
@@ -11,7 +14,6 @@ import AdLinksField from '../fields/ad-links-field';
 import LinkedAdAccountsField from '../fields/linked-ad-accounts-field';
 import LiveApiToggleField from '../fields/live-api-toggle-field';
 import AudienceTypeField from '../fields/audience-type-field';
-import Analytics from '../analytics'
 
 import events from '../../config/events';
 import ui from '../../config/ui';
@@ -28,18 +30,7 @@ class FormControl extends FormControlBase {
     this.analytics = analytics;
 
     this.accounts = new AccountsField($('#ga-accounts'), this);
-    // this.on(events.FIELDS.ACCOUNTS.CHANGE, (event) => {
-    //   if (event.elem) {
-    //     this.properties.init($(event.elem).val(), $(event.elem).text());
-    //   }
-    // });
-
-    this.properties = new PropertiesField($('#ga-properties'), this);
-    this.on(events.FIELDS.PROPERTIES.CHANGE, (event) => {
-      if (event.elem) {
-        this.adLinks.init($(event.elem).data('accountId'), $(event.elem).val(), $(event.elem).text());
-      }
-    })
+     this.properties = new PropertiesField($('#ga-properties'), this);
     this.profiles = new ProfilesField($('#ga-profiles'), this);
     this.remarketingAudiences = new RemarketingAudiencesField($('#ga-remarketing'), this);
     this.linkedViews = new LinkedViewsField($('#ga-linked-views'), this);
