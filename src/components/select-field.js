@@ -31,6 +31,7 @@ class SelectField extends ModelBase {
   initSelectAll() {
     this.selectAll.data('mode', 'all');
     this.selectAll.on('click', (e) => {
+      e.preventDefault();
       let options = [];
       let ids = [];
 

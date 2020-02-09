@@ -20,6 +20,10 @@ class ProfilesField extends SelectField {
 
     this.formControl.on(events.FIELDS.PROPERTIES.CHANGE, (event) => {
       this.empty();
+
+      if (event.elem) {
+        this.init($(event.elem).data('accountId'), $(event.elem).val(), $(event.elem).text());
+      }
     });
   }
 

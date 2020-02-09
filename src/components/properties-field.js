@@ -16,7 +16,11 @@ class PropertiesField extends SelectField {
 
     this.formControl.on(events.FIELDS.ACCOUNTS.CHANGE, (event) => {
       this.empty();
-    })
+
+      if (event.elem) {
+        this.init($(event.elem).val(), $(event.elem).text());
+      }
+    });
   }
 
   init(accountId, accountName) {

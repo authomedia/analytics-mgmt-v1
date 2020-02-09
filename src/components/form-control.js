@@ -1,5 +1,6 @@
 import EventEmitter from 'events';
 
+import FormControlBase from './forms/form-control-base';
 import SelectField from './select-field';
 import AccountsField from './accounts-field';
 import PropertiesField from './properties-field';
@@ -20,25 +21,22 @@ const analytics = new Analytics(
   [process.env.SCOPES]
 );
 
-class FormControl extends EventEmitter {
+class FormControl extends FormControlBase {
   constructor() {
     super();
 
     this.analytics = analytics;
 
-    this.form = $('#analytics-ui form');
-
     this.accounts = new AccountsField($('#ga-accounts'), this);
-    this.on(events.FIELDS.ACCOUNTS.CHANGE, (event) => {
-      if (event.elem) {
-        this.properties.init($(event.elem).val(), $(event.elem).text());
-      }
-    });
+    // this.on(events.FIELDS.ACCOUNTS.CHANGE, (event) => {
+    //   if (event.elem) {
+    //     this.properties.init($(event.elem).val(), $(event.elem).text());
+    //   }
+    // });
 
     this.properties = new PropertiesField($('#ga-properties'), this);
     this.on(events.FIELDS.PROPERTIES.CHANGE, (event) => {
       if (event.elem) {
-        this.profiles.init($(event.elem).data('accountId'), $(event.elem).val(), $(event.elem).text());
         this.adLinks.init($(event.elem).data('accountId'), $(event.elem).val(), $(event.elem).text());
       }
     })
@@ -50,8 +48,6 @@ class FormControl extends EventEmitter {
 
     this.audienceType = new AudienceTypeField($('#ga-remarketing-audience-type'), this);
     this.liveApiCallToggle = new LiveApiToggleField($('#ga-live-api-call-toggle'), this);
-
-    this.submitButtons = $('button[type=submit]');
 
     // Build Remarketing Audiences Form Lookups
     this.remarketingForm = {
@@ -78,11 +74,6 @@ class FormControl extends EventEmitter {
         }
       }
     }
-
-    // Bind Select2 elements
-    $('.select2').select2({
-      width: 'element'
-    });
   }
 
   initRemarketingForm() {
