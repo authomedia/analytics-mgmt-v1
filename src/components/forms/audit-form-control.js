@@ -28,7 +28,6 @@ class AuditFormControl extends FormControlBase {
     this.wrapper = $('#custom-dimensions-table-wrapper');
     this.tableGenerator = new TableGenerator();
 
-
     this.initFormSubmit();
     this.initAuditButton();
 
@@ -53,6 +52,17 @@ class AuditFormControl extends FormControlBase {
     this.form.on('submit', (event) => {
       event.preventDefault();
       console.log(event);
+
+      this.analytics.createCustomDimension({
+        accountId: 'acID',
+        webPropertyId: 'wpID'
+      }
+      ,{
+        name: 'foo',
+        index: 1,
+        scope: 'USER',
+        active: 1,
+      });
     });
   }
 
@@ -60,7 +70,6 @@ class AuditFormControl extends FormControlBase {
     this.tableGenerator.setData(this.currentData);
     this.tableGenerator.generateTable(this.wrapper)
   }
-
 }
 
 export default AuditFormControl;

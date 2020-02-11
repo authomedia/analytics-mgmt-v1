@@ -11,8 +11,7 @@ class SubmitButton extends EventEmitter {
 
   init() {
     this.elem.on('click', (event) => {
-      console.log(event);
-      this.formControl.emit(events.BUTTONS.SUBMIT.CLICK, {
+      this.emit(events.BUTTONS.SUBMIT.CLICK, {
         elem: this
       })
     });

@@ -5,7 +5,8 @@ var i18n = {
       success: "Success!"
     },
     messages: {
-      remarketingSuccess: "Created remarketing campaign"
+      remarketingSuccess: "Created remarketing campaign",
+      customDimensionSuccess: "Created custom dimension",
     },
     analytics: {
       modals: {
@@ -20,7 +21,8 @@ var i18n = {
         noLinkedViews: 'No linked views found for this remarketing audience',
         noAdLinks: 'No Adwords accounts are linked to this account',
         noLinkedAdAccounts: 'No linked ad accounts found for this remarketing audience',
-        remarketingAudiencesValidationError: 'There is a problem with your remarketing audience settings. Please check!'
+        remarketingAudiencesValidationError: 'There is a problem with your remarketing audience settings. Please check!',
+        customDimensionsValidationError: 'There is a problem with your custom dimensions. Please check!'
       }
     },
     select: {

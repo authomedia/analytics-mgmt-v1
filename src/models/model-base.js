@@ -25,12 +25,12 @@ class ModelBase extends EventEmitter {
   }
 
   debug(string) {
-    ui.formControl.debug.append(`${string}\n`);
+    ui.debug.append(`${string}\n`);
   }
 
   debugJson(object) {
     let formattedJson = JSON.stringify(object, null, 2);
-    ui.formControl.debug.append(formattedJson);
+    ui.debug.append(formattedJson);
   }
 }
 
