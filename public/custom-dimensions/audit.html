@@ -83,9 +83,9 @@
 
             <div class="btn-toolbar mb-2 mb-md-0">
               <div class="btn-group mr-2">
-                <button type="submit" class="btn btn-warning" id="custom-dimensions-update-button" disabled>
+                <button type="submit" class="btn btn-warning" id="custom-dimensions-audit-button" disabled>
                   <span class="oi oi-aperture"></span>
-                  Save Custom Dimensions
+                  Audit Now
                 </button>
               </div>
             </div>
@@ -156,6 +156,20 @@
                       <select id="ga-properties" multiple="multiple" class="form-control" size="1">
                         <option value="">None</option>
                       </select>
+                    </div>
+
+                    <div class="row">
+                      <div class="col">
+                        <h5>
+                          <span class="oi oi-puzzle-piece"></span>
+                          Custom Dimensions
+                          <a class="badge badge-primary" href="/custom-dimensions/upload.html">
+                            Edit
+                            <span class="oi oi-external-link"></span>
+                          </a>
+                        </h5>
+                        <div id="custom-dimensions-table-wrapper"></div>
+                      </div>
                     </div>
                   </div>
 

@@ -8,7 +8,7 @@ class Page extends ModelBase {
   }
 
   init() {
-    Logger.info('Page ready')
+    Logger.info('Page ready');
   }
 }
 

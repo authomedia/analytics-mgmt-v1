@@ -3,7 +3,6 @@ import FormControl from '../components/forms/form-control';
 import events from '../config/events';
 
 export default () => {
-  // Initialize app
   $(function() {
     const formControl = new FormControl();
 

@@ -3,6 +3,11 @@ const events = {
     AUTHORIZED: 'google:authorized',
     UNAUTHORIZED: 'google:unauthorized'
   },
+  BUTTONS: {
+    SUBMIT: {
+      CLICK: 'buttons:submit:click'
+    }
+  },
   FIELDS: {
     PROPERTIES: {
       CHANGE: 'fields:properties:change'

@@ -6,6 +6,7 @@ import Page from '../page';
 import TableGenerator from '../../utilities/table-generator';
 import Utilities from '../../components/utilities';
 
+import constants from '../../config/constants';
 import ui from '../../config/ui';
 import db from '../../models/db';
 
@@ -31,7 +32,7 @@ class CustomDimensionsUploadPage extends Page {
     });
 
     db.customDimensions.toArray((data) => {
-      data.unshift(['index','name', 'scope', 'active']);
+      data.unshift(constants.DB_FIELDS);
       this.currentData = data;
       this.updateTable(data);
       ui.loggedIn();
