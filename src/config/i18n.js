@@ -11,7 +11,10 @@ var i18n = {
     analytics: {
       modals: {
         remarketingAudienceModalTitle: 'Create Remarketing Audience',
-        primaryText: 'Create Audiences'
+        primaryText: 'Create Audiences',
+        customDimensions: {
+          audit: 'Audit Custom Dimensions'
+        }
       },
       errors: {
         noAccounts: 'No accounts found for this user.',

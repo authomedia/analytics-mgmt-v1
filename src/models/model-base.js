@@ -9,7 +9,7 @@ class ModelBase extends EventEmitter {
     super();
     this.translate = i18n[process.env.LOCALE];
     this.toast = new Toast();
-    this.modal = new Modal();
+    this.modal = new Modal(ui);
   }
 
   handleSuccess(message, action = {}) {

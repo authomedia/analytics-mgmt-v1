@@ -11,6 +11,7 @@ import TableGenerator from '../../utilities/table-generator';
 import constants from '../../config/constants';
 import events from '../../config/events';
 import ui from '../../config/ui';
+import { translate } from '../../utilities/translate'
 import db from '../../models/db';
 
 const analytics = new Analytics(
@@ -48,21 +49,40 @@ class AuditFormControl extends FormControlBase {
     });
   }
 
-  initFormSubmit() {
+   initFormSubmit() {
     this.form.on('submit', (event) => {
       event.preventDefault();
-      console.log(event);
 
-      this.analytics.createCustomDimension({
-        accountId: 'acID',
-        webPropertyId: 'wpID'
-      }
-      ,{
-        name: 'foo',
-        index: 1,
-        scope: 'USER',
-        active: 1,
+      const options = this.properties.field.find('option:selected');
+      this.listCustomDimensions(options).then((data) => {
+        this.displayAuditTable(data);
       });
+    });
+  }
+
+  listCustomDimensions(options) {
+    return Promise.all(
+      options.map(async (i, elem) => {
+        const item = $(elem).data('item');
+        return await this.analytics.listCustomDimensions(item.accountId, item.id).then((response) => {
+          return response;
+        });
+      })
+    )
+  }
+
+  generateAuditTable(data) {
+    return data;
+  }
+
+  displayAuditTable(data) {
+    this.modal.showModal(
+      translate('analytics.modals.customDimensions.audit'),
+      this.generateAuditTable(data),
+      {
+      callback: (event) => {
+        console.log(event);
+      }
     });
   }
 

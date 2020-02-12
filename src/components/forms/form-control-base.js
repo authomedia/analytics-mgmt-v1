@@ -1,6 +1,6 @@
-import EventEmitter from 'events';
+import ModelBase from '../../models/model-base';
 
-class FormControlBase extends EventEmitter {
+class FormControlBase extends ModelBase {
   constructor() {
     super();
 

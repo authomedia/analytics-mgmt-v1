@@ -23,7 +23,8 @@
   },
   "dependencies": {
     "dexie": "^2.0.4",
-    "events": "^3.1.0"
+    "events": "^3.1.0",
+    "util": "^0.12.1"
   },
   "scripts": {
     "build": "rollup -c",

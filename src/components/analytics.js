@@ -21,9 +21,13 @@ class Analytics extends ModelBase {
     remarketingAudience.create();
   }
 
+  async listCustomDimensions(accountId, webPropertyId) {
+    return await CustomDimension.all(accountId, webPropertyId);
+  }
+
   createCustomDimension(profile, customDimension) {
-    let customDimensionModel = new CustomDimension(profile, customDimension);
-    customDimensionModel.create();
+    let customDimensionModel = new CustomDimension(profile);
+    customDimensionModel.create(customDimension);
   }
 }
 
