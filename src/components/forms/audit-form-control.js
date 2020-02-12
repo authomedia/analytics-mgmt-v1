@@ -1,7 +1,7 @@
+import util from 'util';
+
 import Analytics from '../analytics'
-
 import FormControlBase from './form-control-base';
-
 import AccountsField from '../fields/accounts-field';
 import PropertiesField from '../fields/properties-field';
 import SubmitButton from '../ui/submit-button';
@@ -65,13 +65,18 @@ class AuditFormControl extends FormControlBase {
       options.map(async (i, elem) => {
         const item = $(elem).data('item');
         return await this.analytics.listCustomDimensions(item.accountId, item.id).then((response) => {
-          return response;
+          return {
+            item: item,
+            customDimensions: response
+          }
         });
       })
     )
   }
 
   generateAuditTable(data) {
+    console.log(data);
+    this.debug(util.inspect(data));
     return data;
   }
 
