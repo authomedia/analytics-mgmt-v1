@@ -16,8 +16,8 @@ class Analytics extends ModelBase {
     this.scopes = scopes;
   }
 
-  createRemarketingAudience(profile) {
-    let remarketingAudience = new RemarketingAudience(profile);
+  createRemarketingAudience(profile, formControl) {
+    let remarketingAudience = new RemarketingAudience(profile, formControl);
     remarketingAudience.create();
   }
 

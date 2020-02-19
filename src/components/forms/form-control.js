@@ -76,7 +76,7 @@ class FormControl extends FormControlBase {
       this.showConfirmModal(() => {
         this.profiles.field.find('option:selected').each((i, profile) => {
           ui.debug.append(`${$(profile).text()}\n`);
-          this.analytics.createRemarketingAudience($(profile));
+          this.analytics.createRemarketingAudience($(profile), this);
           ui.debug.append(`\n\n`);
         })
       })
