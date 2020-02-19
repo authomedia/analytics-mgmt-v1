@@ -167,3 +167,13 @@ span.logger-error {
     max-width: 100%;
   }
 }
+
+.scrollable-x {
+  overflow-x: scroll;
+  display: block;
+}
+
+.spinner-small {
+  width: 1.2rem;
+  height: 1.2rem;
+}

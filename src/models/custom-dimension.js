@@ -10,6 +10,8 @@ class CustomDimension extends ModelBase {
     this.name = customDimension.name;
     this.scope = customDimension.scope;
     this.active = customDimension.active;
+    this.accountId = customDimension.accountId;
+    this.webPropertyId = customDimension.webPropertyId;
   }
 
   static async all(accountId, webPropertyId) {
@@ -22,20 +24,105 @@ class CustomDimension extends ModelBase {
       })
     }).catch((err) => {
       console.log(err);
+      return err;
     });
   }
 
-  create() {}
+  static async find(accountId, webPropertyId, index) {
+    return await this._api
+      .get({
+        accountId: accountId,
+        webPropertyId: webPropertyId,
+        customDimensionId: `ga:dimension${index}`
+      })
+      .then((response) => {
+        return new CustomDimension(response.result);
+      })
+      .catch((error) => {
+        return error;
+      });
+  }
 
-  update() {}
+  static get _api() {
+    return gapi.client.analytics.management.customDimensions;
+  }
+
+  get _api() {
+    return this.constructor._api;
+  }
+
+  async create() {
+    return await this._api.insert({
+        accountId: this.accountId,
+        webPropertyId: this.webPropertyId,
+        customDimensionId: `ga:dimension${this.index}`
+      }, this.toJson())
+      .then((response) => {
+        return response
+      }).
+      catch((error) => {
+        return error;
+      });
+  }
+
+  update(newValues) {
+    if (newValues) {
+      this.name = newValues.name;
+      this.scope = newValues.scope;
+      this.active = newValues.active;
+    }
+    return this._patch(this.toJson())
+  }
 
   destroy() {
     console.log('Custom dimensions cannot be destroyed');
   }
 
-  activate() {}
+  async activate() {
+    return await this._patch({
+      active: true
+    });
+  }
 
-  deactivate() {}
+  async deactivate() {
+    return await this._patch({
+      active: false
+    });
+  }
+
+  toJson() {
+    return {
+      name: this.name,
+      scope: this.scope,
+      active: this.active
+    }
+  }
+
+  eq(other) {
+    if (other == undefined) {
+      return false;
+    }
+    return parseInt(this.index) == parseInt(other.index) &&
+           this.name == other.name &&
+           this.scope == other.scope &&
+           this.active == (other.active == "1");
+  }
+
+
+  _patch(data) {
+    return this._api
+      .patch({
+        accountId: this.accountId,
+        webPropertyId: this.webPropertyId,
+        customDimensionId: `ga:dimension${this.index}`
+      }, data)
+      .then((response) => {
+        return response
+      }).
+      catch((error) => {
+        return error;
+      });
+  }
 
 
 }

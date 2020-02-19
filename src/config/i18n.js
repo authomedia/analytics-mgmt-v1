@@ -16,6 +16,11 @@ var i18n = {
           audit: 'Audit Custom Dimensions'
         }
       },
+      tables: {
+        customDimensions: {
+          property: "Property"
+        }
+      },
       errors: {
         noAccounts: 'No accounts found for this user.',
         noProperties: 'No properties found for this user.',

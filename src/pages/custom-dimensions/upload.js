@@ -64,7 +64,13 @@ class CustomDimensionsUploadPage extends Page {
 
   async updateDatabase(data) {
     const dbData = Utilities.mapRows(data[0], data.slice(1, data.length))
-    return await db.customDimensions.bulkPut(dbData);
+    return await db.customDimensions.clear()
+      .then(() => {
+        db.customDimensions.bulkPut(dbData)
+      })
+      .catch((err) => {
+        this.handleError('Problem clearing the db');
+      });
   }
 
   enableButton(active, callback ) {
