@@ -6,7 +6,7 @@ const db = new Dexie(process.env.DB_NAME);
 const dbFields = constants.DB_FIELDS.join(', ');
 
 db.version(1).stores({
-    customDimensions: dbFields
+  customDimensions: dbFields
 });
 
 export default db;

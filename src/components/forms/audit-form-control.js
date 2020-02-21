@@ -140,7 +140,7 @@ class AuditFormControl extends FormControlBase {
 
       Object.values(this.currentData).forEach((col) => {
         return this.buildCell(item, col, row);
-      })
+      });
 
       return row;
     });
@@ -217,7 +217,11 @@ class AuditFormControl extends FormControlBase {
 
     // Activate spinner
     value.updating = true;
-    table.bootstrapTable('updateCell', {index: index, value: value, field: value.field});
+    table.bootstrapTable('updateCell', {
+      index: index,
+      value: value,
+      field: value.field
+    });
 
     // Decide if to create or update
     if (value.customDimension == undefined) {
@@ -226,18 +230,26 @@ class AuditFormControl extends FormControlBase {
       value.customDimension.accountId = value.property.accountId;
       value.customDimension.webPropertyId = value.property.id;
 
-      console.log(value.customDimension);
-      //value.customDimension.create().then((data) => {
+      // console.log(value.customDimension);
+      value.customDimension.create().then((data) => {
         this.handleSuccess('Created new custom dimension');
         value.updating = false;
-        table.bootstrapTable('updateCell', {index: index, value: value, field: value.field});
-      //});
+        table.bootstrapTable('updateCell', {
+          index: index,
+          value: value,
+          field: value.field
+        });
+      });
     } else {
       // Update existing one
       value.customDimension.update(value.data).then((data) => {
         this.handleSuccess('Updated custom dimension');
         value.updating = false;
-        table.bootstrapTable('updateCell', {index: index, value: value, field: value.field});
+        table.bootstrapTable('updateCell', {
+          index: index,
+          value: value,
+          field: value.field
+        });
       });
     }
   }

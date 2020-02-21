@@ -20,6 +20,9 @@ class Utilities {
       if (Array.isArray(row)) {
         let obj = {};
         row.map((col, j) => {
+          if (headers[j].toString() == 'index') {
+            col = parseInt(col);
+          }
           obj[headers[j].toString()] = col;
         });
         return obj;

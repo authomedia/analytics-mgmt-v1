@@ -51,11 +51,11 @@ class CustomDimension extends ModelBase {
     return this.constructor._api;
   }
 
+  // NB. Create MUST be triggered squentially - it will not use the index value
   async create() {
     return await this._api.insert({
         accountId: this.accountId,
-        webPropertyId: this.webPropertyId,
-        customDimensionId: `ga:dimension${this.index}`
+        webPropertyId: this.webPropertyId
       }, this.toJson())
       .then((response) => {
         return response

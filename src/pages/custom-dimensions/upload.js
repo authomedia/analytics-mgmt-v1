@@ -33,6 +33,17 @@ class CustomDimensionsUploadPage extends Page {
 
     db.customDimensions.toArray((data) => {
       data.unshift(constants.DB_FIELDS);
+      // data = data.sort((a, b) => {
+      //   let ai = parseInt(a.index);
+      //   let bi = parseInt(b.index)
+      //   if (ai < bi) {
+      //     return -1;
+      //   }
+      //   if (ai > bi) {
+      //     return 1;
+      //   }
+      //   return 0;
+      // })
       this.currentData = data;
       this.updateTable(data);
       ui.loggedIn();
@@ -82,7 +93,7 @@ class CustomDimensionsUploadPage extends Page {
     } else {
       this.updateButton.addClass('btn-warning');
       this.updateButton.removeClass('btn-success');
-      this.updateButton.off('click')
+      this.updateButton.off('click');
     }
   }
 }
