@@ -183,4 +183,9 @@ span.logger-error {
   .modal-xxl {
     max-width: 95%;
   }
+
+  .modal-xxl table {
+    overflow-x: scroll;
+    display: block;
+  }
 }
