@@ -189,3 +189,7 @@ span.logger-error {
     display: block;
   }
 }
+
+.text-medium-light {
+  color: #dadcde;
+}

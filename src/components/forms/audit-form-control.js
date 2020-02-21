@@ -198,8 +198,8 @@ class AuditFormControl extends FormControlBase {
       return '<div class="spinner-grow text-primary spinner-small" role="status"><span class="sr-only">Loading...</span></div>';
     }
     if (value.customDimension == undefined) {
-      icon = 'oi-circle-x';
-      color = 'text-warning';
+      icon = 'oi-cloud-upload';
+      color = 'text-medium-light';
     } else {
       let same = value.customDimension.eq(value.data);
       icon = same ? 'oi-circle-check' : 'oi-circle-x';
