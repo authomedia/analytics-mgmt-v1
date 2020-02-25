@@ -1,5 +1,3 @@
-import retry from 'async-retry';
-
 import ModelBase from './model-base';
 import ui from '../config/ui';
 
