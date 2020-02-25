@@ -1,4 +1,5 @@
 import util from 'util';
+import dedent from 'dedent';
 // import TableBuilder from 'table-builder';
 
 import CustomDimension from '../../models/custom-dimension';
@@ -104,7 +105,17 @@ class AuditFormControl extends FormControlBase {
           field: 'property',
           title: translate('analytics.tables.customDimensions.property')
         }
-      ]
+      ],
+      onPostBody: (e) => {
+        table.find('[data-toggle="popover"]').popover({
+          html: true,
+          container: 'body'
+        });
+        table.find('[data-toggle="tooltip"]').tooltip({
+          html: true,
+          container: 'body'
+        });
+      }
     };
 
     Object.values(this.currentData).map((item) => {
@@ -112,7 +123,7 @@ class AuditFormControl extends FormControlBase {
       options.columns.push({
         field: label,
         title: item.index,
-        formatter: this.formatCell,
+        formatter: this.formatCell.bind(this),
         events: {
           'click .oi': (e, value, row, index) => {
             return value.event(table, value, row, index)
@@ -193,23 +204,73 @@ class AuditFormControl extends FormControlBase {
   }
 
   formatCell(value, row, index, field) {
-    let icon, color;
+    let icon, color, opts, popoverContent;
     if (value.updating == true) {
       return '<div class="spinner-grow text-primary spinner-small" role="status"><span class="sr-only">Loading...</span></div>';
     }
+    if (value.success == false) {
+      icon = 'oi-warning';
+      color = 'text-warning';
+      return `<span class="hoverable oi ${icon} ${color}"></span>`;
+    }
     if (value.customDimension == undefined) {
-      icon = 'oi-cloud-upload';
+      icon = 'oi-cloud-upload hoverable';
       color = 'text-medium-light';
     } else {
       let same = value.customDimension.eq(value.data);
-      icon = same ? 'oi-circle-check' : 'oi-circle-x';
+      icon = same ? 'oi-check' : 'oi-circle-x hoverable';
       color = same ? 'text-success' : 'text-danger';
+
+      if (!same) {
+        popoverContent = dedent(`
+          <div class='table-auditor text-center'>
+          <div class='row'>
+            <div class='col-3 heading'></div>
+            <div class='col-3 heading'><b>Mine</b></div>
+            <div class='col-3 heading'><b>Theirs</b></div>
+            <div class='col-3 heading'><b>Match?</b></div>
+          </div>
+          <div class='row'>
+            <div class='col-3 heading'><b>Index</b></div>
+            <div class='col-3'>${value.data.index}</div>
+            <div class='col-3'>${value.customDimension.index}</div>
+            <div class='col-3'>${this.buildIcon(value.customDimension.index == value.data.index)}</div>
+          </div>
+          <div class='row'>
+            <div class='col-3 heading'><b>Name</b></div>
+            <div class='col-3'>${value.data.name}</div>
+            <div class='col-3'>${value.customDimension.name}</div>
+            <div class='col-3'>${this.buildIcon(value.customDimension.name == value.data.name)}</div>
+          </div>
+          <div class='row'>
+            <div class='col-3 heading'><b>Scope</b></div>
+            <div class='col-3'>${value.data.scope}</div>
+            <div class='col-3'>${value.customDimension.scope}</div>
+            <div class='col-3'>${this.buildIcon(value.customDimension.scope == value.data.scope)}</div>
+          </div>
+          <div class='row'>
+            <div class='col-3 heading'><b>Active?</b></div>
+            <div class='col-3'>${value.data.active == 1 ? 'true' : 'false'}</div>
+            <div class='col-3'>${value.customDimension.active}</div>
+            <div class='col-3'>${this.buildIcon(value.customDimension.active == value.data.active)}</div>
+          </div>
+          </div>
+        `).trim().replace(/\n|\r/g, "");
+        opts = `data-toggle="popover" data-html="true" data-trigger="hover" data-placement="auto" title="Audit Values" data-content="${popoverContent}"`;
+      }
     }
 
-    return `<span class="oi ${icon} ${color}"></span>`;
+    return `<span class="oi ${icon} ${color}" ${opts}></span>`;
+  }
+
+  buildIcon(same, opts) {
+    const icon = same ? 'oi-check' : 'oi-circle-x';
+    const color = same ? 'text-success' : 'text-danger';
+    return `<span class='oi ${icon} ${color}' ${opts}></span>`
   }
 
   updateCell(table, value, row, index) {
+    table.find('[data-toggle="popover"]').popover('dispose');
     // Dont allow multiple overlapping update events
     if (value.updating == true) {
       return;
@@ -232,6 +293,7 @@ class AuditFormControl extends FormControlBase {
 
       // console.log(value.customDimension);
       value.customDimension.create().then((data) => {
+        value.customDimension = data;
         this.handleSuccess('Created new custom dimension');
         value.updating = false;
         table.bootstrapTable('updateCell', {
@@ -239,12 +301,26 @@ class AuditFormControl extends FormControlBase {
           value: value,
           field: value.field
         });
-      });
+      })
     } else {
+      if (value.customDimension.eq(value.data) && value.success) {
+        return;
+      };
+
       // Update existing one
       value.customDimension.update(value.data).then((data) => {
         this.handleSuccess('Updated custom dimension');
         value.updating = false;
+        value.success = true
+        table.bootstrapTable('updateCell', {
+          index: index,
+          value: value,
+          field: value.field
+        })
+      }).catch((error) => {
+        this.handleError(error);
+        value.updating = false;
+        value.success = false
         table.bootstrapTable('updateCell', {
           index: index,
           value: value,
