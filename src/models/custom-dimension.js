@@ -45,33 +45,52 @@ class CustomDimension extends ModelBase {
     return gapi.client.analytics.management.customDimensions;
   }
 
+  static batch() {
+    return gapi.client.newBatch();
+  }
+
   get _api() {
     return this.constructor._api;
   }
 
+
+
+
   // NB. Create MUST be triggered squentially - it will not use the index value
-  create() {
-    return this._api.insert({
+  create(resolve = true) {
+    const request = this._api.insert({
       accountId: this.accountId,
       webPropertyId: this.webPropertyId
-    }, this.toJson()).then((response) => {
-      return new CustomDimension(response.result);
-    }).catch((error) => {
-      throw new Error(error);
-    });
+    }, this.toJson())
+
+    if (resolve) {
+      return this.deserialize(request)
+    } else {
+      return request;
+    }
   }
 
-  update(newValues) {
+  update(newValues, resolve = true) {
     if (newValues) {
       this.name = newValues.name;
       this.scope = newValues.scope;
       this.active = newValues.active;
     }
-    return this._patch(this.toJson())
+    return this._patch(this.toJson(), resolve);
   }
 
   destroy() {
     console.log('Custom dimensions cannot be destroyed');
+  }
+
+  deserialize(request) {
+    return request.then((response) => {
+      console.log(response);
+      return new CustomDimension(response.result);
+    }).catch((error) => {
+      console.log(error);
+      // throw new Error(error);
+    });
   }
 
   async activate() {
@@ -90,7 +109,7 @@ class CustomDimension extends ModelBase {
     return {
       name: this.name,
       scope: this.scope,
-      active: this.active
+      active: (this.active == "1" || this.active)
     }
   }
 
@@ -105,16 +124,19 @@ class CustomDimension extends ModelBase {
   }
 
 
-  _patch(data) {
-    return this._api
+  _patch(data, resolve = true) {
+    const request = this._api
       .patch({
         accountId: this.accountId,
         webPropertyId: this.webPropertyId,
         customDimensionId: `ga:dimension${this.index}`
-      }, data)
-      .then((response) => {
-        return new CustomDimension(response.result);
-      })
+      }, data);
+
+    if (resolve) {
+      return this.deserialize(request);
+    } else {
+      return request;
+    }
   }
 }
 

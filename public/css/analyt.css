@@ -196,11 +196,11 @@ span.logger-error {
 
 .popover {
   min-width: 400px;
- }
+}
 
- .hoverable {
+.hoverable {
   cursor: pointer;
- }
+}
 
 .table-auditor {
   margin: 0 0.75rem;

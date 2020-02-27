@@ -137,11 +137,69 @@ class AuditFormControl extends FormControlBase {
       title: 'Actions',
       events: {
         'click .action-sync': (e, value, row, index) => {
-          Object.values(row).forEach((item) => {
-            if (item.event) {
-              item.event(table, item, row, index);
+          const cdBatch = CustomDimension.batch();
+          var requireSync = false;
+
+          Object.values(row).forEach((value) => {
+            if (value.event && value.customDimension === undefined) {
+              let cd = new CustomDimension({
+                webPropertyId: value.property.id,
+                accountId: value.property.accountId,
+                index: value.data.index,
+                name: value.data.name,
+                active: value.data.active,
+                scope: value.data.scope
+              })
+
+              let req = cd.create(false);
+              cdBatch.add(req, {id: value.data.index});
+              cd.deserialize(req).then((data) => {
+                value.customDimension = data;
+                value.updating = false;
+                value.event(table, value, row, index);
+              }).catch((error) => {
+                value.updating = false;
+                value.success = false;
+                value.event(table, value, row, index);
+              });;
+
+              value.updating = true;
+              requireSync = true
+            } else if (value.event && value.customDimension && !value.customDimension.eq(value.data)) {
+
+              let req = value.customDimension.update(value.data, false);
+              cdBatch.add(req, {id: value.data.index});
+              value.customDimension.deserialize(req).then((data) => {
+                value.customDimension = data;
+                value.updating = false;
+                value.event(table, value, row, index);
+              }).catch((error) => {
+                value.updating = false;
+                value.success = false;
+                value.event(table, value, row, index);
+              });
+              value.updating = true;
+              requireSync = true;
             }
           });
+
+          if (requireSync) {
+            table.bootstrapTable('updateRow', {
+              index: index,
+              row: row
+            });
+
+            console.log(cdBatch);
+
+            cdBatch.then((data) => {
+              console.log(data);
+
+              table.bootstrapTable('updateRow', {
+                index: index,
+                row: row
+              });
+            });
+          }
         }
       }
     })
@@ -205,6 +263,7 @@ class AuditFormControl extends FormControlBase {
 
   formatCell(value, row, index, field) {
     let icon, color, opts, popoverContent;
+    opts = "";
     if (value.updating == true) {
       return '<div class="spinner-grow text-primary spinner-small" role="status"><span class="sr-only">Loading...</span></div>';
     }
@@ -256,7 +315,7 @@ class AuditFormControl extends FormControlBase {
           </div>
           </div>
         `).trim().replace(/\n|\r/g, "");
-        opts = `data-toggle="popover" data-html="true" data-trigger="hover" data-placement="auto" title="Audit Values" data-content="${popoverContent}"`;
+        opts = `data-toggle="popover" data-html="true" data-trigger="hover" data-placement="right" title="Audit Values" data-content="${popoverContent}"`;
       }
     }
 

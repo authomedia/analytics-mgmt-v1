@@ -1,0 +1,11 @@
+index,name,scope,active
+1,Product Views (inactive),SESSION,1
+2,Page Type,HIT,1
+3,Search Results,HIT,1
+4,Campaign (inactive),HIT,1
+5,BuyNowButtonStatus (inactive),HIT,1
+6,Internal Traffic,HIT,1
+7,Brand,HIT,1
+8,ModelDName,HIT,1
+9,ProductNumberCode,HIT,1
+10,ProdLineBusinessArea,HIT,1
