@@ -1,11 +1,11 @@
 import Page from '../page';
 import events from '../../config/events';
-import ViewEditFormControl from '../../components/forms/view-edit-form-control';
+import ProfilesAuditFormControl from '../../components/forms/profiles-audit-form-control';
 
-class ViewEditPage extends Page {
+class ProfilesAuditPage extends Page {
   constructor() {
     super();
-    this.formControl = new ViewEditFormControl()
+    this.formControl = new ProfilesAuditFormControl();
   }
 
   init() {
@@ -17,7 +17,7 @@ class ViewEditPage extends Page {
 
 export default () => {
   $(function() {
-    const page = new ViewEditPage();
+    const page = new ProfilesAuditPage();
 
     $(window).on(events.GOOGLE.AUTHORIZED, function() {
       page.init();

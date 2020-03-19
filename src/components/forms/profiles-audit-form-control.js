@@ -1,7 +1,6 @@
 import util from 'util';
 import dedent from 'dedent';
 
-// import View from '../../models/view';
 import Analytics from '../analytics'
 import FormControlBase from './form-control-base';
 import AccountsField from '../fields/accounts-field';
@@ -16,14 +15,14 @@ import { translate } from '../../utilities/translate'
 import db from '../../models/db';
 
 import AuditTable from '../audit-table';
-import View from '../../models/view';
+import Profile from '../../models/profile';
 
 const analytics = new Analytics(
   process.env.CLIENT_ID
   [process.env.SCOPES]
 );
 
-class ViewEditFormControl extends FormControlBase {
+class ProfilesAuditFormControl extends FormControlBase {
   constructor() {
     super();
     this.analytics = analytics;
@@ -36,7 +35,7 @@ class ViewEditFormControl extends FormControlBase {
     this.auditTable = new AuditTable(
       'Profile',
       'view',
-      View,
+      Profile,
       'Modal title'
     );
 
@@ -63,19 +62,19 @@ class ViewEditFormControl extends FormControlBase {
         'excludeQueryParameters': 'Exclude URL Params'
       }
 
-      this.listViews(options).then((data) => {
+      this.listProfiles(options).then((data) => {
         this.displayAuditTable(headers, data);
       });
 
     });
   }
 
-  listViews(options) {
+  listProfiles(options) {
     return Promise.all(
       options.map(async (i, elem) => {
         const item = $(elem).data('item');
         console.log(item);
-        return await this.analytics.listViews(item.accountId, item.webPropertyId).then((response) => {
+        return await this.analytics.listProfiles(item.accountId, item.webPropertyId).then((response) => {
           return {
             item: item,
             objects: response
@@ -97,4 +96,4 @@ class ViewEditFormControl extends FormControlBase {
   }
 }
 
-export default ViewEditFormControl;
+export default ProfilesAuditFormControl;

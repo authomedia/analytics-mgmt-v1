@@ -1,7 +1,7 @@
 import ModelBase from './model-base';
 import ui from '../config/ui';
 
-class View extends ModelBase {
+class Profile extends ModelBase {
   constructor(data = {}) {
     super();
     let {
@@ -31,7 +31,7 @@ class View extends ModelBase {
       webPropertyId: webPropertyId
     }).then((response) => {
       return response.result.items.map((item) => {
-        return new View(item);
+        return new Profile(item);
       })
     }).catch((err) => {
       console.log(err);
@@ -47,7 +47,7 @@ class View extends ModelBase {
         profileId: profileId
       })
       .then((response) => {
-        return new View(response.result);
+        return new Profile(response.result);
       })
       .catch((error) => {
         return error;
@@ -97,7 +97,7 @@ class View extends ModelBase {
   deserialize(request) {
     return request.then((response) => {
       console.log(response);
-      return new View(response.result);
+      return new Profile(response.result);
     }).catch((error) => {
       console.log(error);
       // throw new Error(error);
@@ -137,4 +137,4 @@ class View extends ModelBase {
   }
 }
 
-export default View;
+export default Profile;
