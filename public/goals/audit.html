@@ -112,7 +112,7 @@
           <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
             <h1 class="h2 brand-title" id="content-title">
               <img src="/images/analyt-logo.png" class="brand-logo" alt="Analyt">
-              Views > Edit
+              Goals > Audit
             </h1>
 
             <div class="btn-toolbar mb-2 mb-md-0">
@@ -147,7 +147,7 @@
             <div id="analytics-ui" hidden>
               <form>
                 <div class="row">
-                  <div class="col-md-12 col-lg-8">
+                  <div class="col-md-6 col-lg-4">
                    <div class="row">
                       <div class="col-7">
                         <h5>
@@ -215,7 +215,234 @@
                     </div>
                   </div>
 
-                  <div class="col-md-12 col-lg-4">
+                  <div class="col-md-6 col-lg-4">
+                    <div id="ga-remarketing-audiences">
+                      <h5>
+                        <img src="/images/adminhome_remarketing.png">
+                        Goal Definition
+                      </h5>
+                      <div class="form-group">
+                        <div class="input-group">
+                          <input type="text" id="ga-goal-name" class="form-control" placeholder="Goal Name" />
+                        </div>
+                      </div>
+
+                      <div class="form-group">
+                        <label for="ga-goal-id">Goal ID</label>
+
+                        <select type="text" id="ga-goal-id" class="form-control">
+                          <option value="1">Goal Id 1 / Goal Set 1</option>
+                          <option value="2">Goal Id 2 / Goal Set 1</option>
+                          <option value="3">Goal Id 3 / Goal Set 1</option>
+                          <option value="4">Goal Id 4 / Goal Set 1</option>
+                          <option value="5">Goal Id 5 / Goal Set 1</option>
+
+                          <option value="6">Goal Id 6 / Goal Set 2</option>
+                          <option value="7">Goal Id 7 / Goal Set 2</option>
+                          <option value="8">Goal Id 8 / Goal Set 2</option>
+                          <option value="9">Goal Id 9 / Goal Set 2</option>
+                          <option value="10">Goal Id 10 / Goal Set 2</option>
+
+                          <option value="11">Goal Id 11 / Goal Set 3</option>
+                          <option value="12">Goal Id 12 / Goal Set 3</option>
+                          <option value="13">Goal Id 13 / Goal Set 3</option>
+                          <option value="14">Goal Id 14 / Goal Set 3</option>
+                          <option value="15">Goal Id 15 / Goal Set 3</option>
+
+                          <option value="16">Goal Id 16 / Goal Set 4</option>
+                          <option value="17">Goal Id 17 / Goal Set 4</option>
+                          <option value="18">Goal Id 18 / Goal Set 4</option>
+                          <option value="19">Goal Id 19 / Goal Set 4</option>
+                          <option value="20">Goal Id 20 / Goal Set 4</option>
+                        </select>
+                      </div>
+
+                      <div class="form-group">
+                        <div class="custom-control custom-switch">
+                          <input class="custom-control-input" type="checkbox" value="1" id="ga-goal-active" checked>
+                          <label class="custom-control-label" for="ga-goal-active">
+                            Active?
+                          </label>
+                        </div>
+                      </div>
+
+                      <div class="form-group">
+                        <div class="input-group">
+                          <input type="text" id="ga-goal-event-value" class="form-control" placeholder="Event Value" />
+                        </div>
+                      </div>
+
+
+                      <ul class="nav nav-pills" id="ga-goal-tab" role="tablist">
+                        <li class="nav-item ga-goal-url-destination-tab">
+                          <a class="nav-link active" id="url-destination-tab" data-toggle="tab" role="tab" href="#ga-goal-url-destination"  aria-controls="ga-goal-url-destination" aria-selected="true">
+                            Dest'n
+                          </a>
+                        </li>
+                        <li class="nav-item ga-goal-visit-time-on-site-tab">
+                          <a class="nav-link" id="visit-time-on-site-tab" data-toggle="tab" role="tab"  href="#ga-goal-visit-time-on-site" aria-controls="ga-goal-visit-time-on-site" aria-selected="false">
+                            Time/Site
+                          </a>
+                        </li>
+                        <li class="nav-item ga-goal-visit-num-pages-tab">
+                          <a class="nav-link" id="visit-num-pages-tab" data-toggle="tab" role="tab" href="#ga-goal-visit-num-pages" aria-controls="ga-goal-visit-num-pages" aria-selected="false">
+                            No. Pages
+                          </a>
+                        </li>
+                        <li class="nav-item ga-goal-event-tab">
+                          <a class="nav-link" id="event-tab" data-toggle="tab" role="tab" href="#ga-goal-event" aria-controls="ga-goal-event" aria-selected="false">
+                            Event
+                          </a>
+                        </li>
+                      </ul>
+
+                      <div class="tab-content" id="ga-goal-tab-content" style="margin-top:1rem;">
+                        <div class="tab-pane fade show active" id="ga-goal-url-destination" role="tabpanel">
+                          <h6>URL Destination</h6>
+                          <div class="form-group">
+                            <label for="ga-goal-url-destination-details">Details</label>
+                            <textarea id="ga-goal-url-destination-details" class="form-control" placeholder="Details for the goal"></textarea>
+                          </div>
+
+                          <div class="form-group">
+                            <div class="custom-control custom-switch">
+                              <input class="custom-control-input" type="checkbox" value="1" id="ga-goal-url-destination-case-sensitive">
+                              <label class="custom-control-label" for="ga-goal-url-destination-case-sensitive">
+                                Case Sensitive?
+                              </label>
+                            </div>
+                          </div>
+
+                          <div class="form-group">
+                            <div class="custom-control custom-switch">
+                              <input class="custom-control-input" type="checkbox" value="1" id="ga-goal-url-destination-first-step-required">
+                              <label class="custom-control-label" for="ga-goal-url-destination-first-step-required">
+                                First Step Required?
+                              </label>
+                            </div>
+                          </div>
+
+                          <label for="ga-goal-url-destination-match-type">Match Type</label>
+                          <div class="form-group">
+                            <select id="ga-goal-url-destination-match-type" class="form-control">
+                              <option value="HEAD">Head</option>
+                              <option value="EXACT">Exact</option>
+                              <option value="REGEX">Regular Expression</option>
+                            </select>
+                          </div>
+                        </div>
+
+
+                        <div class="tab-pane fade" id="ga-goal-visit-time-on-site" role="tabpanel">
+                          <h6>Visit Time on Site</h6>
+                          <div class="form-group">
+                            <label for="ga-goal-visit-time-on-site-details">Details</label>
+                            <textarea id="ga-goal-visit-time-on-site-details" class="form-control" placeholder="Details for the goal"></textarea>
+                          </div>
+
+                          <label for="ga-goal-visit-time-on-site-comparison-type">Comparison Type</label>
+                          <div class="form-group">
+                            <select id="ga-goal-visit-time-on-site-comparison-type" class="form-control">
+                              <option value="LESS_THAN">Less Than</option>
+                              <option value="GREATER_THAN">Greater Than</option>
+                            </select>
+                          </div>
+
+                          <div class="form-group">
+                            <label for="ga-goal-visit-time-on-site-comparison-value">Comparison Value</label>
+                            <input id="ga-goal-visit-time-on-site-comparison-value" class="form-control" placeholder="Value used for this comparison"  />
+                          </div>
+                        </div>
+
+                        <div class="tab-pane fade" id="ga-goal-visit-num-pages" role="tabpanel">
+                          <h6>Visit Number/Pages</h6>
+                          <div class="form-group">
+                            <label for="ga-goal-visit-num-pages-details">Details</label>
+                            <textarea id="ga-goal-visit-num-pages-details" class="form-control" placeholder="Details for the goal"></textarea>
+                          </div>
+
+                          <label for="ga-goal-visit-num-pages-comparison-type">Comparison Type</label>
+                          <div class="form-group">
+                            <select id="ga-goal-visit-num-pages-comparison-type" class="form-control">
+                              <option value="LESS_THAN">Less Than</option>
+                              <option value="EQUAL">Equal</option>
+                              <option value="GREATER_THAN">Greater Than</option>
+                            </select>
+                          </div>
+
+                          <div class="form-group">
+                            <label for="ga-goal-visit-num-pages-comparison-value">Comparison Value</label>
+                            <input id="ga-goal-visit-num-pages-comparison-value" class="form-control" placeholder="Value used for this comparison"  />
+                          </div>
+                        </div>
+
+                        <div class="tab-pane fade" id="ga-goal-event" role="tabpanel">
+                          <h6>Event</h6>
+                          <div class="form-group">
+                            <label for="ga-goal-event-details">Details</label>
+                            <textarea id="ga-goal-event-details" class="form-control" placeholder="Details for the goal"></textarea>
+                          </div>
+
+                          <label for="ga-goal-event-conditions[type]">Type</label>
+                          <div class="form-group">
+                            <select id="ga-goal-event-conditions[type]" class="form-control">
+                              <option value="CATEGORY">Category</option>
+                              <option value="ACTION">Action</option>
+                              <option value="LABEL">Label</option>
+                              <option value="VALUE">Value</option>
+                            </select>
+                          </div>
+
+                          <label for="ga-goal-event-conditions[comparison-type]">Comparison Type</label>
+                          <div class="form-group">
+                            <select id="ga-goal-event-conditions[comparison-type]" class="form-control">
+                              <option value="LESS_THAN">Less Than</option>
+                              <option value="EQUAL">Equal</option>
+                              <option value="GREATER_THAN">Greater Than</option>
+                            </select>
+                          </div>
+
+                          <div class="form-group">
+                            <label for="ga-goal-event-conditions[comparison-value]">Comparison Value</label>
+                            <input id="ga-goal-event-conditions[comparison-value]" class="form-control" placeholder="Value used for this comparison"  />
+                          </div>
+
+                          <label for="ga-goal-event-conditions[match-type]">Match Type</label>
+                          <div class="form-group">
+                            <select id="ga-goal-event-conditions[match-type]" class="form-control">
+                              <option value="REGEXP">Regular Expression</option>
+                              <option value="BEGINS_WITH">Begins With</option>
+                              <option value="EXACT">Exact</option>
+                            </select>
+                          </div>
+
+                          <div class="form-group">
+                            <label for="ga-goal-event-conditions[expression]">Expression</label>
+                            <textarea id="ga-goal-event-conditions[expression]" class="form-control" placeholder="Expression used for this match"></textarea>
+                          </div>
+
+                          <div class="form-group">
+                            <div class="custom-control custom-switch">
+                              <input class="custom-control-input" type="checkbox" value="1" id="ga-goal-event-use-event-value">
+                              <label class="custom-control-label" for="ga-goal-event-use-event-value">
+                                Use Event Value?
+                              </label>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-12 d-lg-none d-md-block" style="margin-bottom: .5rem;">
+                    <button type="submit" class="btn btn-warning btn-lg">
+                      <span class="oi oi-aperture"></span>
+                      Create Audience
+                    </button>
+                    <hr />
+                  </div>
+
+                  <div class="col-md-6 col-lg-4">
                     <nav>
                       <div class="nav nav-tabs" id="nav-tab" role="tablist">
                         <a class="nav-item nav-link active" id="results-tab" data-toggle="tab" role="tab" href="#results-tab-pane"  aria-controls="results-tab" aria-selected="true">
