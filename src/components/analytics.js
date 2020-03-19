@@ -6,6 +6,7 @@ import ModelBase from '../models/model-base';
 import RemarketingAudience from '../models/remarketing-audience';
 import CustomDimension from '../models/custom-dimension';
 import CustomMetric from '../models/custom-metric';
+import View from '../models/view';
 
 class Analytics extends ModelBase {
   constructor(clientId, scopes) {
@@ -48,6 +49,10 @@ class Analytics extends ModelBase {
   createCustomMetric(profile, customMetric) {
     let customMetricModel = new CustomMetric(profile);
     customMetricModel.create(customMetric);
+  }
+
+  async listViews(accountId, webPropertyId) {
+    return await View.all(accountId, webPropertyId);
   }
 }
 

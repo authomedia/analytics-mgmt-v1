@@ -143,7 +143,7 @@ class AuditFormControl extends FormControlBase {
           const cdBatch = CustomDimension.batch();
           var requireSync = false;
 
-          Object.values(row).forEach((value) => {
+          Object.values(row).forEach(async (value) => {
             if (value.event && value.customDimension === undefined) {
               let cd = new CustomDimension({
                 webPropertyId: value.property.id,
@@ -154,25 +154,7 @@ class AuditFormControl extends FormControlBase {
                 scope: value.data.scope
               })
 
-              let req = cd.create(false);
-              cdBatch.add(req, {id: value.data.index});
-              cd.deserialize(req).then((data) => {
-                value.customDimension = data;
-                value.updating = false;
-                value.event(table, value, row, index);
-              }).catch((error) => {
-                value.updating = false;
-                value.success = false;
-                value.event(table, value, row, index);
-              });;
-
-              value.updating = true;
-              requireSync = true
-            } else if (value.event && value.customDimension && !value.customDimension.eq(value.data)) {
-
-              let req = value.customDimension.update(value.data, false);
-              cdBatch.add(req, {id: value.data.index});
-              value.customDimension.deserialize(req).then((data) => {
+              await cd.create().then((data) => {
                 value.customDimension = data;
                 value.updating = false;
                 value.event(table, value, row, index);
@@ -181,28 +163,70 @@ class AuditFormControl extends FormControlBase {
                 value.success = false;
                 value.event(table, value, row, index);
               });
+
+              // let req = cd.create(false);
+              // cdBatch.add(req, {id: value.data.index});
+              // cd.deserialize(req).then((data) => {
+              //   value.customDimension = data;
+              //   value.updating = false;
+              //   value.event(table, value, row, index);
+              // }).catch((error) => {
+              //   value.updating = false;
+              //   value.success = false;
+              //   value.event(table, value, row, index);
+              // });;
+
               value.updating = true;
-              requireSync = true;
+              // requireSync = true
+            } else if (value.event && value.customDimension && !value.customDimension.eq(value.data)) {
+              console.log(value.customDimension);
+              await value.customDimension.update(value.data).then((data) => {
+                value.customDimension = data;
+                value.updating = false;
+                value.event(table, value, row, index);
+              }).catch((error) => {
+                value.updating = false;
+                value.success = false;
+                value.event(table, value, row, index);
+              });
+
+              // let req = value.customDimension.update(value.data, false);
+              // cdBatch.add(req, {id: value.data.index});
+              // value.customDimension.deserialize(req).then((data) => {
+              //   value.customDimension = data;
+              //   value.updating = false;
+              //   value.event(table, value, row, index);
+              // }).catch((error) => {
+              //   value.updating = false;
+              //   value.success = false;
+              //   value.event(table, value, row, index);
+              // });
+              value.updating = true;
+              // requireSync = true;
             }
+
+            setTimeout(() => {
+              console.log('waiting')
+            }, 1000);
           });
 
-          if (requireSync) {
-            table.bootstrapTable('updateRow', {
-              index: index,
-              row: row
-            });
+          // if (requireSync) {
+          //   table.bootstrapTable('updateRow', {
+          //     index: index,
+          //     row: row
+          //   });
 
-            console.log(cdBatch);
+          //   console.log(cdBatch);
 
-            cdBatch.then((data) => {
-              console.log(data);
+          //   cdBatch.then((data) => {
+          //     console.log(data);
 
-              table.bootstrapTable('updateRow', {
-                index: index,
-                row: row
-              });
-            });
-          }
+          //     table.bootstrapTable('updateRow', {
+          //       index: index,
+          //       row: row
+          //     });
+          //   });
+          // }
         }
       }
     })
