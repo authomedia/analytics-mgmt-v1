@@ -186,7 +186,7 @@ span.logger-error {
 
   .modal-xxl table {
     overflow-x: scroll;
-    display: block;
+    display: inline-block;
   }
 }
 
