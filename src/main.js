@@ -13,3 +13,8 @@ let path = document.location.pathname;
 
 // Route to the appropriate function based on the path
 router[path]();
+
+$(function() {
+  $('[data-toggle="popover"]').popover();
+  $('[data-toggle="tooltip"]').tooltip();
+});

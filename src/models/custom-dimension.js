@@ -1,5 +1,3 @@
-import dedent from 'dedent';
-
 import ModelBase from './model-base';
 import ui from '../config/ui';
 
@@ -47,35 +45,52 @@ class CustomDimension extends ModelBase {
     return gapi.client.analytics.management.customDimensions;
   }
 
+  static batch() {
+    return gapi.client.newBatch();
+  }
+
   get _api() {
     return this.constructor._api;
   }
 
+
+
+
   // NB. Create MUST be triggered squentially - it will not use the index value
-  async create() {
-    return await this._api.insert({
-        accountId: this.accountId,
-        webPropertyId: this.webPropertyId
-      }, this.toJson())
-      .then((response) => {
-        return response
-      }).
-      catch((error) => {
-        return error;
-      });
+  create(resolve = true) {
+    const request = this._api.insert({
+      accountId: this.accountId,
+      webPropertyId: this.webPropertyId
+    }, this.toJson())
+
+    if (resolve) {
+      return this.deserialize(request)
+    } else {
+      return request;
+    }
   }
 
-  update(newValues) {
+  update(newValues, resolve = true) {
     if (newValues) {
       this.name = newValues.name;
       this.scope = newValues.scope;
       this.active = newValues.active;
     }
-    return this._patch(this.toJson())
+    return this._patch(this.toJson(), resolve);
   }
 
   destroy() {
     console.log('Custom dimensions cannot be destroyed');
+  }
+
+  deserialize(request) {
+    return request.then((response) => {
+      console.log(response);
+      return new CustomDimension(response.result);
+    }).catch((error) => {
+      console.log(error);
+      // throw new Error(error);
+    });
   }
 
   async activate() {
@@ -94,7 +109,7 @@ class CustomDimension extends ModelBase {
     return {
       name: this.name,
       scope: this.scope,
-      active: this.active
+      active: (this.active == "1" || this.active)
     }
   }
 
@@ -109,147 +124,20 @@ class CustomDimension extends ModelBase {
   }
 
 
-  _patch(data) {
-    return this._api
+  _patch(data, resolve = true) {
+    const request = this._api
       .patch({
         accountId: this.accountId,
         webPropertyId: this.webPropertyId,
         customDimensionId: `ga:dimension${this.index}`
-      }, data)
-      .then((response) => {
-        return response
-      }).
-      catch((error) => {
-        return error;
-      });
+      }, data);
+
+    if (resolve) {
+      return this.deserialize(request);
+    } else {
+      return request;
+    }
   }
-
-
 }
-
-// class CustomDimension extends ModelBase {
-//   constructor(profile, customDimension) {
-//     super();
-
-//     // Retry behaviour
-//     this.maxRetries = 5;
-//     this.initialWaitTime = 1000; // ms
-//     this.profile = profile;
-//   }
-
-//   all() {
-//     let request = gapi.client.analytics.management.customDimensions.list(profile, webPropertyId);
-//     this.executeRequest(request)
-//   }
-
-//   create(customDimension) {
-//     let customDimensions = this.toJson(customDimension);
-//     this.debugJson(customDimensions);
-
-//     return;
-
-//     customDimensions.forEach((customDimensions) => {
-//       let request = gapi.client.analytics.management.customDimensions.insert(customDimension);
-//       this.executeRequest(request, customDimension);
-//     })
-//   }
-
-//   executeRequest(request, customDimension, retries = 0) {
-//     request.execute((response) => {
-//       // Handle the response.
-//       if (response.code && response.message) {
-//         let message = dedent(`
-//           ${customDimension.name}: ${customDimension.message}
-//         `);
-
-//         let options = {
-//           action: {
-//             text: 'RETRY',
-//             icon: 'reload',
-//             click: (event) => {
-//               let elem = $(event.currentTarget);
-//               this.executeRequest(request, customDimension);
-//             }
-//           }
-//         }
-
-//         this.handleRetry(
-//           response,
-//           request,
-//           audience,
-//           message,
-//           options,
-//           retries
-//         );
-
-//         // Always handle final errors with a toast message
-//         this.handleError(message, options);
-
-//       } else {
-//         let message = dedent(`
-//           ${customDimension.name}: ${this.translate.messages.customDimensionSuccess}
-//         `);
-
-//         this.handleSuccess(message);
-//       }
-//       this.debug(this.profile);
-//       this.debugJson(response);
-//       this.debug(`\n\n`);
-//     });
-//   }
-
-//   handleRetry(response, request, audience, message, options, retries = 0) {
-//     if (response.code == 429 || response.code == 403 || response.code == 400) {
-//       if (retries < this.maxRetries) {
-
-//         let waitTime = (Math.pow(2, retries) + Math.random());
-
-//         retries = retries += 1;
-
-//         this.handleError(`${response.error.data[0].reason}: ${message}`, options);
-
-//         // Wait for backoff time before trying again
-//         console.log(`Waiting for ${waitTime}s before continuing`);
-//         setTimeout(() => {
-//           this.executeRequest(request, audience, retries);
-//         }, waitTime * 1000);
-//       }
-//     }
-//   }
-
-//   toJson(customDimension) {
-//     if (this.isValid(customDimension)) {
-
-//       let requestBody = {
-//         accountId: this.profile.accountId,
-//         webPropertyId: this.profile.webPropertyId,
-//         resource: this.buildResource(customDimension)
-//       }
-
-//       return requestBody;
-
-//     } else {
-//       this.handleError(this.translate.analytics.errors.customDimensionsValidationError);
-//       return [];
-//     }
-//   }
-
-//   buildResource(customDimension) {
-//     const resource = {
-//       name: customDimension.name,
-//       index: customDimension.index,
-//       scope: customDimension.scope,
-//       active: customDimension.active == 1 ? true : false
-//     }
-
-//     return resource;
-//   }
-
-
-//   isValid(customDimension) {
-//     return customDimension !== undefined;
-//   }
-
-// }
 
 export default CustomDimension;
