@@ -2,7 +2,7 @@ import Dexie from 'dexie';
 
 import constants from '../config/constants';
 
-const db = new Dexie('Analyt');
+const db = new Dexie(process.env.DB_NAME);
 const dbFields = constants.DB_FIELDS.join(', ');
 const dbFields2 = constants.DB_FIELDS2.join(', ');
 
