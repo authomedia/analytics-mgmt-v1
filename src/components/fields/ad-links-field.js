@@ -1,10 +1,30 @@
 import SelectField from './select-field';
+import events from '../../config/events';
 
 class AdLinksField extends SelectField {
   constructor(field, formControl) {
     super(field, formControl);
 
     this.className = 'AdLinks';
+
+    this.handleChange((i, elem) => {
+      this.formControl.emit(events.FIELDS.AD_LINKS.CHANGE, {
+        i: i,
+        elem: elem
+      });
+    });
+
+    this.formControl.on(events.FIELDS.ACCOUNTS.CHANGE, (event) => {
+      this.empty();
+    });
+
+    this.formControl.on(events.FIELDS.PROPERTIES.CHANGE, (event) => {
+      this.empty();
+
+      if (event.elem) {
+        this.init($(event.elem).data('accountId'), $(event.elem).val(), $(event.elem).text());
+      }
+    });
   }
 
   init(accountId, propertyId, propertyName) {
@@ -38,8 +58,8 @@ class AdLinksField extends SelectField {
       response.result.items.filter((item, i) => {
         return item.linkedAdAccounts.map((linkedAdAccount, i) => {
           if (!seenAdAccounts.includes(linkedAdAccount.linkedAccountId)) {
-            if (linkedAdAccount.type == "ANALYTICS") {
-              // // Currently, do nothing with ANALYTICS type
+            if (linkedAdAccount.type == "ANALYTICS" || linkedAdAccount.type == "ADWORDS_LINKS") {
+              // // Currently, do nothing with ANALYTICS or ADWORDS_LINKS type
               // console.log(linkedAdAccount);
               // linkedAdAccount.label = `${linkedAdAccount.type} > ${linkedAdAccount.webPropertyId}`;
               // linkedAdAccount.linkedAccountId = linkedAdAccount.webPropertyId; // FIXME: HACK ALERT!!
@@ -104,8 +124,6 @@ class AdLinksField extends SelectField {
   }
 
   handleResult(result) {
-    console.log(result);
-
     super.handleResult(
       result.items,
       this.field,

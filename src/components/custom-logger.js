@@ -8,7 +8,6 @@ const customLogger = function (messages, context) {
   let options = {};
   let action;
 
-  //console.log(messages);
   if (typeof(messages[messages.length -1]) == 'object') {
     options = messages.pop();
     action = options['action'] || {};
@@ -43,9 +42,9 @@ const customLogger = function (messages, context) {
     content.push(link);
   }
 
-  ui.formControl.logger.append($(logMessage.html(content)));
+  ui.logger.append($(logMessage.html(content)));
 
-  let loggerContainer = ui.formControl.logger.parent()
+  let loggerContainer = ui.logger.parent()
   loggerContainer.prop('scrollTop', loggerContainer.prop('scrollHeight'));
 
   Logger.createDefaultHandler()(messages, context);

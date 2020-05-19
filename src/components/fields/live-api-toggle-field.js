@@ -1,4 +1,4 @@
-import ModelBase from '../models/model-base';
+import ModelBase from '../../models/model-base';
 
 class LiveApiToggleField extends ModelBase {
   constructor(field, formControl) {

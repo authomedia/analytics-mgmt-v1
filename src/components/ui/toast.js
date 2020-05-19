@@ -1,4 +1,4 @@
-import ui from '../config/ui';
+import ui from '../../config/ui';
 import Logger from 'js-logger';
 
 class Toast {
