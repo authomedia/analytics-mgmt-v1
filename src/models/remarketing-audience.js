@@ -220,12 +220,13 @@ class RemarketingAudience extends ModelBase {
 
   buildLinkedAccounts(linkedAdAccounts, profile){
     return $.makeArray(linkedAdAccounts.map((i, linkedAdAccount) => {
-      let account = linkedAdAccount.adWordsAccounts[0];
-      return {
-        linkedAccountId: account.customerId,
-        type: account.type ? account.type : 'ADWORDS_LINKS',
-      }
-    }));
+      return linkedAdAccount.adWordsAccounts.map((adWordsAccount, j) => {
+        return {
+          linkedAccountId: adWordsAccount.customerId,
+          type: adWordsAccount.type ? adWordsAccount.type : 'ADWORDS_LINKS',
+        }
+      })
+    })).flat(Infinity);
   }
 
   remarketingFormIsValid() {
