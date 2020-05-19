@@ -1,4 +1,5 @@
 import SelectField from './select-field';
+import events from '../../config/events';
 
 class ProfilesField extends SelectField {
   constructor(field, formControl) {
@@ -6,8 +7,24 @@ class ProfilesField extends SelectField {
 
     this.className = 'Profiles';
 
-    // Initialize with empty callback for n of n selected behaviour
-    this.handleChange((i, elem) => { });
+    this.handleChange((i, elem) => {
+      this.formControl.emit(events.FIELDS.PROFILES.CHANGE, {
+        i: i,
+        elem: elem
+      });
+    });
+
+    this.formControl.on(events.FIELDS.ACCOUNTS.CHANGE, (event) => {
+      this.empty();
+    });
+
+    this.formControl.on(events.FIELDS.PROPERTIES.CHANGE, (event) => {
+      this.empty();
+
+      if (event.elem) {
+        this.init($(event.elem).data('accountId'), $(event.elem).val(), $(event.elem).text());
+      }
+    });
   }
 
   init(accountId, propertyId, propertyName) {

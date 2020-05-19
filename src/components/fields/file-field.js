@@ -1,5 +1,5 @@
 import Logger from 'js-logger';
-import ModelBase from '../models/model-base';
+import ModelBase from '../../models/model-base';
 
 class FileField extends ModelBase {
   constructor(field) {

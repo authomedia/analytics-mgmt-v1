@@ -1,7 +1,7 @@
 import EventEmitter from 'events';
 import i18n from '../config/i18n';
-import Toast from '../components/toast';
-import Modal from '../components/modal';
+import Toast from '../components/ui/toast';
+import Modal from '../components/ui/modal';
 import ui from '../config/ui';
 
 class ModelBase extends EventEmitter {
@@ -9,7 +9,7 @@ class ModelBase extends EventEmitter {
     super();
     this.translate = i18n[process.env.LOCALE];
     this.toast = new Toast();
-    this.modal = new Modal();
+    this.modal = new Modal(ui);
   }
 
   handleSuccess(message, action = {}) {
@@ -25,12 +25,12 @@ class ModelBase extends EventEmitter {
   }
 
   debug(string) {
-    ui.formControl.debug.append(`${string}\n`);
+    ui.debug.append(`${string}\n`);
   }
 
   debugJson(object) {
     let formattedJson = JSON.stringify(object, null, 2);
-    ui.formControl.debug.append(formattedJson);
+    ui.debug.append(formattedJson);
   }
 }
 

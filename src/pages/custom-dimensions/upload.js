@@ -1,15 +1,17 @@
 import bsCustomFileInput from 'bs-custom-file-input'
-import CsvFileField from '../components/csv-file-field';
-import CustomDimensionsValidator from '../utilities/custom-dimensions-validator';
-import Page from './page';
-import TableGenerator from '../utilities/table-generator';
-import Utilities from '../components/utilities';
-import ui from '../config/ui';
 
-import db from '../models/db';
+import CsvFileField from '../../components/fields/csv-file-field';
+import CustomDimensionsValidator from '../../utilities/custom-dimensions-validator';
+import Page from '../page';
+import TableGenerator from '../../utilities/table-generator';
+import Utilities from '../../components/utilities';
+
+import constants from '../../config/constants';
+import ui from '../../config/ui';
+import db from '../../models/db';
 
 
-class CustomDimensionsPage extends Page {
+class CustomDimensionsUploadPage extends Page {
   constructor() {
     super()
 
@@ -30,7 +32,18 @@ class CustomDimensionsPage extends Page {
     });
 
     db.customDimensions.toArray((data) => {
-      data.unshift(['index','name', 'scope', 'active']);
+      data.unshift(constants.DB_FIELDS);
+      // data = data.sort((a, b) => {
+      //   let ai = parseInt(a.index);
+      //   let bi = parseInt(b.index)
+      //   if (ai < bi) {
+      //     return -1;
+      //   }
+      //   if (ai > bi) {
+      //     return 1;
+      //   }
+      //   return 0;
+      // })
       this.currentData = data;
       this.updateTable(data);
       ui.loggedIn();
@@ -62,7 +75,13 @@ class CustomDimensionsPage extends Page {
 
   async updateDatabase(data) {
     const dbData = Utilities.mapRows(data[0], data.slice(1, data.length))
-    return await db.customDimensions.bulkPut(dbData);
+    return await db.customDimensions.clear()
+      .then(() => {
+        db.customDimensions.bulkPut(dbData)
+      })
+      .catch((err) => {
+        this.handleError('Problem clearing the db');
+      });
   }
 
   enableButton(active, callback ) {
@@ -74,13 +93,13 @@ class CustomDimensionsPage extends Page {
     } else {
       this.updateButton.addClass('btn-warning');
       this.updateButton.removeClass('btn-success');
-      this.updateButton.off('click')
+      this.updateButton.off('click');
     }
   }
 }
 
 export default () => {
   $(function() {
-    new CustomDimensionsPage();
+    new CustomDimensionsUploadPage();
   });
 }

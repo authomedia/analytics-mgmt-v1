@@ -3,3 +3,20 @@ index,name,scope,active
 2,bar,SESSION,1
 3,baz,USER,0
 4,boz,PRODUCT,1
+5,foos,HIT,1
+6,hello bar,PRODUCT,1
+7,blah,SESSION,1
+8,test,HIT,1
+9,joker,PRODUCT,1
+10,example,SESSION,1
+11,bobby,HIT,1
+12,dazzler,SESSION,1
+13,football,PRODUCT,1
+14,fleetwood,HIT,1
+15,mac,SESSION,1
+16,dire,HIT,1
+17,straits,HIT,1
+18,pink,HIT,1
+19,floyd,HIT,1
+20,rolling,HIT,1
+21,stones,HIT,1

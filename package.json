@@ -25,7 +25,9 @@
     "table-builder": "^2.1.1"
   },
   "dependencies": {
-    "dexie": "^2.0.4"
+    "dexie": "^2.0.4",
+    "events": "^3.1.0",
+    "util": "^0.12.1"
   },
   "scripts": {
     "build": "rollup -c",

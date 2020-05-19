@@ -11,18 +11,20 @@ import { terser } from 'rollup-plugin-terser';
 const production = !process.env.ROLLUP_WATCH;
 
 export default {
-	input: 'src/main.js',
-	output: {
-		file: 'public/js/bundle.js',
-		format: 'iife', // immediately-invoked function expression — suitable for <script> tags
-		sourcemap: !production
-	},
-	plugins: [
-		resolve(), // tells Rollup how to find date-fns in node_modules
-		commonjs(), // converts date-fns to ES modules
-		nodeGlobals(),
-		builtins(), // Add builtins support
-		dotenv(), // add .env support
-		production && terser() // minify, but only in production
-	]
+  input: 'src/main.js',
+  output: {
+    file: 'public/js/bundle.js',
+    format: 'iife', // immediately-invoked function expression — suitable for <script> tags
+    sourcemap: !production
+  },
+  plugins: [
+    resolve(), // tells Rollup how to find date-fns in node_modules
+    commonjs(), // converts date-fns to ES modules
+    nodeGlobals(),
+    builtins({
+      preferBuiltins: true
+    }), // Add builtins support
+    dotenv(), // add .env support
+    production && terser() // minify, but only in production
+  ]
 };

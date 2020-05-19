@@ -1,8 +1,8 @@
-import ui from '../config/ui';
-import Utilities from './utilities';
-import i18n from '../config/i18n';
+import ui from '../../config/ui';
+import Utilities from '../utilities';
+import i18n from '../../config/i18n';
 
-import ModelBase from '../models/model-base';
+import ModelBase from '../../models/model-base';
 
 
 class SelectField extends ModelBase {
@@ -31,6 +31,7 @@ class SelectField extends ModelBase {
   initSelectAll() {
     this.selectAll.data('mode', 'all');
     this.selectAll.on('click', (e) => {
+      e.preventDefault();
       let options = [];
       let ids = [];
 
@@ -84,7 +85,7 @@ class SelectField extends ModelBase {
   handleChange(callback) {
     this.field.on('change', () => {
       this.prepareSelectedLabel();
-      ui.formControl.debug.html('');
+      ui.debug.html('');
 
       const selected = this.field.children('option:selected');
       if (selected.length) {

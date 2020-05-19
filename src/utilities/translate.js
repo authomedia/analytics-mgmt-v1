@@ -9,7 +9,11 @@ function translate(message, interpolations) {
   keys.forEach((key) => {
     obj = fetchKey(obj, key);
   });
-  return util.format(obj, ...interpolations);
+  if (interpolations !== undefined) {
+ 	 return util.format(obj, ...interpolations);
+  } else {
+  	return obj;
+  }
 }
 
 function fetchKey(obj, key) {

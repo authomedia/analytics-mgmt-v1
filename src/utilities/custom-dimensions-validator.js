@@ -13,7 +13,7 @@ class CustomDimensionsValidator extends Validator {
         validate: this.validateRange,
         message: translate('validations.range', ['Index']),
         min: 1,
-        max: 20 // TODO: 200 for A360 accounts - how do we differentiate?
+        max: 200 // TODO: 200 for A360 accounts - how do we differentiate?
       },
       name: {
         validate: this.validateLength,

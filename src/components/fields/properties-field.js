@@ -1,4 +1,5 @@
 import SelectField from './select-field';
+import events from '../../config/events';
 
 class PropertiesField extends SelectField {
   constructor(field, formControl) {
@@ -7,14 +8,17 @@ class PropertiesField extends SelectField {
     this.className = 'Properties';
 
     this.handleChange((i, elem) => {
-      this.formControl.profiles.empty();
-      this.formControl.remarketingAudiences.empty();
-      this.formControl.linkedAdAccounts.empty();
-      this.formControl.adLinks.empty();
+      this.formControl.emit(events.FIELDS.PROPERTIES.CHANGE, {
+        i: i,
+        elem: elem
+      });
+    });
 
-      if (elem) {
-        this.formControl.profiles.init($(elem).data('accountId'), $(elem).val(), $(elem).text());
-        this.formControl.adLinks.init($(elem).data('accountId'), $(elem).val(), $(elem).text());
+    this.formControl.on(events.FIELDS.ACCOUNTS.CHANGE, (event) => {
+      this.empty();
+
+      if (event.elem) {
+        this.init($(event.elem).val(), $(event.elem).text());
       }
     });
   }

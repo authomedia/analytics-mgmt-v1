@@ -1,9 +1,11 @@
 import remarketing from './remarketing';
-import customDimensions from './custom-dimensions'
+import customDimensionsUpload from './custom-dimensions/upload';
+import customDimensionsAudit from './custom-dimensions/audit';
 
 const routes = {
   '/': remarketing,
-  '/custom-dimensions': customDimensions
+  '/custom-dimensions/upload': customDimensionsUpload,
+  '/custom-dimensions/audit': customDimensionsAudit,
 }
 
 export default routes;
