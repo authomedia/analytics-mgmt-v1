@@ -39,3 +39,4 @@ The `public/index.html` file contains a `<script src='/js/bundle.js'>` tag, whic
 ### Contributors
 
 * [Joey Connor](https://github.com/wildtangent) @ [Authomedia](https://github.com/authomedia)
+* [Sean Burton](https://github.com/analyt-data) @ [Analyt](https://analyt.co.uk/)
