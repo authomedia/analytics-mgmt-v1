@@ -20,7 +20,7 @@ body {
 }
 
 .brand-title {
-  font-family: 'Lobster', cursive;
+  font-family: 'Courier', cursive;
 }
 
 .custom-control-input:checked ~ .custom-control-label::before {

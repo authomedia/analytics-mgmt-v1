@@ -5,6 +5,7 @@ import ModelBase from '../models/model-base';
 
 import RemarketingAudience from '../models/remarketing-audience';
 import CustomDimension from '../models/custom-dimension';
+import CustomMetric from '../models/custom-metric';
 
 class Analytics extends ModelBase {
   constructor(clientId, scopes) {
@@ -26,13 +27,27 @@ class Analytics extends ModelBase {
     return await CustomDimension.find(accountId, webPropertyId, index);
   }
 
+  async findCustomMetric(accountId, webPropertyId, index) {
+    console.log(arguments);
+    return await CustomMetric.find(accountId, webPropertyId, index);
+  }
+
   async listCustomDimensions(accountId, webPropertyId) {
     return await CustomDimension.all(accountId, webPropertyId);
+  }
+
+  async listCustomMetrics(accountId, webPropertyId) {
+    return await CustomMetric.all(accountId, webPropertyId);
   }
 
   createCustomDimension(profile, customDimension) {
     let customDimensionModel = new CustomDimension(profile);
     customDimensionModel.create(customDimension);
+  }
+
+  createCustomMetric(profile, customMetric) {
+    let customMetricModel = new CustomMetric(profile);
+    customMetricModel.create(customMetric);
   }
 }
 
