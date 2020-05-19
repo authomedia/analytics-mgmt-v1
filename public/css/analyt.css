@@ -1,3 +1,4 @@
+
 body {
   font-family: 'Roboto', sans-serif;
 }
@@ -166,4 +167,59 @@ span.logger-error {
   .toasts .toast {
     max-width: 100%;
   }
+}
+
+.scrollable-x {
+  overflow-x: scroll;
+  display: block;
+}
+
+.spinner-small {
+  width: 1.2rem;
+  height: 1.2rem;
+}
+
+@media (min-width: 1200px) {
+  .modal-xxl {
+    max-width: 95%;
+  }
+
+  .modal-xxl table {
+    overflow-x: scroll;
+    display: inline-block;
+  }
+}
+
+.text-medium-light {
+  color: #dadcde;
+}
+
+.popover {
+  min-width: 400px;
+}
+
+.hoverable {
+  cursor: pointer;
+}
+
+.table-auditor {
+  margin: 0 0.75rem;
+  border-top: 1px solid #dee2e6;
+}
+.table-auditor .row, {
+  border-top: 1px solid #dee2e6;
+  word-wrap: normal;
+  border-collapse: collapse;
+}
+
+.table-auditor .col-3 {
+  border-left: 1px solid #dee2e6;
+  border-right: 1px solid #dee2e6;
+  border-bottom: 1px solid #dee2e6;
+  word-wrap: normal;
+  border-collapse: collapse;
+}
+
+.table-auditor .heading {
+  background-color: rgba(0,0,0,.05);;
 }

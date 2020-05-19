@@ -4,14 +4,14 @@ import ModelBase from './model-base';
 import ui from '../config/ui';
 
 class RemarketingAudience extends ModelBase {
-  constructor(profile) {
+  constructor(profile, formControl) {
     super();
 
     // Retry behaviour
     this.maxRetries = 5;
     this.initialWaitTime = 1000; // ms
 
-    this.formControl = ui.formControl;
+    this.formControl = formControl;
 
     this.profile = $(profile).data('item');
     this.property = profile.property;
@@ -54,14 +54,14 @@ class RemarketingAudience extends ModelBase {
           }
         }
 
-        this.handleRetry(
-          response,
-          request,
-          audience,
-          message,
-          options,
-          retries
-        );
+        // this.handleRetry(
+        //   response,
+        //   request,
+        //   audience,
+        //   message,
+        //   options,
+        //   retries
+        // );
 
         // Always handle final errors with a toast message
         this.handleError(message, options);

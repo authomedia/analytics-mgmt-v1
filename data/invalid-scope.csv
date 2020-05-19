@@ -1,0 +1,4 @@
+index,name,scope,active
+1,foo,FOO,1
+2,bar,SESSION,1
+3,baz,USER,0
