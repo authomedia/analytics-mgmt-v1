@@ -5,12 +5,8 @@ import ModelBase from '../models/model-base';
 
 import RemarketingAudience from '../models/remarketing-audience';
 import CustomDimension from '../models/custom-dimension';
-<<<<<<< HEAD
 import CustomMetric from '../models/custom-metric';
-import View from '../models/view';
-=======
 import Profile from '../models/profile';
->>>>>>> Change views into profiles
 
 class Analytics extends ModelBase {
   constructor(clientId, scopes) {
