@@ -25,19 +25,54 @@ const analytics = new Analytics(
 class GoalsAuditFormControl extends FormControlBase {
   constructor() {
     super();
+
     this.analytics = analytics;
+
     this.accounts = new AccountsField($('#ga-accounts'), this);
     this.properties = new PropertiesField($('#ga-properties'), this);
     this.profiles = new ProfilesField($('#ga-profiles'), this);
 
     this.auditButton = new SubmitButton($('#audit-button'), this);
 
-    this.auditTable = new AuditTable(
-      'Goals',
-      'goal',
-      Goal,
-      'Audit Goals'
-    );
+    this.formFields  = {
+      goal: {
+        id: $('#ga-goal-id'),
+        active: $('#ga-goal-active'),
+        eventValue: $('#ga-goal-event-value'),
+        urlDestination: {
+          details: $('#ga-goal-url-destination-details'),
+          caseSensitive: $('#ga-goal-url-destination-case-sensitive'),
+          matchType: $('#ga-goal-url-destination-match-type'),
+        },
+        visitTimeOnSite: {
+          details: $('#ga-goal-visit-time-on-site-details'),
+          comparisonType: $('#ga-goal-visit-time-on-site-comparison-type'),
+          comparisonValue: $('#ga-goal-visit-time-on-site-comparison-value')
+        },
+        numPages: {
+          details: $('#ga-goal-visit-num-pages'),
+          comparisonType: $('#ga-goal-visit-num-pages-comparison-type'),
+          comparisonValue: $('#ga-goal-visit-num-pages-comparison-value')
+        },
+        event: {
+          details: $('#ga-goal-event-details'),
+          conditions: [{
+            type: $('#ga-goal-event-conditions[type]'),
+            comparisonType: $('#ga-goal-event-conditions[comparison-type]'),
+            comparisonValue: $('#ga-goal-event-conditions[comparison-value]'),
+            matchType: $('#ga-goal-event-conditions[match-type]'),
+            expression: $('#ga-goal-event-conditions[expression]'),
+          }],
+          useEventValue: $('#ga-goal-event-use-event-value')
+        }
+      }
+    }
+    // this.auditTable = new AuditTable(
+    //   'Goals',
+    //   'goal',
+    //   Goal,
+    //   'Audit Goals'
+    // );
 
     this.initFormSubmit();
     this.initAuditButton();
@@ -56,44 +91,48 @@ class GoalsAuditFormControl extends FormControlBase {
   initFormSubmit() {
     this.form.on('submit', (event) => {
       event.preventDefault();
-      const options = this.profiles.field.find('option:selected');
-
-      const headers = {
-        'excludeQueryParameters': 'Exclude URL Params'
-      }
-
-      this.listProfiles(options).then((data) => {
-        this.displayAuditTable(headers, data);
+      this.profiles.field.find('option:selected').each((i, profile) => {
+        ui.debug.append(`${$(profile).text()}\n`);
+        this.analytics.createGoals($(profile), this.goalForm);
+        ui.debug.append(`\n\n`);
       });
+
+      // const headers = {
+      //   'excludeQueryParameters': 'Exclude URL Params'
+      // }
+
+      // this.listProfiles(options).then((data) => {
+      //   this.displayAuditTable(headers, data);
+      // });
 
     });
   }
 
-  listProfiles(options) {
-    return Promise.all(
-      options.map(async (i, elem) => {
-        const item = $(elem).data('item');
-        return await this.analytics.listProfiles(item.accountId, item.webPropertyId).then((response) => {
-          return {
-            item: item,
-            objects: response
-          }
-        });
-      })
-    )
-  }
+  // listProfiles(options) {
+  //   return Promise.all(
+  //     options.map(async (i, elem) => {
+  //       const item = $(elem).data('item');
+  //       return await this.analytics.listProfiles(item.accountId, item.webPropertyId).then((response) => {
+  //         return {
+  //           item: item,
+  //           objects: response
+  //         }
+  //       });
+  //     })
+  //   )
+  // }
 
-  displayAuditTable(headers,data) {
-    this.modal.showModal(
-      'Audit Goals',
-      this.auditTable.generateTable(headers, data),
-      {
-        callback: (event) => {
-          console.log(event);
-        }
-      }
-    );
-  }
+  // displayAuditTable(headers,data) {
+  //   this.modal.showModal(
+  //     'Audit Goals',
+  //     this.auditTable.generateTable(headers, data),
+  //     {
+  //       callback: (event) => {
+  //         console.log(event);
+  //       }
+  //     }
+  //   );
+  // }
 }
 
 export default GoalsAuditFormControl;

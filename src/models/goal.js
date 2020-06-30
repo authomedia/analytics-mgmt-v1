@@ -1,7 +1,7 @@
 import ModelBase from './model-base';
 import ui from '../config/ui';
 
-class Profile extends ModelBase {
+class Goal extends ModelBase {
   constructor(data = {}) {
     super();
     let {
@@ -137,4 +137,4 @@ class Profile extends ModelBase {
   }
 }
 
-export default Profile;
+export default Goal;
