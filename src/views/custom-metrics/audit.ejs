@@ -1,0 +1,49 @@
+<%- include('shared/_header', {activeNav: 'custom-metrics-audit'}) -%>
+
+<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+  <%- include('shared/_heading', {
+    title: 'Custom Metrics > Audit',
+    button: {
+      id: 'custom-metrics-audit-button',
+      title: 'Audit Now'
+    }
+  }) -%>
+
+  <%- include('shared/_loading-overlay') -%>
+
+  <%- include('shared/_google-analytics-auth') -%>
+
+  <div id="analytics-ui" hidden>
+    <form>
+      <div class="row">
+        <div class="col-md-12 col-lg-8">
+          <!-- Accounts -->
+          <%- include('shared/fields/_select-multiple', {
+            id: 'ga-accounts',
+            icon: '/images/adminhome_account_settings.png',
+            title: 'Accounts'
+          }) -%>
+
+          <!-- Properties -->
+          <%- include('shared/fields/_select-multiple', {
+            id: 'ga-properties',
+            icon: '/images/adminhome_property_settings.png',
+            title: 'Properties'
+          }) -%>
+
+          <!-- Custom Metrics Upload -->
+          <%- include('shared/fields/_upload-display-table', {
+            id: 'custom-metrics',
+            link: '/custom-metrics/upload.html',
+            icon: 'oi oi-puzzle-piece',
+            title: 'Custom Metrics'
+          }) -%>
+        </div>
+
+        <%- include('shared/_output-panel') -%>
+      </div>
+    </form>
+  </div>
+</main>
+
+<%- include('shared/_footer') -%>

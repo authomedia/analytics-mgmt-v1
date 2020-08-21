@@ -1,0 +1,21 @@
+<div class="row">
+  <div class="col-7">
+    <h5>
+      <img src="<%= icon %>">
+      <%= title %>
+      <span id="<%= id %>-selected" class="badge badge-secondary"></span>
+    </h5>
+  </div>
+  <div class="col-5">
+    <ul class="nav justify-content-end">
+      <li class="nav-item">
+        <a id="<%= id %>-select-all" class="nav-link active" href="#">Select all</a>
+      </li>
+    </ul>
+  </div>
+</div>
+<div class="form-group">
+  <select id="<%= id %>" multiple="multiple" class="form-control" size="1">
+    <option value="">None</option>
+  </select>
+</div>

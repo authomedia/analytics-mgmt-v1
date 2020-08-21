@@ -1,0 +1,28 @@
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+  <h1 class="h2 brand-title" id="content-title">
+    <img src="/images/analyt-logo.png" class="brand-logo" alt="Analyt">
+    <%= title %>
+  </h1>
+
+  <div class="btn-toolbar mb-2 mb-md-0">
+    <div class="btn-group mr-2">
+      <% if (locals.toggle) { %>
+        <!-- Toggle Button -->
+        <div class="custom-control custom-switch" data-toggle="tooltip" data-placement="bottom" title="<%= toggle.tooltip %>">
+          <input class="custom-control-input form-control-lg" type="checkbox" value="1" id="<%= toggle.id %>">
+          <label class="custom-control-label" for="<%= toggle.id %>">
+            <%= toggle.title %>
+          </label>
+        </div>
+      <% } %>
+
+      <% if (locals.button) { %>
+        <!-- Submit Button -->
+        <button type="submit" class="btn btn-warning" id="<%= button.id %>" disabled>
+          <span class="oi oi-aperture"></span>
+          <%= button.title %>
+        </button>
+      <% } %>
+    </div>
+  </div>
+</div>

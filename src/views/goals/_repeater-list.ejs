@@ -1,0 +1,28 @@
+<h4>Goal Details</h4>
+<div data-repeater-list="ga-goal-filter-list">
+  <div data-repeater-item class="form-group row">
+    <div class="col-1">
+      Step
+    </div>
+    <div class="col-3">
+      <input type="text" name="ga-goal-filter-step-name" value="" placeholder="Name" class="form-control" />
+    </div>
+    <div class="col-3">
+      <input type="text" name="ga-goal-filter-screen-page" value="" placeholder="Screen/Page" class="form-control" />
+    </div>
+    <div class="col-3">
+      <div class="custom-control custom-switch">
+        <input class="custom-control-input" type="checkbox" value="1" name="ga-goal-filter-step-required" id="ga-goal-filter-step-required">
+        <label class="custom-control-label" for="ga-goal-filter-step-required">
+          Active?
+        </label>
+      </div>
+    </div>
+    <div class="col-1">
+      <input data-repeater-delete type="button" value="X" class="btn btn-danger"/>
+    </div>
+  </div>
+</div>
+<div>
+  <input data-repeater-create type="button" value="Add" class="btn btn-primary"/>
+</div>

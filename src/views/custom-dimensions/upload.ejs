@@ -1,0 +1,34 @@
+<%- include('shared/_header', {activeNav: 'custom-dimensions-upload'}) -%>
+
+<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+  <%- include('shared/_heading', {
+    title: 'Custom Dimensions > Upload',
+    button: {
+      id: 'custom-dimensions-update-button',
+      title: 'Update Custom Dimensions'
+    }
+  }) -%>
+
+  <%- include('shared/_loading-overlay') -%>
+
+  <%- include('shared/_google-analytics-auth') -%>
+
+  <div id="analytics-ui" hidden>
+    <form>
+      <div class="row">
+        <div class="col-md-12 col-lg-8">
+          <%- include('shared/fields/upload', {
+            id: 'custom-dimensions-csv'
+            title: 'Upload Custom Dimensions'
+          }) -%>
+
+          <div id="custom-dimensions-table-wrapper"></div>
+        </div>
+
+        <%- include('shared/_output-panel') -%>
+      </div>
+    </form>
+  </div>
+</main>
+
+<%- include('shared/_footer') -%>

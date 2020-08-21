@@ -1,0 +1,35 @@
+<%- include('shared/_header', {activeNav: 'custom-metrics-upload'}) -%>
+
+<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+  <%- include('shared/_heading', {
+    title: 'Custom Metrics > Upload',
+    button: {
+      id: 'custom-metrics-update-button',
+      title: 'Update Custom Metrics'
+    }
+  }) -%>
+
+  <%- include('shared/_loading-overlay') -%>
+
+  <%- include('shared/_google-analytics-auth') -%>
+
+  <div id="analytics-ui" hidden>
+    <form>
+      <div class="row">
+        <div class="col-md-12 col-lg-8">
+          <div class="form-group">
+            <div class="custom-file">
+              <input type="file" class="custom-file-input" id="custom-metrics-csv" accept=".csv" />
+              <label for="custom-metrics-csv" class="custom-file-label">Upload Custom Metrics</label>
+            </div>
+          </div>
+          <div id="custom-metrics-table-wrapper"></div>
+        </div>
+
+        <%- include('shared/_output-panel') -%>
+      </div>
+    </form>
+  </div>
+</main>
+
+<%- include('shared/_footer') -%>

@@ -1,0 +1,90 @@
+<nav class="col-md-2 d-none d-md-block bg-light sidebar">
+  <div class="sidebar-sticky">
+    <ul class="nav flex-column">
+
+      <!-- Remarketing Audiences Nav -->
+      <%- include('_inner-nav-item', {
+        title: 'Remarketing Audiences',
+        link: '/index.html',
+        active: activeNav == 'remarketing-audiences',
+        icon: ''
+      }) -%>
+
+      <!-- Custom Dimensions Nav -->
+      <ul class="nav flex-column">
+        <li class="nav-item">
+          <%- include('_inner-nav-header', { title: 'Custom Dimensions' }) -%>
+
+          <ul class="nav flex-column pl-4">
+            <%- include('_inner-nav-item', {
+              title: 'Audit',
+              link: '/custom-dimensions/audit.html',
+              active: activeNav == 'custom-dimensions-audit',
+              icon: 'oi oi-eye'
+            }) -%>
+            <%- include('_inner-nav-item', {
+              title: 'Upload',
+              link: '/custom-dimensions/upload.html',
+              active: activeNav == 'custom-dimensions-upload',
+              icon: 'oi oi-cloud-upload'
+            }) -%>
+          </ul>
+        </li>
+      </ul>
+    </ul>
+
+    <!-- Custom Metrics Nav -->
+    <ul class="nav flex-column">
+      <li class="nav-item">
+        <%- include('_inner-nav-header', { title: 'Custom Metrics' }) -%>
+
+        <ul class="nav flex-column pl-4">
+          <%- include('_inner-nav-item', {
+            title: 'Audit',
+            link: '/custom-metrics/audit.html',
+            active: activeNav == 'custom-metrics-audit',
+            icon: 'oi oi-eye'
+          }) -%>
+          <%- include('_inner-nav-item', {
+            title: 'Upload',
+            link: '/custom-metrics/upload.html',
+            active: activeNav == 'custom-metrics-upload',
+            icon: 'oi oi-cloud-upload'
+          }) -%>
+        </ul>
+      </li>
+    </ul>
+
+    <!-- Goals Nav -->
+    <ul class="nav flex-column">
+      <li class="nav-item">
+        <%- include('_inner-nav-header', { title: 'Goals' }) -%>
+
+        <ul class="nav flex-column pl-4">
+          <%- include('_inner-nav-item', {
+            title: 'Audit',
+            link: '/goals/audit.html',
+            active: activeNav == 'goals-audit',
+            icon: 'oi oi-eye'
+          }) -%>
+        </ul>
+      </li>
+    </ul>
+
+     <!-- Profiles Nav -->
+    <ul class="nav flex-column">
+      <li class="nav-item">
+        <%- include('_inner-nav-header', { title: 'Profiles' }) -%>
+
+        <ul class="nav flex-column pl-4">
+          <%- include('_inner-nav-item', {
+            title: 'Audit',
+            link: '/profiles/audit.html',
+            active: activeNav == 'profiles-audit',
+            icon: 'oi oi-eye'
+          }) -%>
+        </ul>
+      </li>
+    </ul>
+  </div>
+</nav>
