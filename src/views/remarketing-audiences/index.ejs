@@ -1,0 +1,77 @@
+<%- include('shared/_header', {activeNav: 'remarketing-audiences'}) -%>
+
+<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+  <%- include('shared/_heading', {
+    title: 'Remarketing Audiences',
+    toggle: {
+      id: 'ga-live-api-call-toggle',
+      title: 'Live API Call?',
+      tooltip: 'Enable WRITE calls to the Google Management API'
+    }
+  }) -%>
+
+  <%- include('shared/_loading-overlay') -%>
+
+  <%- include('shared/_google-analytics-auth') -%>
+
+  <div id="analytics-ui" hidden>
+    <form>
+      <div class="row">
+        <div class="col-md-6 col-lg-4">
+          <!-- Accounts -->
+          <%- include('shared/fields/_select-multiple', {
+            id: 'ga-accounts',
+            icon: '/images/adminhome_account_settings.png',
+            title: 'Accounts'
+          }) -%>
+
+          <!-- Properties -->
+          <%- include('shared/fields/_select-multiple', {
+            id: 'ga-properties',
+            icon: '/images/adminhome_property_settings.png',
+            title: 'Properties'
+          }) -%>
+
+          <!-- Profiles -->
+          <%- include('shared/fields/_select-multiple', {
+            id: 'ga-profiles',
+            icon: '/images/adminhome_profile_settings.png',
+            title: 'Views/Profiles'
+          }) -%>
+
+          <!-- Ad Accounts/Links -->
+          <%- include('shared/fields/_select-multiple', {
+            id: 'ga-ad-links',
+            icon: '/images/adminhome_link_adwords.png',
+            title: 'Ad Accounts'
+          }) -%>
+        </div>
+
+        <div class="col-md-6 col-lg-4">
+          <%- include('remarketing-audiences/_form') -%>
+        </div>
+
+        <div class="col-12 d-lg-none d-md-block" style="margin-bottom: .5rem;">
+          <%- include('shared/fields/_submit-button', {
+            title: 'Create audience'
+          })-%>
+          <hr />
+        </div>
+
+        <%- include('shared/_output-panel') -%>
+      </div>
+
+      <div class="row d-none d-lg-block">
+        <div class="col-4">
+          <%- include('shared/fields/_submit-button', {
+            title: 'Create audience'
+          })-%>
+        </div>
+
+        <hr />
+      </div>
+    </form>
+  </div>
+</main>
+
+<%- include('shared/_footer') -%>

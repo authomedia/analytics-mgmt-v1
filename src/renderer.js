@@ -26,7 +26,7 @@ const templateBasePath = './src/views';
 const outputBasePath = './public';
 
 const templates = [
-  'index.ejs',
+  'remarketing-audiences/index.ejs',
   'custom-dimensions/audit.ejs',
   'custom-dimensions/upload.ejs',
   'custom-metrics/audit.ejs',
