@@ -4,13 +4,9 @@ const fs =  require('fs-extra');
 const path = require('path');
 const chokidar = require('chokidar');
 const pretty = require('pretty');
+const glob = require('glob');
 
 const production = !process.env.ROLLUP_WATCH;
-// production = false;
-
-// Setup Logger
-Logger.useDefaults();
-Logger.info('App initialized');
 
 // Setup EJS options
 const ejsData = {}
@@ -24,36 +20,40 @@ const ejsOptions = {
 
 const templateBasePath = './src/views';
 const outputBasePath = './public';
+const templateGlob = `${templateBasePath}/**/*.ejs`
 
-const templates = [
-  'remarketing-audiences/index.ejs',
-  'custom-dimensions/audit.ejs',
-  'custom-dimensions/upload.ejs',
-  'custom-metrics/audit.ejs',
-  'custom-metrics/upload.ejs',
-  'goals/audit.ejs',
-  'profiles/audit.ejs'
-]
+function updateTemplatesList() {
+  return glob.sync(templateGlob, {}).filter((template) => {
+    return !isPartial(template);
+  });
+}
+
+function isPartial(pathName) {
+  return path.basename(pathName).match(/^_/);
+}
+
+function outputPath(path) {
+  let outputFileName = path.replace('.ejs', '.html');
+  return outputFileName.replace(templateBasePath, outputBasePath);
+}
 
 function renderTemplate(template) {
   // Render templates
-  let outputFileName = template.replace('.ejs', '.html');
-  let outputFile = `${outputBasePath}/${outputFileName}`;
-  let templateFile = `${templateBasePath}/${template}`
+  const output = outputPath(template);
 
-  ejs.renderFile(templateFile, ejsData, ejsOptions, function(err, str) {
+  ejs.renderFile(template, ejsData, ejsOptions, function(err, str) {
     if (err) {
       return Logger.error('Template could not be rendered', err);
     }
 
-    const dir = path.dirname(outputFile);
+    const dir = path.dirname(output);
     fs.ensureDir(dir)
       .then(() => {
-        fs.writeFile(outputFile, pretty(str, {ocd: true}), function (err) {
+        fs.writeFile(output, pretty(str, {ocd: true}), function (err) {
           if (err) {
             return Logger.error('Template could not be saved', err);
           }
-          Logger.info(`${templateFile} rendered as ${outputFile}`);
+          Logger.info(`${template} rendered as ${output}`);
         });
       })
       .catch((err) => {
@@ -62,48 +62,58 @@ function renderTemplate(template) {
   });
 }
 
-function processWatchedPath(path) {
-  // Remove base path prefix
-  template = path.replace(templateBasePath.replace('./',''), '');
+function handleWatchedPath(path) {
+  if (isPartial(path)) {
+    Logger.info('Partial changed! Need to re-render all templates.');
+    return renderAllTemplates();
+  }
 
-  // Remove / prefix
-  template = template.replace('/', '');
-
-  Logger.info(`${template} changed - re-rendering...`);
-  renderTemplate(template);
+  Logger.info(`${path} changed! Re-rendering this template.`);
+  renderTemplate(`./${path}`);
 }
 
 function deleteWatchedPath(path) {
-  Logger.warn('deleteWatchedPath is not defined yet!');
+  const output = outputPath(`./${path}`);
+  fs.unlink(output, (err) => {
+    if (err) {
+      return Logger.error('File could not be removed', err);
+    }
+
+    console.info(`${output} file was removed`);
+  })
 }
 
 // Render all templates
-templates.forEach((template) => {
-  renderTemplate(template);
-});
+function renderAllTemplates() {
+  templates = updateTemplatesList();
+
+  Logger.debug('Rendering all templates', templates);
+  templates.forEach((template) => {
+    renderTemplate(template);
+  });
+}
+
+// Setup Logger
+Logger.useDefaults();
+Logger.info('App initialized');
+
+// Render all templates initially
+renderAllTemplates();
 
 // Watch for changes in nonproduction
 if (!production) {
-  const watcher = chokidar.watch(`${templateBasePath}/**/*.ejs`, {
+  const watcher = chokidar.watch(templateGlob, {
     ignoreInitial: true,
-    ignored: [
-      /(^|[\/\\])\../, // ignore dotfiles
-      pathString => {
-         // Ignore partials beginning _
-        let dn = path.dirname(pathString);
-        let ps = pathString.replace(dn,'');
-        return ps.match(/^\/_/);
-      }
-    ],
+    ignored: /(^|[\/\\])\../, // ignore dotfiles,
     persistent: true
   });
 
   watcher.on('change', (path, stats) => {
-    processWatchedPath(path);
+    handleWatchedPath(path);
   });
 
   watcher.on('add', (path, stats) => {
-    processWatchedPath(path);
+    handleWatchedPath(path);
   });
 
   watcher.on('unlink', (path) => {
