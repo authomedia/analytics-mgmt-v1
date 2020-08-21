@@ -7,7 +7,7 @@ import goalsAudit from './goals/audit';
 import profilesAudit from './profiles/audit';
 
 const routes = {
-  '/': remarketing,
+  '/remarketing-audiences': remarketing,
   '/custom-dimensions/upload': customDimensionsUpload,
   '/custom-dimensions/audit': customDimensionsAudit,
   '/custom-metrics/upload': customMetricsUpload,
