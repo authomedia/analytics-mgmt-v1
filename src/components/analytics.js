@@ -7,6 +7,7 @@ import RemarketingAudience from '../models/remarketing-audience';
 import CustomDimension from '../models/custom-dimension';
 import CustomMetric from '../models/custom-metric';
 import Profile from '../models/profile';
+import Goal from '../models/goal';
 
 class Analytics extends ModelBase {
   constructor(clientId, scopes) {
@@ -52,8 +53,8 @@ class Analytics extends ModelBase {
   }
 
   createGoal(profile, goal) {
-    let goalModel = new Goal(profile);
-    goalModel.create(goal)
+    let goalModel = new Goal(goal);
+    goalModel.create();
   }
 
   async listProfiles(accountId, webPropertyId) {

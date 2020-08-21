@@ -33,6 +33,9 @@ class GoalsAuditFormControl extends FormControlBase {
     this.profiles = new ProfilesField($('#ga-profiles'), this);
 
     this.auditButton = new SubmitButton($('#audit-button'), this);
+    this.goalFunnelToggle = $('#ga-goal-funnel-toggle');
+
+    this.goalFunnelFields = $('#ga-goal-funnel');
 
     this.formFields  = {
       goal: {
@@ -74,6 +77,34 @@ class GoalsAuditFormControl extends FormControlBase {
     //   'Audit Goals'
     // );
 
+    this.goalFunnelToggle.on('change', () => {
+      this.goalFunnelFields.toggleClass('d-none');
+    })
+
+    const goalsFunnelRepeater = this.form.repeater({
+      initEmpty: false,
+      isFirstItemUndeletable: true,
+      show: function(i) {
+        // Set toggle label actions
+        // let toggle = $(this).find('.custom-control-input');
+        // let toggleLabel = $(this).find('.custom-control-label');
+        // let toggleName = toggle.attr('name');
+        // toggle.attr('id', toggleName);
+        // toggleLabel.attr('for', toggleName);
+
+        // Show field
+        $(this).show();
+        $(this).collapse('show');
+      },
+      hide: function (deleteElement) {
+        $(this).collapse('hide');
+      },
+      ready: function(setIndexes) {
+        console.log('ready');
+      }
+    });
+
+
     this.initFormSubmit();
     this.initAuditButton();
   }
@@ -93,7 +124,7 @@ class GoalsAuditFormControl extends FormControlBase {
       event.preventDefault();
       this.profiles.field.find('option:selected').each((i, profile) => {
         ui.debug.append(`${$(profile).text()}\n`);
-        this.analytics.createGoals($(profile), this.goalForm);
+        this.analytics.createGoals($(profile), this.formFields);
         ui.debug.append(`\n\n`);
       });
 

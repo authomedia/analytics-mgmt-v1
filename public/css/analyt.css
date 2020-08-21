@@ -223,3 +223,16 @@ span.logger-error {
 .table-auditor .heading {
   background-color: rgba(0,0,0,.05);;
 }
+
+body {
+  counter-reset: section;
+}
+
+.repeater-list-index h5::before {
+  /*font-size: 0.6rem;*/
+  top: .5rem;
+  left: 25%;
+  position: relative;
+  counter-increment: section;
+  content: counter(section)
+}

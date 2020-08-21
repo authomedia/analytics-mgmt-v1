@@ -5,23 +5,7 @@ class Goal extends ModelBase {
   constructor(data = {}) {
     super();
     let {
-      id,
-      name,
-      currency,
-      timezone,
-      websiteUrl,
-      defaultPage,
-      excludeQueryParameters,
-      siteSearchQueryParameters,
-      stripSiteSearchQueryParameters,
-      siteSearchCategoryParameters,
-      stripSiteSearchCategoryParameters,
-      eCommerceTracking,
-      enhancedECommerceTracking,
-      botFilteringEnabled,
-      starred,
-      accountId,
-      webPropertyId
+
     } = data;
   }
 
@@ -66,8 +50,9 @@ class Goal extends ModelBase {
     return this.constructor._api;
   }
 
-  // NB. Create MUST be triggered squentially - it will not use the index value
-  create(resolve = true) {
+  create(goal, resolve = true) {
+    console.log(goal);
+    return
     const request = this._api.insert({
       accountId: this.accountId,
       webPropertyId: this.webPropertyId,
