@@ -20,6 +20,17 @@ class RemarketingAudience extends ModelBase {
     this.linkedAdAccounts = this.filterAdAccounts();
   }
 
+  list() {
+    gapi.client.analytics.management.remarketingAudience.list(
+    {
+      accountId: this.profile.accountId,
+      webPropertyId: this.profile.webPropertyId
+    }
+    ).then((results) => {
+      this.debugJson(results.body)
+    });
+  }
+
   create() {
     let audiences = this.toJson();
 
@@ -200,6 +211,15 @@ class RemarketingAudience extends ModelBase {
       let daysToLookBack = parseInt(includeConditions.daysToLookBack.val());
       daysToLookBack = daysToLookBack > 0 ? daysToLookBack : null;
 
+      // FIXME: This still doesn't work - seems like it is not properly supported?
+      if (includeConditions.isSmartList.prop('checked')) {
+        return {
+          segment: includeConditions.segment.val(),
+          membershipDurationDays: parseInt(includeConditions.days),
+          isSmartList: includeConditions.isSmartList.prop('checked')
+        }
+      }
+
       return {
         daysToLookBack: daysToLookBack,
         segment: includeConditions.segment.val(),
@@ -218,7 +238,7 @@ class RemarketingAudience extends ModelBase {
     }
   }
 
-  buildLinkedAccounts(linkedAdAccounts, profile){
+  buildLinkedAccounts(linkedAdAccounts, profile) {
     return $.makeArray(linkedAdAccounts.map((i, linkedAdAccount) => {
       return linkedAdAccount.adWordsAccounts.map((adWordsAccount, j) => {
         return {
@@ -242,6 +262,17 @@ class RemarketingAudience extends ModelBase {
   }
 
   excludeConditionsIsValid(excludeConditions) {
+    const linkedAdAccounts = this.buildLinkedAccounts(this.linkedAdAccounts, this.profile);
+
+    // Need to check if any DV360 accounts are linked - if so can't create any exclusions
+    const hasDBM_LINKS = linkedAdAccounts.some((adAccount) => {
+      return adAccount.type == 'DBM_LINKS'
+    })
+
+    if (hasDBM_LINKS) {
+      return false;
+    }
+
     return (excludeConditions.segment.val() !== '');
   }
 }

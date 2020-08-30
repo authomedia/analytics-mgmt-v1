@@ -23,7 +23,7 @@ const analytics = new Analytics(
   [process.env.SCOPES]
 );
 
-class FormControl extends FormControlBase {
+class RemarketingAudiencesFormControl extends FormControlBase {
   constructor() {
     super();
 
@@ -67,7 +67,7 @@ class FormControl extends FormControlBase {
     }
   }
 
-  initRemarketingForm() {
+  init() {
     this.form.on('submit', (event) => {
       event.preventDefault();
 
@@ -76,6 +76,7 @@ class FormControl extends FormControlBase {
       this.showConfirmModal(() => {
         this.profiles.field.find('option:selected').each((i, profile) => {
           ui.debug.append(`${$(profile).text()}\n`);
+          this.analytics.listRemarketingAudiences($(profile), this);
           this.analytics.createRemarketingAudience($(profile), this);
           ui.debug.append(`\n\n`);
         })
@@ -116,4 +117,4 @@ class FormControl extends FormControlBase {
   }
 }
 
-export default FormControl;
+export default RemarketingAudiencesFormControl;

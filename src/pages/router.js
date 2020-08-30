@@ -1,4 +1,4 @@
-import remarketing from './remarketing';
+import remarketingAudiencesIndex from './remarketing-audiences/index';
 import customDimensionsUpload from './custom-dimensions/upload';
 import customDimensionsAudit from './custom-dimensions/audit';
 import customMetricsUpload from './custom-metrics/upload';
@@ -7,7 +7,7 @@ import goalsAudit from './goals/audit';
 import profilesAudit from './profiles/audit';
 
 const routes = {
-  '/remarketing-audiences': remarketing,
+  '/remarketing-audiences': remarketingAudiencesIndex,
   '/custom-dimensions/upload': customDimensionsUpload,
   '/custom-dimensions/audit': customDimensionsAudit,
   '/custom-metrics/upload': customMetricsUpload,
