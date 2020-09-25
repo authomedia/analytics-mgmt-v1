@@ -37,7 +37,8 @@ class AdLinksField extends SelectField {
       this.handleResult(response.result)
     })
     .then(null, (err) => {
-      this.handleError(`${propertyName}: ${err}`);
+      console.log(err);
+      this.handleError(`${propertyName}: ${err.result.error.message}`);
     });
 
     gapi.client.analytics.management.remarketingAudience.list({
@@ -55,12 +56,22 @@ class AdLinksField extends SelectField {
 
       let seenAdAccounts = []
 
+      // Get Adwords activity for all accounts
+      let linkedViewIds = response.result.items.map((item) => {
+        return item.linkedViews;
+      }).flat();
+      // Get Unique linked views
+      linkedViewIds = Array.from(new Set(linkedViewIds));
+      linkedViewIds.map((linkedViewId) => {
+        return this.checkAdwordsActivity(linkedViewId);
+      });
+
+
       response.result.items.filter((item, i) => {
         return item.linkedAdAccounts.map((linkedAdAccount, i) => {
           if (!seenAdAccounts.includes(linkedAdAccount.linkedAccountId)) {
-            if (linkedAdAccount.type == "ANALYTICS" || linkedAdAccount.type == "ADWORDS_LINKS") {
+            if (linkedAdAccount.type == 'ANALYTICS' || linkedAdAccount.type == 'ADWORDS_LINKS') {
               // // Currently, do nothing with ANALYTICS or ADWORDS_LINKS type
-              // console.log(linkedAdAccount);
               // linkedAdAccount.label = `${linkedAdAccount.type} > ${linkedAdAccount.webPropertyId}`;
               // linkedAdAccount.linkedAccountId = linkedAdAccount.webPropertyId; // FIXME: HACK ALERT!!
             } else {
@@ -70,13 +81,48 @@ class AdLinksField extends SelectField {
             seenAdAccounts.push(linkedAdAccount.linkedAccountId);
           }
         })
-      })
+      });
 
       this.handleAdAccounts(linkedAdAccounts);
     })
     .then(null, (err) => {
-      this.handleError(`${propertyName}: ${err}`)
+      this.handleError(`${propertyName}: ${err.result.error.message}`);
     })
+  }
+
+  checkAdwordsActivity(linkedViewId) {
+    let resultsHash = {};
+    if (!linkedViewId) {
+      return resultsHash;
+    }
+
+    const apiQuery = gapi.client.analytics.data.ga.get({
+      'ids': `ga:${linkedViewId}`,
+      'start-date': '90daysAgo',
+      'end-date': 'yesterday',
+      'metrics': 'ga:sessions,ga:impressions,ga:adCost',
+      'dimensions': 'ga:adwordsCustomerID',
+      'filters': 'ga:sessions>0',
+      'samplingLevel': 'HIGHER_PRECISION'
+    });
+
+    apiQuery.execute((results) => {
+      console.log(results);
+
+      // TODO: Split data by "ga:adwordsCustomerID"
+      if (results.totalResults === 0) {
+        console.log(`No results for ga:${linkedViewId}`);
+        return resultsHash;
+      }
+
+      results.rows.map((row) => {
+        resultsHash[row[0]] = resultsHash[row[0]] || 0;
+        resultsHash[row[0]] += row[1];
+      });
+
+      console.log(resultsHash);
+      return resultsHash;
+    });
   }
 
   castToAdwordsLink(linkedAdAccount) {

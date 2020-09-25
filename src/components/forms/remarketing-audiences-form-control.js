@@ -11,7 +11,7 @@ import ProfilesField from '../fields/profiles-field';
 import RemarketingAudiencesField from '../fields/remarketing-audiences-field';
 import LinkedViewsField from '../fields/linked-views-field';
 import AdLinksField from '../fields/ad-links-field';
-import LinkedAdAccountsField from '../fields/linked-ad-accounts-field';
+// import LinkedAdAccountsField from '../fields/linked-ad-accounts-field';
 import LiveApiToggleField from '../fields/live-api-toggle-field';
 import AudienceTypeField from '../fields/audience-type-field';
 
@@ -35,7 +35,7 @@ class RemarketingAudiencesFormControl extends FormControlBase {
     this.remarketingAudiences = new RemarketingAudiencesField($('#ga-remarketing'), this);
     this.linkedViews = new LinkedViewsField($('#ga-linked-views'), this);
     this.adLinks = new AdLinksField($('#ga-ad-links'), this);
-    this.linkedAdAccounts = new LinkedAdAccountsField($('#ga-linked-ad-accounts'), this);
+    // this.linkedAdAccounts = new LinkedAdAccountsField($('#ga-linked-ad-accounts'), this);
 
     this.audienceType = new AudienceTypeField($('#ga-remarketing-audience-type'), this);
     this.liveApiCallToggle = new LiveApiToggleField($('#ga-live-api-call-toggle'), this);
