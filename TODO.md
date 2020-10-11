@@ -1,9 +1,9 @@
-GA - Analytic
+# GA - Analytics
 
-Custom Dimensions/Metrics
+## Custom Dimensions/Metrics
 - Sync Button doesn't work but not high priority
 
-Audiences
+## Audiences
 - Ad accounts - shows link name links multiple ad accounts - within link name
   - Potentially query the GA account for any traffic within the last 90 days driven from that ad account and filter or display traffic values on those ad accounts only
 
@@ -11,8 +11,9 @@ Audiences
 
 DV360 - skip exclusion criteria when writing to DV360 accounts
 
+~Load/Save form values~
 
-
+## Future work
 Facebook / Instagram
 Data lake population
 Facebook pages - bring back insights
