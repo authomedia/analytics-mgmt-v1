@@ -18,14 +18,24 @@ var i18n = {
         },
         customMetrics: {
           audit: 'Audit Custom Metrics'
+        },
+        saveSnapshot: {
+          title: 'Save snapshot',
+          primaryText: 'Save snapshot',
+          placeholder: 'Please enter a name to save the snapshot as'
+        },
+        loadSnapshot: {
+          title: 'Load snapshot',
+          primaryText: 'Load snapshot',
+          placeholder: 'Please enter the name of the snapshot to load'
         }
       },
       tables: {
         customDimensions: {
-          property: "Property"
+          property: 'Property'
         },
         customMetrics: {
-          property: "Property"
+          property: 'Property'
         }
       },
       errors: {

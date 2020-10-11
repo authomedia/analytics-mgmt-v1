@@ -17,6 +17,8 @@ import db from '../../models/db';
 import AuditTable from '../audit-table';
 import Goal from '../../models/goal';
 
+import SnapshotManager from '../../utilities/snapshot-manager';
+
 const analytics = new Analytics(
   process.env.CLIENT_ID
   [process.env.SCOPES]
@@ -27,6 +29,8 @@ class GoalsAuditFormControl extends FormControlBase {
     super();
 
     this.analytics = analytics;
+
+    this.formName = 'GoalsAuditForm';
 
     this.accounts = new AccountsField($('#ga-accounts'), this);
     this.properties = new PropertiesField($('#ga-properties'), this);
@@ -107,6 +111,13 @@ class GoalsAuditFormControl extends FormControlBase {
 
     this.initFormSubmit();
     this.initAuditButton();
+
+    this.snapshotManager = new SnapshotManager(
+      this.formName,
+      this.form,
+      this.serializeForm.bind(this),
+      this.hydrateForm.bind(this)
+    );
   }
 
   initAuditButton() {
@@ -164,6 +175,66 @@ class GoalsAuditFormControl extends FormControlBase {
   //     }
   //   );
   // }
+
+  serializeForm() {
+    const goal = this.formFields.goal;
+
+    const serializedForm = {
+      goal: {
+        id: goal.id.val(),
+        active: goal.active.val(),
+        eventValue: goal.eventValue.val(),
+        urlDestination: {
+          details: goal.urlDestination.details.val(),
+          caseSensitive: goal.urlDestination.caseSensitive.val(),
+          matchType: goal.urlDestination.matchType.val(),
+        },
+        visitTimeOnSite: {
+          details: goal.visitTimeOnSite.details.val(),
+          comparisonType: goal.visitTimeOnSite.comparisonType.val(),
+          comparisonValue: goal.visitTimeOnSite.comparisonValue.val()
+        },
+        numPages: {
+          details: goal.numPages.details.val(),
+          comparisonType: goal.numPages.comparisonType.val(),
+          comparisonValue: goal.numPages.comparisonValue.val()
+        },
+        event: {
+          details: goal.event.details.val(),
+          conditions: [],
+          useEventValue: goal.event.useEventValue.val()
+        }
+      }
+    }
+
+    // serializedForm.goal.event.conditions = '' // FIXME
+
+    return serializedForm;
+  }
+
+  hydrateForm(data) {
+    const goal = this.formFields.goal;
+
+    goal.id.val(data.goal.id);
+    goal.active.val(data.goal.active);
+    goal.eventValue.val(data.goal.eventValue);
+
+    goal.urlDestination.details.val(data.goal.urlDestination.details);
+    goal.urlDestination.caseSensitive.val(data.goal.urlDestination.caseSensitive);
+    goal.urlDestination.matchType.val(data.goal.urlDestination.matchType);
+
+    goal.visitTimeOnSite.details.val(data.goal.urlDestination.details);
+    goal.visitTimeOnSite.comparisonType.val(data.goal.urlDestination.comparisonType);
+    goal.visitTimeOnSite.comparisonValue.val(data.goal.urlDestination.comparisonValue);
+
+    goal.numPages.details.val(data.goal.numPages.details);
+    goal.numPages.comparisonType.val(data.goal.numPages.comparisonType);
+    goal.numPages.comparisonValue.val(data.goal.numPages.comparisonValue);
+
+    goal.event.details.val(data.goal.event.details);
+    // goal.event.conditions.val(data.goal.event.conditions); // FIXME
+    goal.event.useEventValue.val(data.goal.event.useEventValue);
+  }
 }
 
 export default GoalsAuditFormControl;

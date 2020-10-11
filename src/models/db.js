@@ -3,12 +3,14 @@ import Dexie from 'dexie';
 import constants from '../config/constants';
 
 const db = new Dexie(process.env.DB_NAME);
-const dbFields = constants.DB_FIELDS.join(', ');
-const dbFields2 = constants.DB_FIELDS2.join(', ');
+const customDimensionsFields = constants.DB_FIELDS_CUSTOM_DIMENSIONS.join(', ');
+const customMetricsFields = constants.DB_FIELDS_CUSTOM_METRICS.join(', ');
+const snapshotsFields = constants.DB_FIELDS_SNAPSHOTS.join(', ');
 
 db.version(1).stores({
-  customDimensions: dbFields,
-  customMetrics: dbFields2
+  customDimensions: customDimensionsFields,
+  customMetrics: customMetricsFields,
+  snapshots: snapshotsFields,
 });
 
 export default db;

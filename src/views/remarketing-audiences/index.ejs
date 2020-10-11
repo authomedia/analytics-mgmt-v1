@@ -7,6 +7,9 @@
       id: 'ga-live-api-call-toggle',
       title: 'Live API Call?',
       tooltip: 'Enable WRITE calls to the Google Management API'
+    },
+    snapshot: {
+      id: 'ga-remarketing-audiences'
     }
   }) -%>
 
@@ -58,6 +61,7 @@
           <hr />
         </div>
 
+
         <%- include('shared/_output-panel') -%>
       </div>
 
@@ -66,6 +70,7 @@
           <%- include('shared/fields/_submit-button', {
             title: 'Create audience'
           })-%>
+          <hr />
         </div>
 
         <hr />

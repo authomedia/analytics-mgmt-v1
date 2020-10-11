@@ -4,8 +4,29 @@
     <%= title %>
   </h1>
 
+  <% if (locals.snapshot) { %>
+    <!-- Snapshot Buttons -->
+    <div class="btn-toolbar mb-2 mb-md-0">
+    <%- include('shared/fields/_button', {
+      id: 'save-snapshot-button',
+      title: 'Save',
+      icon: 'data-transfer-upload',
+      color: 'link'
+    }) -%>
+
+    <%- include('shared/fields/_button', {
+      id: 'load-snapshot-button',
+      title: 'Load',
+      icon: 'data-transfer-download',
+      color: 'link'
+    }) -%>
+    </div>
+  <% } %>
+
   <div class="btn-toolbar mb-2 mb-md-0">
     <div class="btn-group mr-2">
+
+
       <% if (locals.toggle) { %>
         <!-- Toggle Button -->
         <div class="custom-control custom-switch" data-toggle="tooltip" data-placement="bottom" title="<%= toggle.tooltip %>">

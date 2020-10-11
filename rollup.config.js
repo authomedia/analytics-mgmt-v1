@@ -4,6 +4,7 @@ import builtins from 'rollup-plugin-node-builtins';
 import nodeGlobals from 'rollup-plugin-node-globals';
 import dotenv from 'rollup-plugin-dotenv';
 import { terser } from 'rollup-plugin-terser';
+import json from '@rollup/plugin-json';
 
 
 // `npm run build` -> `production` is true
@@ -20,6 +21,7 @@ export default {
   plugins: [
     resolve(), // tells Rollup how to find date-fns in node_modules
     commonjs(), // converts date-fns to ES modules
+    json(),
     nodeGlobals(),
     builtins({
       preferBuiltins: true

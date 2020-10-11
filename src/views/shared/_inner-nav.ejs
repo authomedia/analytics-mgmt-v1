@@ -71,7 +71,7 @@
       </li>
     </ul>
 
-     <!-- Profiles Nav -->
+    <!-- Profiles Nav -->
     <ul class="nav flex-column">
       <li class="nav-item">
         <%- include('_inner-nav-header', { title: 'Profiles' }) -%>
@@ -82,6 +82,22 @@
             link: '/profiles/audit.html',
             active: activeNav == 'profiles-audit',
             icon: 'oi oi-eye'
+          }) -%>
+        </ul>
+      </li>
+    </ul>
+
+    <!-- Admin Nav -->
+    <ul class="nav flex-column">
+      <li class="nav-item">
+        <%- include('_inner-nav-header', { title: 'Administration' }) -%>
+
+        <ul class="nav flex-column pl-4">
+          <%- include('_inner-nav-item', {
+            title: 'Snapshots',
+            link: '/administration/snapshots.html',
+            active: activeNav == 'admin-snapshots',
+            icon: 'oi oi-camera-slr'
           }) -%>
         </ul>
       </li>

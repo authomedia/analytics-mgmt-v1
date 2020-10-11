@@ -14,9 +14,12 @@ import AdLinksField from '../fields/ad-links-field';
 // import LinkedAdAccountsField from '../fields/linked-ad-accounts-field';
 import LiveApiToggleField from '../fields/live-api-toggle-field';
 import AudienceTypeField from '../fields/audience-type-field';
+import Button from '../ui/button';
 
-import events from '../../config/events';
 import ui from '../../config/ui';
+
+import { translate } from '../../utilities/translate'
+import SnapshotManager from '../../utilities/snapshot-manager';
 
 const analytics = new Analytics(
   process.env.CLIENT_ID
@@ -29,6 +32,8 @@ class RemarketingAudiencesFormControl extends FormControlBase {
 
     this.analytics = analytics;
 
+    this.formName = 'RemarketingAudiencesForm';
+
     this.accounts = new AccountsField($('#ga-accounts'), this);
     this.properties = new PropertiesField($('#ga-properties'), this);
     this.profiles = new ProfilesField($('#ga-profiles'), this);
@@ -39,6 +44,7 @@ class RemarketingAudiencesFormControl extends FormControlBase {
 
     this.audienceType = new AudienceTypeField($('#ga-remarketing-audience-type'), this);
     this.liveApiCallToggle = new LiveApiToggleField($('#ga-live-api-call-toggle'), this);
+
 
     // Build Remarketing Audiences Form Lookups
     this.remarketingForm = {
@@ -68,6 +74,13 @@ class RemarketingAudiencesFormControl extends FormControlBase {
   }
 
   init() {
+    this.snapshotManager = new SnapshotManager(
+      this.formName,
+      this.remarketingForm,
+      this.serializeForm.bind(this),
+      this.hydrateForm.bind(this)
+    );
+
     this.form.on('submit', (event) => {
       event.preventDefault();
 
@@ -84,12 +97,13 @@ class RemarketingAudiencesFormControl extends FormControlBase {
     });
   }
 
+
   showConfirmModal(callback) {
     ui.modal.showModal(
-      this.analytics.translate.analytics.modals.remarketingAudienceModalTitle,
+      translate('analytics.modals.remarketingAudienceModalTitle'),
       `<p>${this.getAudienceInfo()}</p>`,
       {
-        primaryText: this.analytics.translate.analytics.modals.primaryText,
+        primaryText: translate('analytics.modals.primaryText'),
         callback: (event) => {
           callback();
         }
@@ -114,6 +128,76 @@ class RemarketingAudiencesFormControl extends FormControlBase {
     return membershipDurationDays.map((days) => {
       return days.trim();
     }).filter(Boolean);
+  }
+
+  serializeForm() {
+    const form = this.remarketingForm;
+
+    return {
+      name: form.name.val(),
+      audienceType: form.audienceType.val(),
+      audienceDefinition: {
+        includeConditions: {
+          daysToLookBack: form.audienceDefinition.includeConditions.daysToLookBack.val(),
+          segment: form.audienceDefinition.includeConditions.segment.val(),
+          membershipDurationDays: form.audienceDefinition.includeConditions.membershipDurationDays.val(),
+          isSmartList: form.audienceDefinition.includeConditions.isSmartList.val(),
+        }
+      },
+      stateBasedAudienceDefinition: {
+        includeConditions: {
+          daysToLookBack: form.stateBasedAudienceDefinition.includeConditions.daysToLookBack.val(),
+          segment: form.stateBasedAudienceDefinition.includeConditions.segment.val(),
+          membershipDurationDays: form.stateBasedAudienceDefinition.includeConditions.membershipDurationDays.val(),
+          isSmartList: form.stateBasedAudienceDefinition.includeConditions.isSmartList.val(),
+        },
+        excludeConditions: {
+          segment: form.stateBasedAudienceDefinition.excludeConditions.segment.val(),
+          exclusionDuration: form.stateBasedAudienceDefinition.excludeConditions.exclusionDuration.val(),
+        }
+      }
+    }
+  }
+
+  hydrateForm(data) {
+    const form = this.remarketingForm;
+
+    form.name.val(data.name);
+    form.audienceType.val(data.audienceType);
+    form.audienceType.trigger('change');
+
+    form.audienceDefinition.includeConditions.daysToLookBack.val(
+      data.audienceDefinition.includeConditions.daysToLookBack
+    );
+    form.audienceDefinition.includeConditions.segment.val(
+      data.audienceDefinition.includeConditions.segment
+    );
+    form.audienceDefinition.includeConditions.membershipDurationDays.val(
+      data.audienceDefinition.includeConditions.membershipDurationDays
+    );
+    form.audienceDefinition.includeConditions.isSmartList.val(
+      data.audienceDefinition.includeConditions.isSmartList
+    );
+
+    form.stateBasedAudienceDefinition.includeConditions.daysToLookBack.val(
+      data.stateBasedAudienceDefinition.includeConditions.daysToLookBack
+    );
+    form.stateBasedAudienceDefinition.includeConditions.segment.val(
+      data.stateBasedAudienceDefinition.includeConditions.segment
+    );
+    form.stateBasedAudienceDefinition.includeConditions.membershipDurationDays.val(
+      data.stateBasedAudienceDefinition.includeConditions.membershipDurationDays
+    );
+    form.stateBasedAudienceDefinition.includeConditions.isSmartList.val(
+      data.stateBasedAudienceDefinition.includeConditions.isSmartList
+    );
+
+    form.stateBasedAudienceDefinition.excludeConditions.segment.val(
+      data.stateBasedAudienceDefinition.excludeConditions.segment
+    );
+    form.stateBasedAudienceDefinition.excludeConditions.exclusionDuration.val(
+      data.stateBasedAudienceDefinition.excludeConditions.exclusionDuration
+    );
   }
 }
 

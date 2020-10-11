@@ -54,7 +54,7 @@ class AuditFormControl extends FormControlBase {
     });
   }
 
-   initFormSubmit() {
+  initFormSubmit() {
     this.form.on('submit', (event) => {
       event.preventDefault();
 

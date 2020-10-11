@@ -6,6 +6,9 @@ const events = {
   BUTTONS: {
     SUBMIT: {
       CLICK: 'buttons:submit:click'
+    },
+    BUTTON: {
+      CLICK: 'buttons:button:click'
     }
   },
   FIELDS: {
