@@ -3,6 +3,7 @@ node_modules
 package-lock.json
 public/js/bundle*
 public/**/*.html
+public/**/*.png
 .env
 *.zip
 

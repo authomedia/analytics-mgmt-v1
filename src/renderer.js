@@ -19,13 +19,19 @@ const ejsOptions = {
 }
 
 const templateBasePath = './src/views';
+const assetsBasePath = './src/assets';
 const outputBasePath = './public';
-const templateGlob = `${templateBasePath}/**/*.ejs`
+const templateGlob = `${templateBasePath}/**/*.ejs`;
+const assetsGlob = `${assetsBasePath}/**/*`;
 
 function updateTemplatesList() {
   return glob.sync(templateGlob, {}).filter((template) => {
     return !isPartial(template);
   });
+}
+
+function updateAssetsList() {
+  return glob.sync(assetsGlob, {});
 }
 
 function isPartial(pathName) {
@@ -36,6 +42,12 @@ function outputPath(path) {
   let outputFileName = path.replace('.ejs', '.html');
   return outputFileName.replace(templateBasePath, outputBasePath);
 }
+
+function assetOutputPath(path) {
+  // let outputFileName = path.replace('.ejs', '.html');
+  return path.replace(assetsBasePath, `${outputBasePath}/assets`);
+}
+
 
 function renderTemplate(template) {
   // Render templates
@@ -62,6 +74,14 @@ function renderTemplate(template) {
   });
 }
 
+function prepareAsset(asset) {
+  const output = assetOutputPath(asset);
+  fs.ensureDir(path.dirname(output))
+    .then(() => {
+      fs.copyFile(asset, output);
+    });
+}
+
 function handleWatchedPath(path) {
   if (isPartial(path)) {
     Logger.info('Partial changed! Need to re-render all templates.');
@@ -85,11 +105,22 @@ function deleteWatchedPath(path) {
 
 // Render all templates
 function renderAllTemplates() {
-  templates = updateTemplatesList();
+  const templates = updateTemplatesList();
 
   Logger.debug('Rendering all templates', templates);
   templates.forEach((template) => {
     renderTemplate(template);
+  });
+}
+
+// Prepare all assets
+function prepareAllAssets() {
+  Logger.debug('foo')
+  const assets = updateAssetsList();
+
+  Logger.debug('Preparing all assets', assets);
+  assets.forEach((asset) => {
+    prepareAsset(asset);
   });
 }
 
@@ -99,6 +130,9 @@ Logger.info('App initialized');
 
 // Render all templates initially
 renderAllTemplates();
+
+// Prepare all assets initially
+prepareAllAssets();
 
 // Watch for changes in nonproduction
 if (!production) {
@@ -118,5 +152,25 @@ if (!production) {
 
   watcher.on('unlink', (path) => {
     deleteWatchedPath(path)
-  })
+  });
+
+  const assetWatcher  = chokidar.watch(assetsGlob, {
+    ignoreInitial: true,
+    ignored: /(^|[\/\\])\../, // ignore dotfiles,
+    persistent: true
+  });
+
+  assetWatcher.on('change', (path, stats) => {
+    handleWatchedAssetPath(path);
+  });
+
+  assetWatcher.on('add', (path, stats) => {
+    handleWatchedAssetPath(path);
+  });
+
+  assetWatcher.on('unlink', (path) => {
+    deleteWatchedAssetPath(path)
+  });
+
+
 }
