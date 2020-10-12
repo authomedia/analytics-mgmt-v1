@@ -32,7 +32,7 @@ class CustomMetricsUploadPage extends Page {
     });
 
     db.customMetrics.toArray((data) => {
-      data.unshift(constants.DB_FIELDS2);
+      data.unshift(constants.DB_FIELDS_CUSTOM_METRICS);
       // data = data.sort((a, b) => {
       //   let ai = parseInt(a.index);
       //   let bi = parseInt(b.index)

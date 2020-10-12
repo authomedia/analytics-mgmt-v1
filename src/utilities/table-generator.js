@@ -27,7 +27,7 @@ class TableGenerator extends ModelBase {
       let dataRows = this.data.slice(1, this.data.length);
       dataRows = Utilities.mapRows(headerRow, dataRows);
 
-      const csvTable = new TableBuilder({ class: 'table'})
+      const csvTable = new TableBuilder({ class: 'table' })
                             .setHeaders(headers)
                             .setData(dataRows);
 

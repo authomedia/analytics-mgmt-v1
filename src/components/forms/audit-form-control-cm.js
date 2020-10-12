@@ -40,7 +40,7 @@ class AuditFormControl extends FormControlBase {
     db.customMetrics.toArray((data) => {
       this.currentData = Object.assign({}, data);
 
-      data.unshift(constants.DB_FIELDS2);
+      data.unshift(constants.DB_FIELDS_CUSTOM_METRICS);
       this.updateTable(data);
     });
   }

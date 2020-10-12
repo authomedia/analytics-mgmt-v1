@@ -32,7 +32,7 @@ class CustomDimensionsUploadPage extends Page {
     });
 
     db.customDimensions.toArray((data) => {
-      data.unshift(constants.DB_FIELDS);
+      data.unshift(constants.DB_FIELDS_CUSTOM_DIMENSIONS);
       // data = data.sort((a, b) => {
       //   let ai = parseInt(a.index);
       //   let bi = parseInt(b.index)

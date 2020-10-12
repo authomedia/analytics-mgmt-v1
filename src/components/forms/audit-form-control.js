@@ -39,7 +39,7 @@ class AuditFormControl extends FormControlBase {
     db.customDimensions.toArray((data) => {
       this.currentData = Object.assign({}, data);
 
-      data.unshift(constants.DB_FIELDS);
+      data.unshift(constants.DB_FIELDS_CUSTOM_DIMENSIONS);
       this.updateTable(data);
     });
   }
