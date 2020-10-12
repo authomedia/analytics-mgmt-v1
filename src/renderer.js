@@ -103,6 +103,22 @@ function deleteWatchedPath(path) {
   })
 }
 
+function handleWatchedAssetPath(path) {
+  Logger.info(`${path} changed! Preparing this asset.`);
+  prepareAsset(`./${path}`);
+}
+
+function deleteWatchedAssetPath(path) {
+  const output = assetOutputPath(`./${path}`);
+  fs.unlink(output, (err) => {
+    if (err) {
+      return Logger.error('File could not be removed', err);
+    }
+
+    console.info(`${output} file was removed`);
+  })
+}
+
 // Render all templates
 function renderAllTemplates() {
   const templates = updateTemplatesList();
