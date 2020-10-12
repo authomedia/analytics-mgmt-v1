@@ -7,6 +7,8 @@ import AccountsField from '../fields/accounts-field';
 import PropertiesField from '../fields/properties-field';
 import ProfilesField from '../fields/profiles-field';
 import SubmitButton from '../ui/submit-button';
+import LiveApiToggleField from '../fields/live-api-toggle-field';
+
 
 import constants from '../../config/constants';
 import events from '../../config/events';
@@ -35,9 +37,9 @@ class GoalsAuditFormControl extends FormControlBase {
     this.accounts = new AccountsField($('#ga-accounts'), this);
     this.properties = new PropertiesField($('#ga-properties'), this);
     this.profiles = new ProfilesField($('#ga-profiles'), this);
+    this.liveApiCallToggle = new LiveApiToggleField($('#ga-live-api-call-toggle'), this);
 
     this.goalFunnelFields = $('#ga-goal-funnel');
-
 
     const goalFunnelToggle = $('#ga-goal-funnel-toggle');
     const goalsFunnelRepeater = this.form.repeater({
@@ -61,7 +63,7 @@ class GoalsAuditFormControl extends FormControlBase {
       }
     });
 
-    // Set after so we can also assign them to the object below
+    // Set both instance and local vars so we can also reference them in the object below
     this.goalsFunnelRepeater = goalsFunnelRepeater;
     this.goalFunnelToggle = goalFunnelToggle;
 
@@ -146,7 +148,11 @@ class GoalsAuditFormControl extends FormControlBase {
       event.preventDefault();
       this.profiles.field.find('option:selected').each((i, profile) => {
         ui.debug.append(`${$(profile).text()}\n`);
-        this.analytics.createGoal($(profile), this.formFields);
+        this.analytics.createGoal(
+          $(profile),
+          this.serializeForm(),
+          this.liveApiCallToggle.isChecked()
+        );
         ui.debug.append(`\n\n`);
       });
 

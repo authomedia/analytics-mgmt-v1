@@ -47,8 +47,8 @@ class Analytics extends ModelBase {
     return await CustomMetric.all(accountId, webPropertyId);
   }
 
-  createGoal(profile, goal) {
-    let goalModel = new Goal(goal);
+  createGoal(profile, goal, live) {
+    let goalModel = new Goal(profile, goal, live);
     goalModel.create();
   }
 

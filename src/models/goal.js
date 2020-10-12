@@ -2,12 +2,12 @@ import ModelBase from './model-base';
 import ui from '../config/ui';
 
 class Goal extends ModelBase {
-  constructor(data = {}) {
+  constructor(profile, data = {}, live = false) {
     super();
     console.log(data);
-    let {
-
-    } = data;
+    this.profile = profile;
+    this.live = live;
+    this.data = data;
   }
 
   static async all(accountId, webPropertyId) {
@@ -32,7 +32,7 @@ class Goal extends ModelBase {
         profileId: profileId
       })
       .then((response) => {
-        return new Profile(response.result);
+        return new Goal(response.result);
       })
       .catch((error) => {
         return error;
@@ -51,8 +51,8 @@ class Goal extends ModelBase {
     return this.constructor._api;
   }
 
-  create(goal, resolve = true) {
-    console.log(goal);
+  create(resolve = true) {
+    console.log(this.data);
     return
     const request = this._api.insert({
       accountId: this.accountId,
