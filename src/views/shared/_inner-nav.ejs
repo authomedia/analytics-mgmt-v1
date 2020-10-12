@@ -7,13 +7,23 @@
         title: 'Remarketing Audiences',
         link: '/remarketing-audiences/index.html',
         active: activeNav == 'remarketing-audiences',
-        icon: ''
+        icon: 'oi oi-fork'
+      }) -%>
+
+      <%- include('_inner-nav-item', {
+        title: 'Goals',
+        link: '/goals/audit.html',
+        active: activeNav == 'goals-audit',
+        icon: 'oi oi-flag'
       }) -%>
 
       <!-- Custom Dimensions Nav -->
       <ul class="nav flex-column">
         <li class="nav-item">
-          <%- include('_inner-nav-header', { title: 'Custom Dimensions' }) -%>
+          <%- include('_inner-nav-header', {
+            title: 'Custom Dimensions',
+            icon: 'oi oi-graph'
+          }) -%>
 
           <ul class="nav flex-column pl-4">
             <%- include('_inner-nav-item', {
@@ -36,7 +46,10 @@
     <!-- Custom Metrics Nav -->
     <ul class="nav flex-column">
       <li class="nav-item">
-        <%- include('_inner-nav-header', { title: 'Custom Metrics' }) -%>
+        <%- include('_inner-nav-header', {
+          title: 'Custom Metrics',
+          icon: 'oi oi-spreadsheet'
+        }) -%>
 
         <ul class="nav flex-column pl-4">
           <%- include('_inner-nav-item', {
@@ -55,26 +68,15 @@
       </li>
     </ul>
 
-    <!-- Goals Nav -->
-    <ul class="nav flex-column">
-      <li class="nav-item">
-        <%- include('_inner-nav-header', { title: 'Goals' }) -%>
 
-        <ul class="nav flex-column pl-4">
-          <%- include('_inner-nav-item', {
-            title: 'Audit',
-            link: '/goals/audit.html',
-            active: activeNav == 'goals-audit',
-            icon: 'oi oi-eye'
-          }) -%>
-        </ul>
-      </li>
-    </ul>
 
     <!-- Profiles Nav -->
     <ul class="nav flex-column">
       <li class="nav-item">
-        <%- include('_inner-nav-header', { title: 'Profiles' }) -%>
+        <%- include('_inner-nav-header', {
+          title: 'Profiles',
+          icon: 'oi oi-people'
+        }) -%>
 
         <ul class="nav flex-column pl-4">
           <%- include('_inner-nav-item', {
@@ -90,7 +92,10 @@
     <!-- Admin Nav -->
     <ul class="nav flex-column">
       <li class="nav-item">
-        <%- include('_inner-nav-header', { title: 'Administration' }) -%>
+        <%- include('_inner-nav-header', {
+          title: 'Administration',
+          icon: 'oi oi-cog'
+        }) -%>
 
         <ul class="nav flex-column pl-4">
           <%- include('_inner-nav-item', {
