@@ -47,16 +47,6 @@ class Analytics extends ModelBase {
     return await CustomMetric.all(accountId, webPropertyId);
   }
 
-  createCustomDimension(profile, customDimension) {
-    let customDimensionModel = new CustomDimension(profile);
-    customDimensionModel.create(customDimension);
-  }
-
-  createCustomMetric(profile, customMetric) {
-    let customMetricModel = new CustomMetric(profile);
-    customMetricModel.create(customMetric);
-  }
-
   createGoal(profile, goal) {
     let goalModel = new Goal(goal);
     goalModel.create();

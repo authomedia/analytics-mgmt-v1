@@ -36,20 +36,49 @@ class GoalsAuditFormControl extends FormControlBase {
     this.properties = new PropertiesField($('#ga-properties'), this);
     this.profiles = new ProfilesField($('#ga-profiles'), this);
 
-    this.auditButton = new SubmitButton($('#audit-button'), this);
-    this.goalFunnelToggle = $('#ga-goal-funnel-toggle');
-
     this.goalFunnelFields = $('#ga-goal-funnel');
 
-    this.formFields  = {
+
+    const goalFunnelToggle = $('#ga-goal-funnel-toggle');
+    const goalsFunnelRepeater = this.form.repeater({
+      initEmpty: false,
+      isFirstItemUndeletable: true,
+      show: function(i) {
+        // Show field
+        $(this).show();
+        $(this).collapse('show');
+
+        // Remove the element from the DOM once it is collapsed/hidden
+        $(this).on('hidden.bs.collapse', (event) => {
+          $(event.currentTarget).remove();
+        });
+      },
+      hide: function (deleteElement) {
+        $(this).collapse('hide');
+      },
+      ready: function(setIndexes) {
+        console.log('ready');
+      }
+    });
+
+    // Set after so we can also assign them to the object below
+    this.goalsFunnelRepeater = goalsFunnelRepeater;
+    this.goalFunnelToggle = goalFunnelToggle;
+
+    this.formFields = {
       goal: {
+        name: $('#ga-goal-name'),
         id: $('#ga-goal-id'),
         active: $('#ga-goal-active'),
+        tab: $('#ga-goal-tab'),
         eventValue: $('#ga-goal-event-value'),
         urlDestination: {
           details: $('#ga-goal-url-destination-details'),
           caseSensitive: $('#ga-goal-url-destination-case-sensitive'),
           matchType: $('#ga-goal-url-destination-match-type'),
+          firstStepRequired: $('#ga-goal-url-destination-first-step-required'),
+          funnelToggle: goalFunnelToggle,
+          funnel: goalsFunnelRepeater,
         },
         visitTimeOnSite: {
           details: $('#ga-goal-visit-time-on-site-details'),
@@ -85,32 +114,10 @@ class GoalsAuditFormControl extends FormControlBase {
       this.goalFunnelFields.toggleClass('d-none');
     })
 
-    const goalsFunnelRepeater = this.form.repeater({
-      initEmpty: false,
-      isFirstItemUndeletable: true,
-      show: function(i) {
-        // Set toggle label actions
-        // let toggle = $(this).find('.custom-control-input');
-        // let toggleLabel = $(this).find('.custom-control-label');
-        // let toggleName = toggle.attr('name');
-        // toggle.attr('id', toggleName);
-        // toggleLabel.attr('for', toggleName);
-
-        // Show field
-        $(this).show();
-        $(this).collapse('show');
-      },
-      hide: function (deleteElement) {
-        $(this).collapse('hide');
-      },
-      ready: function(setIndexes) {
-        console.log('ready');
-      }
-    });
 
 
     this.initFormSubmit();
-    this.initAuditButton();
+    // this.initAuditButton();
 
     this.snapshotManager = new SnapshotManager(
       this.formName,
@@ -120,22 +127,26 @@ class GoalsAuditFormControl extends FormControlBase {
     );
   }
 
-  initAuditButton() {
-    this.auditButton.on(events.BUTTONS.SUBMIT.CLICK, (event) => {
-      this.form.submit();
-    })
-
-    this.on(events.FIELDS.PROPERTIES.CHANGE, (event) => {
-      this.auditButton.toggle(event.elem);
-    });
+  getFunnelFields() {
+    return $('#ga-goal-funnel').find('input[type=text]');
   }
+
+  // initAuditButton() {
+  //   this.auditButton.on(events.BUTTONS.SUBMIT.CLICK, (event) => {
+  //     this.form.submit();
+  //   })
+
+  //   this.on(events.FIELDS.PROPERTIES.CHANGE, (event) => {
+  //     this.auditButton.toggle(event.elem);
+  //   });
+  // }
 
   initFormSubmit() {
     this.form.on('submit', (event) => {
       event.preventDefault();
       this.profiles.field.find('option:selected').each((i, profile) => {
         ui.debug.append(`${$(profile).text()}\n`);
-        this.analytics.createGoals($(profile), this.formFields);
+        this.analytics.createGoal($(profile), this.formFields);
         ui.debug.append(`\n\n`);
       });
 
@@ -181,13 +192,18 @@ class GoalsAuditFormControl extends FormControlBase {
 
     const serializedForm = {
       goal: {
+        name: goal.name.val(),
         id: goal.id.val(),
-        active: goal.active.val(),
+        active: goal.active.prop('checked'),
         eventValue: goal.eventValue.val(),
+        tab: goal.tab.find('li a.nav-link.active').prop('id'),
         urlDestination: {
           details: goal.urlDestination.details.val(),
-          caseSensitive: goal.urlDestination.caseSensitive.val(),
           matchType: goal.urlDestination.matchType.val(),
+          caseSensitive: goal.urlDestination.caseSensitive.prop('checked'),
+          firstStepRequired: goal.urlDestination.firstStepRequired.prop('checked'),
+          funnelToggle: goal.urlDestination.funnelToggle.prop('checked'),
+          funnel: goal.urlDestination.funnel.repeaterVal()['ga-goal-funnel-list'],
         },
         visitTimeOnSite: {
           details: goal.visitTimeOnSite.details.val(),
@@ -215,24 +231,36 @@ class GoalsAuditFormControl extends FormControlBase {
   hydrateForm(data) {
     const goal = this.formFields.goal;
 
+    goal.name.val(data.goal.name);
     goal.id.val(data.goal.id);
-    goal.active.val(data.goal.active);
+    goal.active.prop('checked', data.goal.active);
     goal.eventValue.val(data.goal.eventValue);
 
-    goal.urlDestination.details.val(data.goal.urlDestination.details);
-    goal.urlDestination.caseSensitive.val(data.goal.urlDestination.caseSensitive);
-    goal.urlDestination.matchType.val(data.goal.urlDestination.matchType);
+    goal.tab.find(`li a.nav-link#${data.goal.tab}`).trigger('click');
 
-    goal.visitTimeOnSite.details.val(data.goal.urlDestination.details);
-    goal.visitTimeOnSite.comparisonType.val(data.goal.urlDestination.comparisonType);
-    goal.visitTimeOnSite.comparisonValue.val(data.goal.urlDestination.comparisonValue);
+    goal.urlDestination.details.val(data.goal.urlDestination.details);
+    goal.urlDestination.caseSensitive.prop('checked', data.goal.urlDestination.caseSensitive);
+    goal.urlDestination.firstStepRequired.prop('checked', data.goal.urlDestination.firstStepRequired);
+    goal.urlDestination.matchType.val(data.goal.urlDestination.matchType);
+    if (data.goal.urlDestination.funnelToggle && !goal.urlDestination.funnelToggle.prop('checked')) {
+      goal.urlDestination.funnelToggle.trigger('click');
+    }
+    goal.urlDestination.funnel.setList(data.goal.urlDestination.funnel);
+
+
+    goal.visitTimeOnSite.details.val(data.goal.visitTimeOnSite.details);
+    goal.visitTimeOnSite.comparisonType.val(data.goal.visitTimeOnSite.comparisonType);
+    goal.visitTimeOnSite.comparisonValue.val(data.goal.visitTimeOnSite.comparisonValue);
 
     goal.numPages.details.val(data.goal.numPages.details);
     goal.numPages.comparisonType.val(data.goal.numPages.comparisonType);
     goal.numPages.comparisonValue.val(data.goal.numPages.comparisonValue);
 
     goal.event.details.val(data.goal.event.details);
+
+
     // goal.event.conditions.val(data.goal.event.conditions); // FIXME
+
     goal.event.useEventValue.val(data.goal.event.useEventValue);
   }
 }

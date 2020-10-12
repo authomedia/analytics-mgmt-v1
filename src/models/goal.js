@@ -4,6 +4,7 @@ import ui from '../config/ui';
 class Goal extends ModelBase {
   constructor(data = {}) {
     super();
+    console.log(data);
     let {
 
     } = data;

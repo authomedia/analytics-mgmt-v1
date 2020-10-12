@@ -13,7 +13,7 @@ const routes = {
   '/custom-dimensions/audit': customDimensionsAudit,
   '/custom-metrics/upload': customMetricsUpload,
   '/custom-metrics/audit': customMetricsAudit,
-  '/goals/audit': goalsAudit,
+  '/goals': goalsAudit,
   '/profiles/audit': profilesAudit,
   '/administration/snapshots': administrationSnapshots,
 }

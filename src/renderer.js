@@ -187,6 +187,4 @@ if (!production) {
   assetWatcher.on('unlink', (path) => {
     deleteWatchedAssetPath(path)
   });
-
-
 }

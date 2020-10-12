@@ -141,7 +141,7 @@ class RemarketingAudiencesFormControl extends FormControlBase {
           daysToLookBack: form.audienceDefinition.includeConditions.daysToLookBack.val(),
           segment: form.audienceDefinition.includeConditions.segment.val(),
           membershipDurationDays: form.audienceDefinition.includeConditions.membershipDurationDays.val(),
-          isSmartList: form.audienceDefinition.includeConditions.isSmartList.val(),
+          isSmartList: form.audienceDefinition.includeConditions.isSmartList.prop('checked'),
         }
       },
       stateBasedAudienceDefinition: {
@@ -188,7 +188,8 @@ class RemarketingAudiencesFormControl extends FormControlBase {
     form.stateBasedAudienceDefinition.includeConditions.membershipDurationDays.val(
       data.stateBasedAudienceDefinition.includeConditions.membershipDurationDays
     );
-    form.stateBasedAudienceDefinition.includeConditions.isSmartList.val(
+    form.stateBasedAudienceDefinition.includeConditions.isSmartList.prop(
+      'checked',
       data.stateBasedAudienceDefinition.includeConditions.isSmartList
     );
 
