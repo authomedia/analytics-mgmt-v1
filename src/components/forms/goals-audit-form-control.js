@@ -74,6 +74,7 @@ class GoalsAuditFormControl extends FormControlBase {
         active: $('#ga-goal-active'),
         tab: $('#ga-goal-tab'),
         eventValue: $('#ga-goal-event-value'),
+        type: $('#ga-goal-type'),
         urlDestination: {
           details: $('#ga-goal-url-destination-details'),
           caseSensitive: $('#ga-goal-url-destination-case-sensitive'),
@@ -116,6 +117,11 @@ class GoalsAuditFormControl extends FormControlBase {
       this.goalFunnelFields.toggleClass('d-none');
     })
 
+    this.formFields.goal.tab.on('show.bs.tab', (event) => {
+      const elem = $(event.target);
+      console.log(elem.data('value'));
+      this.formFields.goal.type.val(elem.data('value'));
+    })
 
 
     this.initFormSubmit();
@@ -148,9 +154,9 @@ class GoalsAuditFormControl extends FormControlBase {
       event.preventDefault();
       this.profiles.field.find('option:selected').each((i, profile) => {
         ui.debug.append(`${$(profile).text()}\n`);
-        this.analytics.createGoal(
-          $(profile),
-          this.serializeForm(),
+        this.analytics.upsertGoal(
+          $(profile).data('item'),
+          this.serializeForm().goal,
           this.liveApiCallToggle.isChecked()
         );
         ui.debug.append(`\n\n`);
@@ -203,6 +209,7 @@ class GoalsAuditFormControl extends FormControlBase {
         active: goal.active.prop('checked'),
         eventValue: goal.eventValue.val(),
         tab: goal.tab.find('li a.nav-link.active').prop('id'),
+        type: goal.type.val(),
         urlDestination: {
           details: goal.urlDestination.details.val(),
           matchType: goal.urlDestination.matchType.val(),

@@ -40,7 +40,7 @@ class Goal extends ModelBase {
   }
 
   static get _api() {
-    return gapi.client.analytics.management.profiles;
+    return gapi.client.analytics.management.goals;
   }
 
   static batch() {
@@ -50,40 +50,49 @@ class Goal extends ModelBase {
   get _api() {
     return this.constructor._api;
   }
+  upsert(resolve = false) {
+    this.create(resolve).then((response1) => {
+      console.log(response1);
+    }).catch((error1) => {
+      console.log(error1);
+      this.update(resolve).then((response2) => {
+        console.log(response2);
+      }).catch((error2) => {
+        console.log(error2)
+      });
+    });
+  }
 
   create(resolve = true) {
-    console.log(this.data);
-    return
-    const request = this._api.insert({
-      accountId: this.accountId,
-      webPropertyId: this.webPropertyId,
-      profileId: this.profileId
-    }, this.toJson())
+    if (this.live) {
+      const request = this._api.insert({
+        accountId: this.profile.accountId,
+        webPropertyId: this.profile.webPropertyId,
+        profileId: this.profile.id
+      }, this.toJson())
 
-    if (resolve) {
-      return this.deserialize(request)
+      if (resolve) {
+        return this.deserialize(request)
+      } else {
+        return request;
+      }
     } else {
-      return request;
+      return;
     }
   }
 
-  update(newValues, resolve = true) {
-    if (newValues) {
-      this.name = newValues.name;
-      this.scope = newValues.scope;
-      this.active = newValues.active;
-    }
+  update(resolve = true) {
     return this._patch(this.toJson(), resolve);
   }
 
   destroy() {
-    console.log('Custom dimensions cannot be destroyed');
+    console.log('TODO');
   }
 
   deserialize(request) {
     return request.then((response) => {
       console.log(response);
-      return new Profile(response.result);
+      return new Goal(response.result);
     }).catch((error) => {
       console.log(error);
       // throw new Error(error);
@@ -91,9 +100,60 @@ class Goal extends ModelBase {
   }
 
   toJson() {
-    return {
-      excludeQueryParameters: this.excludeQueryParameters,
+    const obj = {
+      id: this.data.id,
+      name: this.data.name,
+      active: this.data.active,
+      type: this.data.type,
+      value: this.data.eventValue,
     }
+
+    switch(this.data.type) {
+    case "URL_DESTINATION":
+      obj.urlDestinationDetails = {
+        caseSensitive: this.data.urlDestination.caseSensitive,
+        firstStepRequired: this.data.urlDestination.firstStepRequired,
+        matchType: this.data.urlDestination.matchType,
+        url: this.data.urlDestination.details,
+        steps: this.data.urlDestination.funnel.map((step, i) => {
+          return {
+            number: (i + 1),
+            name: step['ga-goal-funnel-step-name'],
+            url: step['ga-goal-funnel-screen-page']
+          }
+        })
+      }
+      break;
+
+    case "VISIT_NUM_PAGES":
+      obj.visitNumPagesDetails = {
+        comparisonType: this.data.numPages.comparisonType,
+        comparisonValue: this.data.numPages.comparisonValue || 0
+      }
+      break;
+
+    case "VISIT_TIME_ON_SITE":
+      obj.visitTimeOnSiteDetails = {
+        comparisonType: this.data.visitTimeOnSite.comparisonType,
+        comparisonValue: this.data.visitTimeOnSite.comparisonValue || 0
+      }
+      break;
+
+    case "EVENT":
+      obj.eventDetails = {
+        // eventConditions: [{
+        //   comparisonType:
+        //   comparisonValue:
+        //   expression:
+        //   matchType:
+        //   type:
+        // }],
+        eventConditions: []
+      }
+      break;
+    }
+
+    return obj
   }
 
   eq(other) {
@@ -108,17 +168,21 @@ class Goal extends ModelBase {
 
 
   _patch(data, resolve = true) {
-    const request = this._api
-      .patch({
-        accountId: this.accountId,
-        webPropertyId: this.webPropertyId,
-        customDimensionId: `ga:dimension${this.index}`
-      }, data);
+    if (this.live) {
+      const request = this._api.patch({
+          accountId: this.profile.accountId,
+          webPropertyId: this.profile.webPropertyId,
+          profileId: this.profile.id,
+          goalId: this.data.id
+        }, this.toJson());
 
-    if (resolve) {
-      return this.deserialize(request);
+      if (resolve) {
+        return this.deserialize(request);
+      } else {
+        return request;
+      }
     } else {
-      return request;
+      return;
     }
   }
 }

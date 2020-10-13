@@ -47,14 +47,20 @@ class Analytics extends ModelBase {
     return await CustomMetric.all(accountId, webPropertyId);
   }
 
-  createGoal(profile, goal, live) {
-    let goalModel = new Goal(profile, goal, live);
-    goalModel.create();
-  }
-
   async listProfiles(accountId, webPropertyId) {
     return await Profile.all(accountId, webPropertyId);
   }
+
+  async createGoal(profile, goal, live) {
+    let goalModel = new Goal(profile, goal, live);
+    await goalModel.create();
+  }
+
+  async upsertGoal(profile, goal, live) {
+    let goalModel = new Goal(profile, goal, live);
+    await goalModel.upsert(false);
+  }
+
 }
 
 export default Analytics;
