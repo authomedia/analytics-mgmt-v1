@@ -1,7 +1,9 @@
       </div>
 
       <%- include('_toasts') -%>
-      <%- include('_modals') -%>
+      <%- include('_modals', {
+        extra_classes: locals.modals_extra_classes
+      }) -%>
     </div>
     <%- include('_scripts') -%>
   </body>
