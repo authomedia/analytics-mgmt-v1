@@ -1,6 +1,7 @@
 import csv from 'csv'
 import TableBuilder from 'table-builder'
 import FileField from './file-field';
+import { Blob } from 'blob-polyfill';
 
 class CsvFileField extends FileField {
   handleFile(file) {
