@@ -1,6 +1,7 @@
 import Modal from '../components/ui/modal';
 
 var ui = {
+  body: $('body'),
   analyticsUi: $('#analytics-ui'),
   authButton: $('#auth-button'),
   loadingOverlay: $('#loading-overlay'),

@@ -1,7 +1,17 @@
 <div class="row">
   <div class="col-7">
     <h5>
-      <img src="<%= icon %>">
+      <img src="<%= icon %>" id="<%= id %>-icon">
+      <div
+        id="<%= id %>-loader"
+        class="spinner-border spinner-small spinner-light text-primary"
+        style="display:none;"
+        role="status"
+      >
+        <span class="sr-only">Loading...</span>
+      </div>
+
+
       <%= title %>
       <span id="<%= id %>-selected" class="badge badge-secondary"></span>
     </h5>

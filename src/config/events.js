@@ -29,6 +29,12 @@ const events = {
     },
     AD_LINKS: {
       CHANGE: 'field:adLinks:change'
+    },
+    DV360_LINKS: {
+      CHANGE: 'field:dv360Links:change'
+    },
+    SHOW_SESSIONS: {
+      CHANGE: 'field:showSessions:change'
     }
   }
 }

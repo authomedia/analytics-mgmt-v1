@@ -6,7 +6,14 @@
     toggle: {
       id: 'ga-live-api-call-toggle',
       title: 'Live API Call?',
-      tooltip: 'Enable WRITE calls to the Google Management API'
+      tooltip: 'Enable WRITE calls to the Google Management API',
+      checked: false
+    },
+    toggle2: {
+      id: 'ga-show-sessions-toggle',
+      title: 'Show Traffic?',
+      tooltip: 'Show number of sessions delivered by ad accounts',
+      checked: true
     },
     snapshot: {
       id: 'ga-remarketing-audiences'
@@ -46,7 +53,14 @@
           <%- include('shared/fields/_select-multiple', {
             id: 'ga-ad-links',
             icon: '/images/adminhome_link_adwords.png',
-            title: 'Ad Accounts'
+            title: 'Adwords Accounts'
+          }) -%>
+
+          <!-- DV360/DBM Accounts/Links -->
+          <%- include('shared/fields/_select-multiple', {
+            id: 'ga-dv360-links',
+            icon: '/images/adminhome_link_adwords.png',
+            title: 'DV360 Accounts'
           }) -%>
         </div>
 

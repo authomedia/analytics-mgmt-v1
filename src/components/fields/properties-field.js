@@ -25,15 +25,20 @@ class PropertiesField extends SelectField {
 
   init(accountId, accountName) {
     super.init();
+
+    this.showLoader();
+
     gapi.client.analytics.management.webproperties.list({
       'accountId': accountId
     })
       .then((response) => {
         response.parentName = accountName;
         this.handleResult(response)
+        this.hideLoader();
       })
       .then(null, (err) => {
         this.handleError(`${accountName}: ${err}`);
+        this.hideLoader();
     });
   }
 

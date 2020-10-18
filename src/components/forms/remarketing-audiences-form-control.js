@@ -11,8 +11,11 @@ import ProfilesField from '../fields/profiles-field';
 import RemarketingAudiencesField from '../fields/remarketing-audiences-field';
 import LinkedViewsField from '../fields/linked-views-field';
 import AdLinksField from '../fields/ad-links-field';
+import DV360LinksField from '../fields/dv360-links-field';
+
 // import LinkedAdAccountsField from '../fields/linked-ad-accounts-field';
 import LiveApiToggleField from '../fields/live-api-toggle-field';
+import ShowSessionsToggleField from '../fields/show-sessions-toggle-field';
 import AudienceTypeField from '../fields/audience-type-field';
 import Button from '../ui/button';
 
@@ -40,11 +43,11 @@ class RemarketingAudiencesFormControl extends FormControlBase {
     this.remarketingAudiences = new RemarketingAudiencesField($('#ga-remarketing'), this);
     this.linkedViews = new LinkedViewsField($('#ga-linked-views'), this);
     this.adLinks = new AdLinksField($('#ga-ad-links'), this);
-    // this.linkedAdAccounts = new LinkedAdAccountsField($('#ga-linked-ad-accounts'), this);
+    this.dv360Links = new DV360LinksField($('#ga-dv360-links'), this);
 
     this.audienceType = new AudienceTypeField($('#ga-remarketing-audience-type'), this);
     this.liveApiCallToggle = new LiveApiToggleField($('#ga-live-api-call-toggle'), this);
-
+    this.showSessionsToggle = new ShowSessionsToggleField($('#ga-show-sessions-toggle'), this);
 
     // Build Remarketing Audiences Form Lookups
     this.remarketingForm = {
@@ -89,7 +92,7 @@ class RemarketingAudiencesFormControl extends FormControlBase {
       this.showConfirmModal(() => {
         this.profiles.field.find('option:selected').each((i, profile) => {
           ui.debug.append(`${$(profile).text()}\n`);
-          this.analytics.listRemarketingAudiences($(profile), this);
+          // this.analytics.listRemarketingAudiences($(profile), this);
           this.analytics.createRemarketingAudience($(profile), this);
           ui.debug.append(`\n\n`);
         })

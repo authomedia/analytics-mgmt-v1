@@ -1,13 +1,23 @@
 import commaNumber from 'comma-number';
 
+import queue from '../../utilities/queue';
 import SelectField from './select-field';
 import events from '../../config/events';
+import AdvertiserActivity from '../../utilities/advertiser-activity';
 
 class AdLinksField extends SelectField {
   constructor(field, formControl) {
     super(field, formControl);
 
     this.className = 'AdLinks';
+
+    this.advertiserActivity = new AdvertiserActivity();
+
+    this.showSessions = true;
+
+    this.queue = queue;
+
+    this.loadingQueue = [];
 
     this.handleChange((i, elem) => {
       this.formControl.emit(events.FIELDS.AD_LINKS.CHANGE, {
@@ -24,203 +34,178 @@ class AdLinksField extends SelectField {
       this.empty();
 
       if (event.elem) {
-        this.init($(event.elem).data('accountId'), $(event.elem).val(), $(event.elem).text());
+        this.init(
+          $(event.elem).data('accountId'),
+          $(event.elem).val(),
+          $(event.elem).text()
+        );
       }
     });
-  }
 
-  init(accountId, propertyId, propertyName) {
-    gapi.client.analytics.management.webPropertyAdWordsLinks.list({
-      'accountId': accountId,
-      'webPropertyId': propertyId
-    })
-    .then((response) => {
-      response.result.parentName = propertyName;
+    this.formControl.on(events.FIELDS.SHOW_SESSIONS.CHANGE, (event) => {
+      this.showSessions = event.elem.prop('checked');
+      console.log('Show sessions:', this.showSessions);
+      console.log(this.field);
 
-      // Get Adwords activity for all accounts
-      let linkedViewIds = response.result.items.map((item) => {
-        return item.profileIds;
-      }).flat();
-
-      // Get Unique linked views
-      linkedViewIds = Array.from(new Set(linkedViewIds));
-      console.log(linkedViewIds);
-
-      const activeAccounts = {}
-
-      Promise.all(
-        linkedViewIds.map(async (linkedViewId) => {
-          await this.checkAdwordsActivity(linkedViewId, activeAccounts);
-        })
-      ).then(() => {
-        response.result.items = response.result.items.filter((item) => {
-          item.adWordsAccounts.map((account) => {
-            const shortId = account.customerId.replace(/-/g, '');
-            const accountSessions = activeAccounts[shortId] || 0;
-
-            item.name = `${item.name} (${commaNumber(accountSessions)} sessions)`;
-            item.sessions = item.sessions || 0;
-            item.sessions += accountSessions;
-            return account;
-          });
-
-          return (item.sessions > 0) ? true : false;
-        });
-
-        this.handleResult(response.result)
-      })
-      // console.log(activeAccounts);
-
-
-    })
-    .then(null, (err) => {
-      console.log(err);
-      this.handleError(`${propertyName}: ${err.result.error.message}`);
-    });
-
-    gapi.client.analytics.management.remarketingAudience.list({
-      'accountId': accountId,
-      'webPropertyId': propertyId,
-      'itemsPerPage': 2000
-    })
-    .then((response) => {
-      response.parentName = propertyName;
-
-      let linkedAdAccounts = {
-        parentName: response.parentName,
-        items: []
-      };
-
-      let seenAdAccounts = [];
-
-      // Get Adwords activity for all accounts
-      let linkedViewIds = response.result.items.map((item) => {
-        return item.linkedViews;
-      }).flat();
-
-      // Get Unique linked views
-      linkedViewIds = Array.from(new Set(linkedViewIds));
-      const activeAccounts = {}
-      linkedViewIds.map((linkedViewId) => {
-        this.checkAdwordsActivity(linkedViewId, activeAccounts);
+      this.field.find('option:selected').each((i, item) => {
+        const elem = $(item).data('item');
+        console.log(elem);
       });
 
-      console.log('Active Accounts: ', activeAccounts);
+      this.field.find('option').each((i, option) => {
+        option = $(option);
 
-      response.result.items.filter((item, i) => {
-        return item.linkedAdAccounts.map((linkedAdAccount, i) => {
-          if (!seenAdAccounts.includes(linkedAdAccount.linkedAccountId)) {
-            if (linkedAdAccount.type == 'ANALYTICS' || linkedAdAccount.type == 'ADWORDS_LINKS') {
-              // // Currently, do nothing with ANALYTICS or ADWORDS_LINKS type
-              // linkedAdAccount.label = `${linkedAdAccount.type} > ${linkedAdAccount.webPropertyId}`;
-              // linkedAdAccount.linkedAccountId = linkedAdAccount.webPropertyId; // FIXME: HACK ALERT!!
-              console.log('adwords account');
-            } else {
-              linkedAdAccount = this.castToAdwordsLink(linkedAdAccount);
-
-              if (
-                linkedAdAccount.linkedAccountId &&
-                activeAccounts[linkedAdAccount.linkedAccountId.replace(/-/g, '')]
-              ) {
-                linkedAdAccounts.items.push(linkedAdAccount);
-              } else {
-                console.log(linkedAdAccount.linkedAccountId, linkedAdAccount.label, 'does not have any active ad traffic');
-              }
-            }
-
-            seenAdAccounts.push(linkedAdAccount.linkedAccountId);
+        if (option.data('disabled')) {
+          if (event.state == false) {
+            option.prop('disabled', false);
+          } else {
+            option.prop('disabled', true);
           }
-        })
+        }
       });
 
-      this.handleAdAccounts(linkedAdAccounts);
-    })
-    .then(null, (err) => {
-      console.log(err)
-      // this.handleError(`${propertyName}: ${err.result.error.message}`);
-    })
-  }
-
-  async checkAdwordsActivity(linkedViewId, accounts) {
-    const minSessions = 100;
-    const minImpressions = 0;
-
-    if (!linkedViewId) {
-      return accounts;
-    }
-
-    return await gapi.client.analytics.data.ga.get({
-      'ids': `ga:${linkedViewId}`,
-      'start-date': '90daysAgo',
-      'end-date': 'yesterday',
-      'metrics': 'ga:sessions,ga:impressions,ga:adCost,ga:adClicks',
-      'dimensions': 'ga:adwordsCustomerID',
-      'filters': `ga:sessions>${minSessions};ga:impressions>${minImpressions}`,
-      'samplingLevel': 'HIGHER_PRECISION'
-    }).then((response) => {
-      const results = response.result;
-
-      if (results.totalResults === 0) {
-        console.log(`No results for ga:${linkedViewId}`);
-        return accounts;
-      }
-
-      results.rows.map((row) => {
-        // const sessions = parseInt(row[1]);
-        // const adClicks = parseInt(row[3]);
-        // if (sessions > (adClicks * 0.8)) {
-        // console.log(row[0], ': Ad Clicks count is within 20% of session count', sessions, adClicks * 0.8);
-        accounts[row[0]] = accounts[row[0]] || 0;
-        accounts[row[0]] = parseInt(row[1]);
-        // }
-      });
-
-      return accounts;
+      this.empty();
     });
   }
 
-  castToAdwordsLink(linkedAdAccount) {
-    return {
-      label: `${linkedAdAccount.type} > ${linkedAdAccount.linkedAccountId}`,
-      linkedAccountId: linkedAdAccount.linkedAccountId,
-      adWordsAccounts: [{
-        // autoTaggingEnabled: true,
-        customerId: linkedAdAccount.linkedAccountId,
-        // kind: "analytics#adWordsAccount",
-        type: linkedAdAccount.type
-      }],
-      entity: {
-        webPropertyRef: {
-          accountId: linkedAdAccount.accountId,
-          href: `https://www.googleapis.com/analytics/v3/management/accounts/${linkedAdAccount.accountId}/webproperties/${linkedAdAccount.webPropertyId}`,
-          id: linkedAdAccount.webPropertyId,
-          internalWebPropertyId: linkedAdAccount.internalWebPropertyId,
-          kind: "analytics#webPropertyRef",
-          name: linkedAdAccount.parentName
-        }
-      },
-      id: linkedAdAccount.id, // TBC
-      kind: "analytics#entityAdWordsLink",
-      name: linkedAdAccount.parentName,
-      profileIds: [
-        // TBC
-      ],
-      // selfLink: `https://www.googleapis.com/analytics/v3/management/accounts/${linkedAdAccount.accountId}/webproperties/${linkedAdAccount.webPropertyId}/entityAdWordsLinks/${linkedAdAccount.id}`
+  async init(accountId, propertyId, propertyName) {
+    const params = {
+      accountId: accountId,
+      webPropertyId: propertyId
+    }
+
+    this.showLoader(params);
+
+    Promise.all([
+      this.loadAdwordsLinks(params),
+      this.loadAdStats(params)
+    ]).then((results) => {
+      results[0].parentName = propertyName;
+
+      this.appendSessionData(results[0], results[1]);
+
+      const adwordsAccounts = this.getFlatAdwordsAccounts(results[0]);
+
+      this.debugJson(adwordsAccounts);
+
+      this.handleResult(adwordsAccounts);
+      this.hideLoader();
+
+      this.handleSuccess(`Loaded linked AdWords Accounts for ${propertyName}`);
+
+    }).catch((error) => {
+      this.hideLoader();
+      try {
+        this.handleError(error.result.error.message);
+      } catch (e) {
+        this.handleError(error.message);
+      }
+    });
+  }
+
+  loadAdwordsLinks(params) {
+    return new Promise((resolve, reject) => {
+      return this.queue(() => {
+        gapi.client.analytics.management.webPropertyAdWordsLinks.list(params)
+          .then((response) => {
+
+            response.result.items.forEach((item) => {
+              item.adWordsAccounts.forEach((adwordsAccount) => {
+                adwordsAccount.name = adwordsAccount.customerId;
+                adwordsAccount.webPropertyId = item.entity.webPropertyRef.id;
+                adwordsAccount.internalWebPropertyId = item.entity.webPropertyRef.internalWebPropertyId;
+                adwordsAccount.accountId = item.entity.webPropertyRef.accountId;
+                adwordsAccount.id = adwordsAccount.customerId;
+                adwordsAccount.type = 'ADWORDS_LINKS';
+              });
+            });
+
+            return resolve(response.result);
+          }).then(null, (error) => {
+            return reject(error);
+          });
+      })
+    });
+  }
+
+  appendSessionData(results, sessions) {
+    if (this.showSessions) {
+      results.items.forEach((item) => {
+        item.adWordsAccounts.forEach((adwordsAccount) => {
+          const sessionData = sessions[adwordsAccount.customerId.replace(/-/g, '')] || {};
+          adwordsAccount.sessionData = sessionData;
+          if (sessionData.sessions && sessionData.sessions > 0) {
+            adwordsAccount.name = `${adwordsAccount.name} (${sessionData.sessions} sessions)`;
+            adwordsAccount.hidden = false;
+          } else {
+            adwordsAccount.name = `${adwordsAccount.name} (0 sessions)`;
+            adwordsAccount.hidden = true;
+          }
+        });
+      });
     }
   }
 
-  handleAdAccounts(result) {
-    super.handleResult(
-      result.items,
-      this.field,
-      'label',
-      'linkedAccountId',
-      [],
-      `${result.parentName}: ${this.translate.analytics.errors[`no${this.className}`]}`,
-      {
-        parentName: result.parentName
+  getFlatAdwordsAccounts(results) {
+    return {
+      parentName: results.parentName,
+      items: results.items.map((item) => {
+        return item.adWordsAccounts.map((adwordsAccount) => {
+          // if (this.showSessions) {
+          //   if (adwordsAccount.sessionData.sessions > 0) {
+          //     return adwordsAccount;
+          //   }
+          // } else {
+          return adwordsAccount;
+          // }
+        }).filter(Boolean);
+      }).flat(),
+    }
+  }
+
+  loadAdStats(params) {
+    return new Promise((resolve, reject) => {
+      const activeAccounts = {};
+
+      if (!this.showSessions) {
+        console.log('Skipping session lookup');
+        return resolve(activeAccounts);
       }
-    );
+
+      console.log('Loading session data');
+      return this.queue(() => {
+        gapi.client.analytics.management.profiles.list(params)
+          .then((response) => {
+            const promises = [];
+
+            response.result.items.forEach((item) => {
+              promises.push(
+                this.advertiserActivity.find(item.id, activeAccounts, 'adwords')
+              );
+            });
+
+            Promise.all(promises).then((results) => {
+              return resolve(activeAccounts);
+            }).catch((error) => {
+              return resolve(activeAccounts);
+            });
+          }).then(null, (error) => {
+            return reject(error);
+          });
+      });
+    });
+  }
+
+  showLoader(item) {
+    this.loadingQueue.push(item);
+    super.showLoader();
+  }
+
+  hideLoader() {
+    this.loadingQueue.pop();
+    if (this.loadingQueue.length <= 0) {
+      super.hideLoader();
+    }
   }
 
   handleResult(result) {
@@ -232,7 +217,8 @@ class AdLinksField extends SelectField {
       [],
       `${result.parentName}: ${this.translate.analytics.errors[`no${this.className}`]}`,
       {
-        parentName: result.parentName
+        parentName: result.parentName,
+        hidden: 'hidden'
       }
     );
   }

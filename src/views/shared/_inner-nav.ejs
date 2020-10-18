@@ -104,6 +104,13 @@
             active: activeNav == 'admin-snapshots',
             icon: 'oi oi-camera-slr'
           }) -%>
+
+          <%- include('_inner-nav-item', {
+            title: 'Metrics Cache',
+            link: '/administration/metrics-cache.html',
+            active: activeNav == 'admin-metrics-cache',
+            icon: 'oi oi-bar-chart'
+          }) -%>
         </ul>
       </li>
     </ul>

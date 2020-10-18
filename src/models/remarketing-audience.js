@@ -18,6 +18,10 @@ class RemarketingAudience extends ModelBase {
     this.remarketingForm = this.formControl.remarketingForm;
 
     this.linkedAdAccounts = this.filterAdAccounts();
+    this.linkedDV360Accounts = this.filterDV360Accounts();
+
+    console.log(this.linkedAdAccounts);
+    console.log(this.linkedDV360Accounts);
   }
 
   list() {
@@ -103,7 +107,7 @@ class RemarketingAudience extends ModelBase {
         this.handleError(`${response.error.data[0].reason}: ${message}`, options);
 
         // Wait for backoff time before trying again
-        console.log(`Waiting for ${waitTime}s before continuing`);
+        this.handleWarn(`Waiting for ${waitTime}s before continuing`);
         setTimeout(() => {
           this.executeRequest(request, audience, retries);
         }, waitTime * 1000);
@@ -114,7 +118,17 @@ class RemarketingAudience extends ModelBase {
   filterAdAccounts() {
     return this.formControl.adLinks.field.find('option:selected')
       .filter((i, item) => {
-        return $(item).data('item').entity.webPropertyRef.id == this.profile.webPropertyId;
+        return $(item).data('item').webPropertyId == this.profile.webPropertyId;
+      })
+      .map((i, item) => {
+        return $(item).data('item');
+      })
+  }
+
+  filterDV360Accounts() {
+    return this.formControl.dv360Links.field.find('option:selected')
+      .filter((i, item) => {
+        return $(item).data('item').webPropertyId == this.profile.webPropertyId;
       })
       .map((i, item) => {
         return $(item).data('item');
@@ -156,10 +170,12 @@ class RemarketingAudience extends ModelBase {
   }
 
   buildResource(days) {
+    const linkedAdAccounts = this.getAllLinkedAdAccounts();
+
     let resource = {
       name: `${this.remarketingForm.name.val()} - ${days} Days`,
       linkedViews: [this.profile.id],
-      linkedAdAccounts: this.buildLinkedAccounts(this.linkedAdAccounts, this.profile),
+      linkedAdAccounts: linkedAdAccounts,
       audienceType: this.remarketingForm.audienceType.val(),
     }
 
@@ -239,14 +255,19 @@ class RemarketingAudience extends ModelBase {
   }
 
   buildLinkedAccounts(linkedAdAccounts, profile) {
-    return $.makeArray(linkedAdAccounts.map((i, linkedAdAccount) => {
-      return linkedAdAccount.adWordsAccounts.map((adWordsAccount, j) => {
-        return {
-          linkedAccountId: adWordsAccount.customerId,
-          type: adWordsAccount.type ? adWordsAccount.type : 'ADWORDS_LINKS',
-        }
-      })
+    return $.makeArray(linkedAdAccounts.map((i, adWordsAccount) => {
+      return {
+        linkedAccountId: adWordsAccount.customerId,
+        type: adWordsAccount.type ? adWordsAccount.type : 'ADWORDS_LINKS',
+      }
     })).flat(Infinity);
+  }
+
+  getAllLinkedAdAccounts() {
+    const linkedAdwordsAccounts = this.buildLinkedAccounts(this.linkedAdAccounts, this.profile);
+    const linkedDV360Accounts = this.buildLinkedAccounts(this.linkedDV360Accounts, this.profile);
+
+    return [...linkedAdwordsAccounts, ...linkedDV360Accounts];
   }
 
   remarketingFormIsValid() {
@@ -262,7 +283,7 @@ class RemarketingAudience extends ModelBase {
   }
 
   excludeConditionsIsValid(excludeConditions) {
-    const linkedAdAccounts = this.buildLinkedAccounts(this.linkedAdAccounts, this.profile);
+    const linkedAdAccounts = this.getAllLinkedAdAccounts()
 
     // Need to check if any DV360 accounts are linked - if so can't create any exclusions
     const hasDBM_LINKS = linkedAdAccounts.some((adAccount) => {

@@ -1,21 +1,6 @@
-import ModelBase from '../../models/model-base';
+import ToggleField from './toggle-field';
 
-class LiveApiToggleField extends ModelBase {
-  constructor(field, formControl) {
-    super();
-    this.field = field;
-    this.formControl = formControl;
-
-    this.field.on('change', (event) => {
-      let elem = $(event.currentTarget);
-      this.handleToggle(elem);
-    });
-  }
-
-  isChecked() {
-    return this.field.prop('checked');
-  }
-
+class LiveApiToggleField extends ToggleField {
   handleToggle(elem) {
     if (elem.prop('checked')) {
       this.formControl.submitButtons.removeClass('btn-warning');

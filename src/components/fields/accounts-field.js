@@ -17,10 +17,16 @@ class AccountsField extends SelectField {
 
   init() {
     super.init();
+
+    this.showLoader();
     gapi.client.load('analytics', 'v3').then(() => {
       gapi.client.analytics.management.accounts.list().then((response) => {
         this.handleResult(response);
+        this.hideLoader()
       });
+    }).then(null, (error) => {
+      this.handleError(error);
+      this.hideLoader();
     });
   }
 

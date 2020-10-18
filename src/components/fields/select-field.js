@@ -16,6 +16,8 @@ class SelectField extends ModelBase {
 
     this.fieldID = this.field.prop('id');
     this.selectedLabel = $(`span#${this.fieldID}-selected`);
+    this.loader = $(`div#${this.fieldID}-loader`);
+    this.icon = $(`img#${this.fieldID}-icon`);
     this.selectAll = $(`a#${this.fieldID}-select-all`);
 
     this.initSelectAll();
@@ -36,7 +38,7 @@ class SelectField extends ModelBase {
       let ids = [];
 
       if (this.selectAll.data('mode') == 'all') {
-        options = this.field.children('option');
+        options = this.field.children('option:not([disabled])');
         ids = $.map(options, (elem, i) => {
           return $(elem).data().item.id;
         });
@@ -113,6 +115,18 @@ class SelectField extends ModelBase {
     }
   }
 
+  showLoader() {
+    this.field.prop('disabled', 'disabled');
+    this.loader.show();
+    this.icon.hide();
+  }
+
+  hideLoader() {
+    this.loader.hide();
+    this.icon.show();
+    this.field.prop('disabled', false);
+  }
+
   handleResult(items, field, keyField, valueField, dataFields, errorMsg, options = {}) {
     if (items && items.length) {
       if (options.parentName) {
@@ -178,7 +192,7 @@ class SelectField extends ModelBase {
     }
     $.each(items, (key, value) => {
       if (value !== "" && value !== undefined) {
-        this.populateOption(key, value, keyField, valueField, dataFields);
+        this.populateOption(key, value, keyField, valueField, dataFields, options);
       }
     });
     // this.sortOptions();
@@ -211,9 +225,14 @@ class SelectField extends ModelBase {
     }).remove();
   }
 
-  populateOption(key, value, keyField, valueField, dataFields = []) {
+  populateOption(key, value, keyField, valueField, dataFields = [], options = {}) {
     let selectOption = $(new Option(value[keyField], value[valueField])).data('item', value);
-
+    if (options.hidden) {
+      if (value[options.hidden]) {
+        selectOption.prop('disabled', true);
+        selectOption.data('disabled', true);
+      }
+    }
     this.field.append(selectOption);
 
     $.each(dataFields, function(i, dataKey) {

@@ -29,16 +29,20 @@ class ProfilesField extends SelectField {
 
   init(accountId, propertyId, propertyName) {
     super.init();
+
+    this.showLoader();
     gapi.client.analytics.management.profiles.list({
       'accountId': accountId,
       'webPropertyId': propertyId
     })
     .then((response) => {
       response.parentName = propertyName;
-      this.handleResult(response)
+      this.handleResult(response);
+      this.hideLoader();
     })
     .then(null, (err) => {
       this.handleError(`${propertyName}: ${err}`);
+      this.hideLoader();
     });
   }
 

@@ -6,6 +6,8 @@ import customMetricsAudit from './custom-metrics/audit';
 import goalsAudit from './goals/audit';
 import profilesAudit from './profiles/audit';
 import administrationSnapshots from './administration/snapshots';
+import administrationMetricsCache from './administration/metrics-cache';
+
 
 const routes = {
   '/remarketing-audiences': remarketingAudiencesIndex,
@@ -16,6 +18,7 @@ const routes = {
   '/goals': goalsAudit,
   '/profiles/audit': profilesAudit,
   '/administration/snapshots': administrationSnapshots,
+  '/administration/metrics-cache': administrationMetricsCache,
 }
 
 export default routes;

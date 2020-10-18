@@ -28,6 +28,14 @@ body {
   border-color: #28a745;
 }
 
+.custom-switch {
+  margin-right: 0.5rem;
+}
+
+.custom-switch:last-child {
+  margin-right: 0;
+}
+
 .navbar-brand > img {
   height: 30px;
 }
@@ -179,6 +187,10 @@ span.logger-error {
   height: 1.2rem;
 }
 
+.spinner-light {
+  border-width: 0.15rem;
+}
+
 @media (min-width: 1200px) {
   .modal-xxl {
     max-width: 95%;
@@ -235,4 +247,9 @@ body {
   position: relative;
   counter-increment: section;
   content: counter(section)
+}
+
+
+body.show-sessions #select2-ga-ad-links-results .select2-results__option[aria-disabled=true] {
+  display: none;
 }

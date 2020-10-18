@@ -25,16 +25,24 @@
 
   <div class="btn-toolbar mb-2 mb-md-0">
     <div class="btn-group mr-2">
-
-
       <% if (locals.toggle) { %>
         <!-- Toggle Button -->
-        <div class="custom-control custom-switch" data-toggle="tooltip" data-placement="bottom" title="<%= toggle.tooltip %>">
-          <input class="custom-control-input form-control-lg" type="checkbox" value="1" id="<%= toggle.id %>">
-          <label class="custom-control-label" for="<%= toggle.id %>">
-            <%= toggle.title %>
-          </label>
-        </div>
+        <%- include('shared/fields/_toggle-switch', {
+          id: toggle.id,
+          title: toggle.title,
+          tooltip: toggle.tooltip,
+          checked: toggle.checked
+        }) -%>
+      <% } %>
+
+      <% if (locals.toggle2) { %>
+        <!-- Toggle Button -->
+        <%- include('shared/fields/_toggle-switch', {
+          id: toggle2.id,
+          title: toggle2.title,
+          tooltip: toggle2.tooltip,
+          checked: toggle2.checked
+        }) -%>
       <% } %>
 
       <% if (locals.button) { %>

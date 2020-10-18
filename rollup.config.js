@@ -5,7 +5,7 @@ import nodeGlobals from 'rollup-plugin-node-globals';
 import dotenv from 'rollup-plugin-dotenv';
 import { terser } from 'rollup-plugin-terser';
 import json from '@rollup/plugin-json';
-
+import notify from 'rollup-plugin-notify';
 
 // `npm run build` -> `production` is true
 // `npm run dev` -> `production` is false
@@ -19,6 +19,9 @@ export default {
     sourcemap: !production
   },
   plugins: [
+    notify({
+      success: true
+    }),
     resolve(), // tells Rollup how to find date-fns in node_modules
     commonjs(), // converts date-fns to ES modules
     json(),
