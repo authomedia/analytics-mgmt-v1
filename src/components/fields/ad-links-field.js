@@ -37,7 +37,7 @@ class AdLinksField extends SelectField {
         this.init(
           $(event.elem).data('accountId'),
           $(event.elem).val(),
-          $(event.elem).text()
+          $(event.elem).text().replace('---', '')
         );
       }
     });
@@ -64,7 +64,8 @@ class AdLinksField extends SelectField {
         }
       });
 
-      this.empty();
+      this.setFieldVal();
+      this.setSize();
     });
   }
 
@@ -132,7 +133,7 @@ class AdLinksField extends SelectField {
     if (this.showSessions) {
       results.items.forEach((item) => {
         item.adWordsAccounts.forEach((adwordsAccount) => {
-          const sessionData = sessions[adwordsAccount.customerId.replace(/-/g, '')] || {};
+          const sessionData = sessions[adwordsAccount.customerId.replace(/-/g, '')] || this.advertiserActivity.emptyObject(adwordsAccount.customerId, adwordsAccount.customerId);
           adwordsAccount.sessionData = sessionData;
           if (sessionData.sessions && sessionData.sessions > 0) {
             adwordsAccount.name = `${adwordsAccount.name} (${sessionData.sessions} sessions)`;
@@ -159,7 +160,22 @@ class AdLinksField extends SelectField {
           return adwordsAccount;
           // }
         }).filter(Boolean);
-      }).flat(),
+      }).flat().sort((itemA, itemB) => {
+        if (itemA.sessionData.sessions > itemB.sessionData.sessions) {
+          return -1;
+        } else if (itemA.sessionData.sessions < itemB.sessionData.sessions) {
+          return 1;
+        } else {
+          return 0;
+        }
+        // if (itemA.name > itemB.name) {
+        //   return 1;
+        // } else if (itemA.name < itemB.name) {
+        //   return -1;
+        // } else {
+        //   return 0;
+        // }
+      }),
     }
   }
 
@@ -217,8 +233,11 @@ class AdLinksField extends SelectField {
       [],
       `${result.parentName}: ${this.translate.analytics.errors[`no${this.className}`]}`,
       {
-        parentName: result.parentName,
-        hidden: 'hidden'
+        parentName: "---",
+        hidden: 'hidden',
+        group: {
+          name: result.parentName
+        }
       }
     );
   }

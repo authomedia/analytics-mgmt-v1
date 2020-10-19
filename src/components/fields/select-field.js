@@ -190,6 +190,13 @@ class SelectField extends ModelBase {
     if (options.empty) {
       this.empty(false);
     }
+
+    if (options.group) {
+      const selectOptionGroup = $(`<optgroup label="${options.group.name}"></optgroup>`);
+      const selectOptionGroupElem = this.field.append(selectOptionGroup);
+      options.group.elem = selectOptionGroupElem;
+    }
+
     $.each(items, (key, value) => {
       if (value !== "" && value !== undefined) {
         this.populateOption(key, value, keyField, valueField, dataFields, options);
@@ -233,7 +240,12 @@ class SelectField extends ModelBase {
         selectOption.data('disabled', true);
       }
     }
-    this.field.append(selectOption);
+
+    if (options.group && options.group.elem) {
+      options.group.elem.append(selectOption);
+    } else {
+      this.field.append(selectOption);
+    }
 
     $.each(dataFields, function(i, dataKey) {
       selectOption.data(dataKey, value[dataKey])

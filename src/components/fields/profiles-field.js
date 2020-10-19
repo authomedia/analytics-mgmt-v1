@@ -22,7 +22,11 @@ class ProfilesField extends SelectField {
       this.empty();
 
       if (event.elem) {
-        this.init($(event.elem).data('accountId'), $(event.elem).val(), $(event.elem).text());
+        this.init(
+          $(event.elem).data('accountId'),
+          $(event.elem).val(),
+          $(event.elem).text().replace('---', '')
+        );
       }
     });
   }
@@ -55,7 +59,10 @@ class ProfilesField extends SelectField {
       ['accountId'],
       this.translate.analytics.errors[`no${this.className}`],
       {
-        parentName: response.parentName
+        parentName: "---",
+        group: {
+          name: response.parentName
+        }
       }
     );
   }

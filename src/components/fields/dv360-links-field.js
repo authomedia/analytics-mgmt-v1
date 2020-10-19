@@ -37,7 +37,7 @@ class DV360LinksField extends SelectField {
         this.init(
           $(event.elem).data('accountId'),
           $(event.elem).val(),
-          $(event.elem).text()
+          $(event.elem).text().replace('---', '')
         );
       }
     });
@@ -84,10 +84,7 @@ class DV360LinksField extends SelectField {
         return item.linkedAdAccounts.map((linkedAdAccount, i) => {
           if (!seenAdAccounts.includes(linkedAdAccount.linkedAccountId)) {
             if (linkedAdAccount.type == 'ANALYTICS' || linkedAdAccount.type == 'ADWORDS_LINKS') {
-              // // Currently, do nothing with ANALYTICS or ADWORDS_LINKS type
-              // linkedAdAccount.label = `${linkedAdAccount.type} > ${linkedAdAccount.webPropertyId}`;
-              // linkedAdAccount.linkedAccountId = linkedAdAccount.webPropertyId; // FIXME: HACK ALERT!!
-              console.log('adwords account');
+              // These are handled by a different field now
             } else {
               console.log(linkedAdAccount.type);
               linkedAdAccount = this.castToAdwordsLink(linkedAdAccount);
@@ -95,7 +92,7 @@ class DV360LinksField extends SelectField {
               if (linkedAdAccount.linkedAccountId) {
                 // const shortId = linkedAdAccount.customerId.replace(/-/g, '');
                 // const accountSessions = activeAccounts[shortId] || 0;
-                // linkedAdAccount.label = `${linkedAdAccount.label} (${commaNumber(accountSessions)} sessions)`;
+                // linkedAdAccount.name = `${linkedAdAccount.name} (${commaNumber(accountSessions)} sessions)`;
               }
 
               linkedAdAccounts.items.push(linkedAdAccount);
@@ -196,7 +193,10 @@ class DV360LinksField extends SelectField {
       [],
       `${result.parentName}: ${this.translate.analytics.errors[`no${this.className}`]}`,
       {
-        parentName: result.parentName
+        parentName: "---",
+        group: {
+          name: result.parentName
+        }
       }
     );
   }

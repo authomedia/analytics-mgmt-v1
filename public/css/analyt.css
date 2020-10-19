@@ -32,6 +32,18 @@ body {
   margin-right: 0.5rem;
 }
 
+.custom-switch .custom-control-label::before {
+  top: 0.1rem;
+}
+
+.custom-switch .custom-control-input:checked~.custom-control-label::after {
+  top: calc(0.1rem + 2px);
+}
+
+.custom-switch .custom-control-input~.custom-control-label::after {
+  top: calc(0.1rem + 2px);
+}
+
 .custom-switch:last-child {
   margin-right: 0;
 }
@@ -252,4 +264,8 @@ body {
 
 body.show-sessions #select2-ga-ad-links-results .select2-results__option[aria-disabled=true] {
   display: none;
+}
+
+.push-vertical {
+  top: 0.15rem;
 }

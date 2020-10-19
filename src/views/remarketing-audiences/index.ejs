@@ -3,18 +3,18 @@
 <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
   <%- include('shared/_heading', {
     title: 'Remarketing Audiences',
-    toggle: {
+    toggles: [{
       id: 'ga-live-api-call-toggle',
-      title: 'Live API Call?',
+      title: 'Live API Writes?',
       tooltip: 'Enable WRITE calls to the Google Management API',
       checked: false
     },
-    toggle2: {
+    {
       id: 'ga-show-sessions-toggle',
       title: 'Show Traffic?',
       tooltip: 'Show number of sessions delivered by ad accounts',
       checked: true
-    },
+    }],
     snapshot: {
       id: 'ga-remarketing-audiences'
     }

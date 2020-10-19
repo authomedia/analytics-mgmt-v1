@@ -10,6 +10,17 @@ class AdvertiserActivity {
     this.queue = queue;
   }
 
+  emptyObject(advertiserId, advertiserName) {
+    return {
+      advertiserId: advertiserId,
+      advertiserName: advertiserName,
+      sessions: 0,
+      impressions: 0,
+      adClicks: 0,
+      adCost: 0
+    }
+  }
+
   async find(linkedViewId, accounts, type = 'adwords') {
     return new Promise(async (resolve, reject) => {
       let params = {};
