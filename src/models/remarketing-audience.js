@@ -214,9 +214,8 @@ class RemarketingAudience extends ModelBase {
         resource.stateBasedAudienceDefinition.includeConditions = this.buildIncludeConditions(includeConditions);
       }
 
-      if (this.excludeConditionsIsValid(excludeConditions)) {
-        resource.stateBasedAudienceDefinition.excludeConditions = this.buildExcludeConditions(excludeConditions);
-      }
+      resource.stateBasedAudienceDefinition.excludeConditions = this.buildExcludeConditions(excludeConditions);
+
     }
 
     return resource;
@@ -251,6 +250,8 @@ class RemarketingAudience extends ModelBase {
         exclusionDuration: excludeConditions.exclusionDuration.val(),
         segment: excludeConditions.segment.val()
       }
+    } else {
+      return { } // require empty object?
     }
   }
 
