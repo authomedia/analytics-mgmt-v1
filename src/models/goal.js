@@ -4,19 +4,19 @@ import ui from '../config/ui';
 class Goal extends ModelBase {
   constructor(profile, data = {}, live = false) {
     super();
-    console.log(data);
     this.profile = profile;
     this.live = live;
     this.data = data;
   }
 
-  static async all(accountId, webPropertyId) {
+  static async all(accountId, webPropertyId, profileId) {
     return await this._api.list({
       accountId: accountId,
-      webPropertyId: webPropertyId
+      webPropertyId: webPropertyId,
+      profileId: profileId
     }).then((response) => {
       return response.result.items.map((item) => {
-        return new Profile(item);
+        return new Goal(profileId, item, true);
       })
     }).catch((err) => {
       console.log(err);
@@ -32,7 +32,7 @@ class Goal extends ModelBase {
         profileId: profileId
       })
       .then((response) => {
-        return new Goal(response.result);
+        return new Goal(profileId, response.result, true);
       })
       .catch((error) => {
         return error;

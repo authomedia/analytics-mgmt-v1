@@ -1,11 +1,11 @@
 import Page from '../page';
 import events from '../../config/events';
-import CustomMetricsAuditFormControl from '../../components/forms/custom-metrics-audit-form-control';
+import GoalsFormControl from '../../components/forms/goals-form-control';
 
-class CustomMetricsAuditPage extends Page {
+class GoalsPage extends Page {
   constructor() {
     super();
-    this.formControl = new CustomMetricsAuditFormControl()
+    this.formControl = new GoalsFormControl();
   }
 
   init() {
@@ -17,7 +17,7 @@ class CustomMetricsAuditPage extends Page {
 
 export default () => {
   $(function() {
-    const page = new CustomMetricsAuditPage();
+    const page = new GoalsPage();
 
     $(window).on(events.GOOGLE.AUTHORIZED, function() {
       page.init();

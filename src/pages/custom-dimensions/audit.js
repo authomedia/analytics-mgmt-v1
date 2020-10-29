@@ -1,11 +1,11 @@
 import Page from '../page';
 import events from '../../config/events';
-import AuditFormControl from '../../components/forms/audit-form-control';
+import CustomDimensionsAuditFormControl from '../../components/forms/custom-dimensions-audit-form-control';
 
 class CustomDimensionsAuditPage extends Page {
   constructor() {
     super();
-    this.formControl = new AuditFormControl()
+    this.formControl = new CustomDimensionsAuditFormControl()
   }
 
   init() {

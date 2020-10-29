@@ -51,6 +51,11 @@ class Analytics extends ModelBase {
     return await Profile.all(accountId, webPropertyId);
   }
 
+
+  async listGoals(accountId, webPropertyId, profileId) {
+    return await Goal.all(accountId, webPropertyId, profileId);
+  }
+
   async createGoal(profile, goal, live) {
     let goalModel = new Goal(profile, goal, live);
     await goalModel.create();

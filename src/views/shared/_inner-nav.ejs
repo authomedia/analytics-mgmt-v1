@@ -9,38 +9,56 @@
         active: activeNav == 'remarketing-audiences',
         icon: 'oi oi-fork'
       }) -%>
+    </ul>
 
-      <%- include('_inner-nav-item', {
-        title: 'Goals',
-        link: '/goals/index.html',
-        active: activeNav == 'goals',
-        icon: 'oi oi-flag'
-      }) -%>
+    <!-- Goals Nav -->
+    <ul class="nav flex-column">
+      <li class="nav-item">
+        <%- include('_inner-nav-header', {
+          title: 'Goals',
+          icon: 'oi oi-flag'
+        }) -%>
 
-      <!-- Custom Dimensions Nav -->
-      <ul class="nav flex-column">
-        <li class="nav-item">
-          <%- include('_inner-nav-header', {
-            title: 'Custom Dimensions',
-            icon: 'oi oi-graph'
+        <ul class="nav flex-column pl-4">
+          <%- include('_inner-nav-item', {
+            title: 'Bulk Edit',
+            link: '/goals/index.html',
+            active: activeNav == 'goals',
+            icon: 'oi oi-pencil'
           }) -%>
+          <%- include('_inner-nav-item', {
+            title: 'Audit',
+            link: '/goals/audit.html',
+            active: activeNav == 'goals-audit',
+            icon: 'oi oi-flag'
+          }) -%>
+        </ul>
+      </li>
+    </ul>
 
-          <ul class="nav flex-column pl-4">
-            <%- include('_inner-nav-item', {
-              title: 'Audit',
-              link: '/custom-dimensions/audit.html',
-              active: activeNav == 'custom-dimensions-audit',
-              icon: 'oi oi-eye'
-            }) -%>
-            <%- include('_inner-nav-item', {
-              title: 'Upload',
-              link: '/custom-dimensions/upload.html',
-              active: activeNav == 'custom-dimensions-upload',
-              icon: 'oi oi-cloud-upload'
-            }) -%>
-          </ul>
-        </li>
-      </ul>
+    <!-- Custom Dimensions Nav -->
+    <ul class="nav flex-column">
+      <li class="nav-item">
+        <%- include('_inner-nav-header', {
+          title: 'Custom Dimensions',
+          icon: 'oi oi-graph'
+        }) -%>
+
+        <ul class="nav flex-column pl-4">
+          <%- include('_inner-nav-item', {
+            title: 'Audit',
+            link: '/custom-dimensions/audit.html',
+            active: activeNav == 'custom-dimensions-audit',
+            icon: 'oi oi-eye'
+          }) -%>
+          <%- include('_inner-nav-item', {
+            title: 'Upload',
+            link: '/custom-dimensions/upload.html',
+            active: activeNav == 'custom-dimensions-upload',
+            icon: 'oi oi-cloud-upload'
+          }) -%>
+        </ul>
+      </li>
     </ul>
 
     <!-- Custom Metrics Nav -->

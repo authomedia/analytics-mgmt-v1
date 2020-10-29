@@ -269,3 +269,11 @@ body.show-sessions #select2-ga-ad-links-results .select2-results__option[aria-di
 .push-vertical {
   top: 0.15rem;
 }
+
+@media (max-width: 1200px) {
+  .data-table-cell-scroll {
+    max-width: 300px;
+    overflow: scroll;
+  }
+}
+
