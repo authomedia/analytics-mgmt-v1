@@ -8,14 +8,19 @@ class Modal {
   showModal(title, body, modalOptions) {
     let opts = $.extend(this.ui.modals.defaults, modalOptions);
 
-    this.modal = this.ui.modals.modal
+    this.modal = this.ui.modals.modal;
+
+    this.modal.off('shown.bs.modal');
+    this.modal.on('shown.bs.modal', (e) => {
+      console.log('foo');
+      return opts.onShown(e);
+    });
 
     this.modal.modal(opts);
 
     this.ui.modals.container.append(this.modal);
-
-    this.modal.find('.modal-title').html(title);
-    this.modal.find('.modal-body').html(body);
+    this.updateBody(body);
+    this.updateTitle(title)
 
     let primaryBtn = this.modal.find('.btn.btn-primary');
     let secondaryBtn = this.modal.find('.btn.btn-secondary');
@@ -25,7 +30,7 @@ class Modal {
 
     primaryBtn.off('click');
     primaryBtn.on('click', (event) => {
-      this.modal.modal('hide');
+      this.hideModal();
       return opts.callback(event);
     });
 
@@ -33,7 +38,16 @@ class Modal {
   }
 
   hideModal() {
+    this.modal.off('shown.bs.modal');
     this.modal.modal('hide');
+  }
+
+  updateBody(body) {
+    this.modal.find('.modal-body').html(body);
+  }
+
+  updateTitle(title) {
+    this.modal.find('.modal-title').html(title);
   }
 }
 

@@ -31,7 +31,8 @@ var ui = {
     defaults: {
       primaryText: "Confirm submit",
       secondaryText: "Cancel",
-      callback: (event) => {}
+      callback: (event) => {},
+      onShown: (event) => {}
     }
   },
 

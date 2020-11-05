@@ -104,15 +104,72 @@ class GoalsAuditFormControl extends FormControlBase {
       'Audit Goals'
     );
 
+    const header = $(`<div class="row">
+      <div class="col">Audit Goals</div>
+      <div class="col">${this.generateGoalSelectors()}<div>
+    <div>`);
+
+    header.find('#ga-goal-id').on('change', (e) => {
+      const goalId = parseInt($(e.currentTarget).val(), 10);
+      console.log(goalId);
+      if (goalId == 0) {
+        return this.modal.updateBody(dataTable.generateTable(headers, data));
+      }
+
+      const dupData = $.extend(true, [], data);
+
+      const filteredData = dupData.map((row) => {
+        row.objects = row.objects.filter((obj) => {
+          return parseInt(obj.data.id, 10) === goalId;
+        })
+        return row;
+      })
+      return this.modal.updateBody(dataTable.generateTable(headers, filteredData));
+    });
+
+    console.log(data);
+
     this.modal.showModal(
-      'Audit Goals',
+      header,
       dataTable.generateTable(headers, data),
       {
         callback: (event) => {
           console.log(event);
+
         }
       }
     );
+  }
+
+  generateGoalSelectors() {
+    return `
+      <select type="text" name="ga-goal-id" id="ga-goal-id" class="form-control">
+        <option value="0" selected>SHOW ALL</option>
+        <option value="1">Goal Id 1 / Goal Set 1</option>
+        <option value="2">Goal Id 2 / Goal Set 1</option>
+        <option value="3">Goal Id 3 / Goal Set 1</option>
+        <option value="4">Goal Id 4 / Goal Set 1</option>
+        <option value="5">Goal Id 5 / Goal Set 1</option>
+
+        <option value="6">Goal Id 6 / Goal Set 2</option>
+        <option value="7">Goal Id 7 / Goal Set 2</option>
+        <option value="8">Goal Id 8 / Goal Set 2</option>
+        <option value="9">Goal Id 9 / Goal Set 2</option>
+        <option value="10">Goal Id 10 / Goal Set 2</option>
+
+        <option value="11">Goal Id 11 / Goal Set 3</option>
+        <option value="12">Goal Id 12 / Goal Set 3</option>
+        <option value="13">Goal Id 13 / Goal Set 3</option>
+        <option value="14">Goal Id 14 / Goal Set 3</option>
+        <option value="15">Goal Id 15 / Goal Set 3</option>
+
+        <option value="16">Goal Id 16 / Goal Set 4</option>
+        <option value="17">Goal Id 17 / Goal Set 4</option>
+        <option value="18">Goal Id 18 / Goal Set 4</option>
+        <option value="19">Goal Id 19 / Goal Set 4</option>
+        <option value="20">Goal Id 20 / Goal Set 4</option>
+      </select>
+    `;
   }
 }
 
