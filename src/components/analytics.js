@@ -6,6 +6,8 @@ import ModelBase from '../models/model-base';
 import RemarketingAudience from '../models/remarketing-audience';
 import CustomDimension from '../models/custom-dimension';
 import CustomMetric from '../models/custom-metric';
+import Profile from '../models/profile';
+import Goal from '../models/goal';
 
 class Analytics extends ModelBase {
   constructor(clientId, scopes) {
@@ -48,6 +50,15 @@ class Analytics extends ModelBase {
   createCustomMetric(profile, customMetric) {
     let customMetricModel = new CustomMetric(profile);
     customMetricModel.create(customMetric);
+  }
+
+  createGoal(profile, goal) {
+    let goalModel = new Goal(goal);
+    goalModel.create();
+  }
+
+  async listProfiles(accountId, webPropertyId) {
+    return await Profile.all(accountId, webPropertyId);
   }
 }
 

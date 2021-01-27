@@ -3,6 +3,9 @@ import customLogger from './components/custom-logger';
 import router from './pages/router';
 import authorizer from './utilities/ga-authorizer';
 
+// JQuery repeater plugin - extends $('elem').repeater()
+import { } from 'jquery.repeater/jquery.repeater';
+
 // Setup Logger
 Logger.useDefaults();
 Logger.setHandler(customLogger);

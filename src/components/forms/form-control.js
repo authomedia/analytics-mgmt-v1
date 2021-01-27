@@ -30,7 +30,7 @@ class FormControl extends FormControlBase {
     this.analytics = analytics;
 
     this.accounts = new AccountsField($('#ga-accounts'), this);
-     this.properties = new PropertiesField($('#ga-properties'), this);
+    this.properties = new PropertiesField($('#ga-properties'), this);
     this.profiles = new ProfilesField($('#ga-profiles'), this);
     this.remarketingAudiences = new RemarketingAudiencesField($('#ga-remarketing'), this);
     this.linkedViews = new LinkedViewsField($('#ga-linked-views'), this);
