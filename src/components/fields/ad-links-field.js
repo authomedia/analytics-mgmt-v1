@@ -4,6 +4,7 @@ import queue from '../../utilities/queue';
 import SelectField from './select-field';
 import events from '../../config/events';
 import AdvertiserActivity from '../../utilities/advertiser-activity';
+import pQueue from '../../utilities/p-queue';
 
 class AdLinksField extends SelectField {
   constructor(field, formControl) {
@@ -105,8 +106,8 @@ class AdLinksField extends SelectField {
   }
 
   loadAdwordsLinks(params) {
-    return new Promise((resolve, reject) => {
-      return this.queue(() => {
+    return pQueue.add(async () => {
+      return await new Promise((resolve, reject) => {
         gapi.client.analytics.management.webPropertyAdWordsLinks.list(params)
           .then((response) => {
 
@@ -189,25 +190,33 @@ class AdLinksField extends SelectField {
       }
 
       console.log('Loading session data');
-      return this.queue(() => {
-        gapi.client.analytics.management.profiles.list(params)
-          .then((response) => {
-            const promises = [];
+      return pQueue.add(async () => {
+        return await new Promise((res, rej) => {
+          gapi.client.analytics.management.profiles.list(params)
+            .then((response) => {
+              const promises = [];
 
-            response.result.items.forEach((item) => {
-              promises.push(
-                this.advertiserActivity.find(item.id, activeAccounts, 'adwords')
-              );
-            });
+              response.result.items.forEach((item) => {
+                promises.push(
+                  this.advertiserActivity.find(item.id, activeAccounts, 'adwords')
+                );
+              });
 
-            Promise.all(promises).then((results) => {
-              return resolve(activeAccounts);
-            }).catch((error) => {
-              return resolve(activeAccounts);
+              Promise.all(promises).then((results) => {
+                resolve(activeAccounts);
+                res()
+                return;
+              }).catch((error) => {
+                resolve(activeAccounts);
+                rej();
+                return
+              });
+            }).then(null, (error) => {
+              reject(error);
+              rej()
+              return;
             });
-          }).then(null, (error) => {
-            return reject(error);
-          });
+        })
       });
     });
   }

@@ -1,5 +1,6 @@
 import ModelBase from './model-base';
 import ui from '../config/ui';
+import pQueue from '../utilities/p-queue';
 
 class Profile extends ModelBase {
   constructor(data = {}) {
@@ -26,32 +27,36 @@ class Profile extends ModelBase {
   }
 
   static async all(accountId, webPropertyId) {
-    return await this._api.list({
-      accountId: accountId,
-      webPropertyId: webPropertyId
-    }).then((response) => {
-      return response.result.items.map((item) => {
-        return new Profile(item);
-      })
-    }).catch((err) => {
-      console.log(err);
-      return err;
+    return await pQueue.add(async () => {
+      return await this._api.list({
+        accountId: accountId,
+        webPropertyId: webPropertyId
+      }).then((response) => {
+        return response.result.items.map((item) => {
+          return new Profile(item);
+        })
+      }).catch((err) => {
+        console.log(err);
+        return err;
+      });
     });
   }
 
   static async find(accountId, webPropertyId, profileId) {
-    return await this._api
-      .get({
-        accountId: accountId,
-        webPropertyId: webPropertyId,
-        profileId: profileId
-      })
-      .then((response) => {
-        return new Profile(response.result);
-      })
-      .catch((error) => {
-        return error;
-      });
+    return await pQueue.add(async () => {
+      return await this._api
+        .get({
+          accountId: accountId,
+          webPropertyId: webPropertyId,
+          profileId: profileId
+        })
+        .then((response) => {
+          return new Profile(response.result);
+        })
+        .catch((error) => {
+          return error;
+        });
+    });
   }
 
   static get _api() {
@@ -66,19 +71,20 @@ class Profile extends ModelBase {
     return this.constructor._api;
   }
 
-  // NB. Create MUST be triggered squentially - it will not use the index value
   create(resolve = true) {
-    const request = this._api.insert({
-      accountId: this.accountId,
-      webPropertyId: this.webPropertyId,
-      profileId: this.profileId
-    }, this.toJson())
+    return pQueue.add(async () => {
+      const request = this._api.insert({
+        accountId: this.accountId,
+        webPropertyId: this.webPropertyId,
+        profileId: this.profileId
+      }, this.toJson())
 
-    if (resolve) {
-      return this.deserialize(request)
-    } else {
-      return request;
-    }
+      if (resolve) {
+        return this.deserialize(request)
+      } else {
+        return request;
+      }
+    });
   }
 
   update(newValues, resolve = true) {
@@ -122,18 +128,20 @@ class Profile extends ModelBase {
 
 
   _patch(data, resolve = true) {
-    const request = this._api
-      .patch({
-        accountId: this.accountId,
-        webPropertyId: this.webPropertyId,
-        customDimensionId: `ga:dimension${this.index}`
-      }, data);
+    return pQueue.add(async () => {
+      const request = this._api
+        .patch({
+          accountId: this.accountId,
+          webPropertyId: this.webPropertyId,
+          customDimensionId: `ga:dimension${this.index}`
+        }, data);
 
-    if (resolve) {
-      return this.deserialize(request);
-    } else {
-      return request;
-    }
+      if (resolve) {
+        return this.deserialize(request);
+      } else {
+        return request;
+      }
+    });
   }
 }
 

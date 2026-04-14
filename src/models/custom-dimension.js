@@ -1,5 +1,6 @@
 import ModelBase from './model-base';
 import ui from '../config/ui';
+import pQueue from '../utilities/p-queue';
 
 class CustomDimension extends ModelBase {
   constructor(customDimension = {}) {
@@ -13,32 +14,36 @@ class CustomDimension extends ModelBase {
   }
 
   static async all(accountId, webPropertyId) {
-    return await gapi.client.analytics.management.customDimensions.list({
-      accountId: accountId,
-      webPropertyId: webPropertyId
-    }).then((response) => {
-      return response.result.items.map((item) => {
-        return new CustomDimension(item);
-      })
-    }).catch((err) => {
-      console.log(err);
-      return err;
+    return await pQueue.add(async () => {
+      return await gapi.client.analytics.management.customDimensions.list({
+        accountId: accountId,
+        webPropertyId: webPropertyId
+      }).then((response) => {
+        return response.result.items.map((item) => {
+          return new CustomDimension(item);
+        })
+      }).catch((err) => {
+        console.log(err);
+        return err;
+      });
     });
   }
 
   static async find(accountId, webPropertyId, index) {
-    return await this._api
-      .get({
-        accountId: accountId,
-        webPropertyId: webPropertyId,
-        customDimensionId: `ga:dimension${index}`
-      })
-      .then((response) => {
-        return new CustomDimension(response.result);
-      })
-      .catch((error) => {
-        return error;
-      });
+    return await pQueue.add(async () => {
+      return await this._api
+        .get({
+          accountId: accountId,
+          webPropertyId: webPropertyId,
+          customDimensionId: `ga:dimension${index}`
+        })
+        .then((response) => {
+          return new CustomDimension(response.result);
+        })
+        .catch((error) => {
+          return error;
+        });
+    });
   }
 
   static get _api() {
@@ -125,18 +130,20 @@ class CustomDimension extends ModelBase {
 
 
   _patch(data, resolve = true) {
-    const request = this._api
-      .patch({
-        accountId: this.accountId,
-        webPropertyId: this.webPropertyId,
-        customDimensionId: `ga:dimension${this.index}`
-      }, data);
+    return pQueue.add(async () => {
+      const request = this._api
+        .patch({
+          accountId: this.accountId,
+          webPropertyId: this.webPropertyId,
+          customDimensionId: `ga:dimension${this.index}`
+        }, data);
 
-    if (resolve) {
-      return this.deserialize(request);
-    } else {
-      return request;
-    }
+      if (resolve) {
+        return this.deserialize(request);
+      } else {
+        return request;
+      }
+    });
   }
 }
 

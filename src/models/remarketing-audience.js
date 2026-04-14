@@ -2,6 +2,7 @@ import dedent from 'dedent';
 
 import ModelBase from './model-base';
 import ui from '../config/ui';
+import pQueue from '../utilities/p-queue';
 
 class RemarketingAudience extends ModelBase {
   constructor(profile, formControl) {
@@ -25,13 +26,18 @@ class RemarketingAudience extends ModelBase {
   }
 
   list() {
-    gapi.client.analytics.management.remarketingAudience.list(
-    {
-      accountId: this.profile.accountId,
-      webPropertyId: this.profile.webPropertyId
-    }
-    ).then((results) => {
-      this.debugJson(results.body)
+    return pQueue.add(async () => {
+      return await new Promise((resolve, reject) => {
+        gapi.client.analytics.management.remarketingAudience.list(
+        {
+          accountId: this.profile.accountId,
+          webPropertyId: this.profile.webPropertyId
+        }
+        ).then((results) => {
+          this.debugJson(results.body)
+          resolve(results.body);
+        });
+      })
     });
   }
 
@@ -49,50 +55,52 @@ class RemarketingAudience extends ModelBase {
   }
 
   executeRequest(request, audience, retries = 0) {
-    request.execute((response) => {
-      // Handle the response.
-      if (response.code && response.message) {
-        let message = dedent(`
-          ${audience.webPropertyId} >
-            ${audience.resource.name}:
-            ${response.message}
-        `);
+    return pQueue.add(async () => {
+      request.execute((response) => {
+        // Handle the response.
+        if (response.code && response.message) {
+          let message = dedent(`
+            ${audience.webPropertyId} >
+              ${audience.resource.name}:
+              ${response.message}
+          `);
 
-        let options = {
-          action: {
-            text: 'RETRY',
-            icon: 'reload',
-            click: (event) => {
-              let elem = $(event.currentTarget);
-              this.executeRequest(request, audience);
+          let options = {
+            action: {
+              text: 'RETRY',
+              icon: 'reload',
+              click: (event) => {
+                let elem = $(event.currentTarget);
+                this.executeRequest(request, audience);
+              }
             }
           }
+
+          // this.handleRetry(
+          //   response,
+          //   request,
+          //   audience,
+          //   message,
+          //   options,
+          //   retries
+          // );
+
+          // Always handle final errors with a toast message
+          this.handleError(message, options);
+
+        } else {
+          let message = dedent(`
+            ${audience.webPropertyId} >
+              ${audience.resource.name}:
+              ${this.translate.messages.remarketingSuccess}
+          `);
+
+          this.handleSuccess(message);
         }
-
-        // this.handleRetry(
-        //   response,
-        //   request,
-        //   audience,
-        //   message,
-        //   options,
-        //   retries
-        // );
-
-        // Always handle final errors with a toast message
-        this.handleError(message, options);
-
-      } else {
-        let message = dedent(`
-          ${audience.webPropertyId} >
-            ${audience.resource.name}:
-            ${this.translate.messages.remarketingSuccess}
-        `);
-
-        this.handleSuccess(message);
-      }
-      this.debug($(this.profile).text());
-      this.debugJson(response);
-      this.debug(`\n\n`);
+        this.debug($(this.profile).text());
+        this.debugJson(response);
+        this.debug(`\n\n`);
+      });
     });
   }
 

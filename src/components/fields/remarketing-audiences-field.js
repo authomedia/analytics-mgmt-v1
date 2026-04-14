@@ -1,5 +1,6 @@
 import SelectField from './select-field';
 import events from '../../config/events';
+import pQueue from '../../utilities/p-queue';
 
 class RemarketingAudiencesField extends SelectField {
   constructor(field, formControl) {
@@ -25,16 +26,18 @@ class RemarketingAudiencesField extends SelectField {
 
   init(accountId, propertyId, propertyName) {
     super.init();
-    gapi.client.analytics.management.remarketingAudience.list({
-      'accountId': accountId,
-      'webPropertyId': propertyId
-    })
-    .then((response) => {
-      response.parentName = propertyName;
-      this.handleResult(response)
-    })
-    .then(null, (err) => {
-      this.handleError(err);
+    return pQueue.add(async () => {
+      return await gapi.client.analytics.management.remarketingAudience.list({
+        'accountId': accountId,
+        'webPropertyId': propertyId
+      })
+      .then((response) => {
+        response.parentName = propertyName;
+        this.handleResult(response)
+      })
+      .then(null, (err) => {
+        this.handleError(err);
+      });
     });
   }
 

@@ -1,5 +1,6 @@
 import ModelBase from './model-base';
 import ui from '../config/ui';
+import pQueue from '../utilities/p-queue';
 
 class CustomMetric extends ModelBase {
   constructor(customMetric = {}) {
@@ -14,32 +15,36 @@ class CustomMetric extends ModelBase {
   }
 
   static async all(accountId, webPropertyId) {
-    return await gapi.client.analytics.management.customMetrics.list({
-      accountId: accountId,
-      webPropertyId: webPropertyId
-    }).then((response) => {
-      return response.result.items.map((item) => {
-        return new CustomMetric(item);
-      })
-    }).catch((err) => {
-      console.log(err);
-      return err;
+    return await pQueue.add(async () => {
+      return await gapi.client.analytics.management.customMetrics.list({
+        accountId: accountId,
+        webPropertyId: webPropertyId
+      }).then((response) => {
+        return response.result.items.map((item) => {
+          return new CustomMetric(item);
+        })
+      }).catch((err) => {
+        console.log(err);
+        return err;
+      });
     });
   }
 
   static async find(accountId, webPropertyId, index) {
-    return await this._api
-      .get({
-        accountId: accountId,
-        webPropertyId: webPropertyId,
-        customMetricId: `ga:metric${index}`
-      })
-      .then((response) => {
-        return new CustomMetric(response.result);
-      })
-      .catch((error) => {
-        return error;
-      });
+    return await pQueue.add(async () => {
+      return await this._api
+        .get({
+          accountId: accountId,
+          webPropertyId: webPropertyId,
+          customMetricId: `ga:metric${index}`
+        })
+        .then((response) => {
+          return new CustomMetric(response.result);
+        })
+        .catch((error) => {
+          return error;
+        });
+     });
   }
 
   static get _api() {
@@ -129,18 +134,20 @@ class CustomMetric extends ModelBase {
 
 
   _patch(data, resolve = true) {
-    const request = this._api
-      .patch({
-        accountId: this.accountId,
-        webPropertyId: this.webPropertyId,
-        customMetricId: `ga:metric${this.index}`
-      }, data);
+    return pQueue.add(async () => {
+      const request = this._api
+        .patch({
+          accountId: this.accountId,
+          webPropertyId: this.webPropertyId,
+          customMetricId: `ga:metric${this.index}`
+        }, data);
 
-    if (resolve) {
-      return this.deserialize(request);
-    } else {
-      return request;
-    }
+      if (resolve) {
+        return this.deserialize(request);
+      } else {
+        return request;
+      }
+    });
   }
 }
 

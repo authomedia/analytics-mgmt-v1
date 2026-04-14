@@ -1,5 +1,7 @@
 import ModelBase from './model-base';
 import ui from '../config/ui';
+import pQueue from '../utilities/p-queue';
+
 
 class Goal extends ModelBase {
   constructor(profile, data = {}, live = false) {
@@ -10,33 +12,37 @@ class Goal extends ModelBase {
   }
 
   static async all(accountId, webPropertyId, profileId) {
-    return await this._api.list({
-      accountId: accountId,
-      webPropertyId: webPropertyId,
-      profileId: profileId
-    }).then((response) => {
-      return response.result.items.map((item) => {
-        return new Goal(profileId, item, true);
-      })
-    }).catch((err) => {
-      console.log(err);
-      return err;
-    });
+    return await pQueue.add(async () => {
+      return await this._api.list({
+         accountId: accountId,
+         webPropertyId: webPropertyId,
+         profileId: profileId
+       }).then((response) => {
+         return response.result.items.map((item) => {
+           return new Goal(profileId, item, true);
+         })
+       }).catch((err) => {
+         console.log(err);
+         return err;
+       });
+    })
   }
 
   static async find(accountId, webPropertyId, profileId) {
-    return await this._api
-      .get({
-        accountId: accountId,
-        webPropertyId: webPropertyId,
-        profileId: profileId
-      })
-      .then((response) => {
-        return new Goal(profileId, response.result, true);
-      })
-      .catch((error) => {
-        return error;
-      });
+    return await pQueue.add(async () => {
+      return await this._api
+        .get({
+          accountId: accountId,
+          webPropertyId: webPropertyId,
+          profileId: profileId
+        })
+        .then((response) => {
+          return new Goal(profileId, response.result, true);
+        })
+        .catch((error) => {
+          return error;
+        });
+    })
   }
 
   static get _api() {
@@ -50,6 +56,7 @@ class Goal extends ModelBase {
   get _api() {
     return this.constructor._api;
   }
+
   upsert(resolve = false) {
     this.create(resolve).then((response1) => {
       console.log(response1);
@@ -65,19 +72,23 @@ class Goal extends ModelBase {
 
   create(resolve = true) {
     if (this.live) {
-      const request = this._api.insert({
-        accountId: this.profile.accountId,
-        webPropertyId: this.profile.webPropertyId,
-        profileId: this.profile.id
-      }, this.toJson())
+      return pQueue.add(async () => {
+        const request = this._api.insert({
+          accountId: this.profile.accountId,
+          webPropertyId: this.profile.webPropertyId,
+          profileId: this.profile.id
+        }, this.toJson())
 
-      if (resolve) {
-        return this.deserialize(request)
-      } else {
-        return request;
-      }
+        if (resolve) {
+          return this.deserialize(request)
+        } else {
+          return request;
+        }
+      });
     } else {
-      return;
+      return new Promise((resolve, reject) => {
+        return resolve('Live flag not toggled');
+      });
     }
   }
 
@@ -105,7 +116,7 @@ class Goal extends ModelBase {
       name: this.data.name,
       active: this.data.active,
       type: this.data.type,
-      value: this.data.eventValue,
+      value: this.data.eventValue === "" ? undefined : this.data.eventValue,
     }
 
     switch(this.data.type) {
@@ -115,13 +126,17 @@ class Goal extends ModelBase {
         firstStepRequired: this.data.urlDestination.firstStepRequired,
         matchType: this.data.urlDestination.matchType,
         url: this.data.urlDestination.details,
-        steps: this.data.urlDestination.funnel.map((step, i) => {
+      }
+
+      if (this.data.urlDestination.funnel.length) {
+        console.log(this.data.urlDestination.funnel);
+        obj.urlDestinationDetails.steps = this.data.urlDestination.funnel.map((step, i) => {
           return {
             number: (i + 1),
             name: step['ga-goal-funnel-step-name'],
             url: step['ga-goal-funnel-screen-page']
           }
-        })
+        });
       }
       break;
 
@@ -169,18 +184,20 @@ class Goal extends ModelBase {
 
   _patch(data, resolve = true) {
     if (this.live) {
-      const request = this._api.patch({
-          accountId: this.profile.accountId,
-          webPropertyId: this.profile.webPropertyId,
-          profileId: this.profile.id,
-          goalId: this.data.id
-        }, this.toJson());
+      return pQueue.add(async () => {
+        const request = this._api.patch({
+            accountId: this.profile.accountId,
+            webPropertyId: this.profile.webPropertyId,
+            profileId: this.profile.id,
+            goalId: this.data.id
+          }, this.toJson());
 
-      if (resolve) {
-        return this.deserialize(request);
-      } else {
-        return request;
-      }
+        if (resolve) {
+          return this.deserialize(request);
+        } else {
+          return request;
+        }
+      });
     } else {
       return;
     }

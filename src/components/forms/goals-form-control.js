@@ -157,8 +157,9 @@ class GoalsFormControl extends FormControlBase {
         this.analytics.upsertGoal(
           $(profile).data('item'),
           this.serializeForm().goal,
-          this.liveApiCallToggle.isChecked()
-        );
+          true,
+          // this.liveApiCallToggle.isChecked()
+         );
         ui.debug.append(`\n\n`);
       });
 

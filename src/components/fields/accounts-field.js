@@ -1,5 +1,6 @@
 import SelectField from './select-field';
 import events from '../../config/events';
+import pQueue from '../../utilities/p-queue';
 
 class AccountsField extends SelectField {
   constructor(field, formControl) {
@@ -20,9 +21,11 @@ class AccountsField extends SelectField {
 
     this.showLoader();
     gapi.client.load('analytics', 'v3').then(() => {
-      gapi.client.analytics.management.accounts.list().then((response) => {
-        this.handleResult(response);
-        this.hideLoader()
+      return pQueue.add(async () => {
+        return await gapi.client.analytics.management.accounts.list().then((response) => {
+          this.handleResult(response);
+          this.hideLoader()
+        });
       });
     }).then(null, (error) => {
       this.handleError(error);
